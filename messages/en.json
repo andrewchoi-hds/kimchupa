@@ -1,0 +1,230 @@
+{
+  "common": {
+    "siteName": "KimchuPa",
+    "siteDescription": "Find the perfect kimchi for you",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "search": "Search",
+    "searchPlaceholder": "Enter search term",
+    "viewAll": "View All",
+    "more": "More",
+    "back": "Back",
+    "next": "Next",
+    "prev": "Previous",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Home",
+    "wiki": "KimchiPedia",
+    "community": "Community",
+    "shop": "Shop",
+    "recommendation": "Kimchi Quiz",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout",
+    "signup": "Sign Up",
+    "myPage": "My Page",
+    "settings": "Settings"
+  },
+  "hero": {
+    "title": "Find the Perfect Kimchi for You",
+    "subtitle": "50 types of kimchi, personalized recommendations, and community",
+    "cta": "Get Recommendations",
+    "exploreCta": "Explore KimchiPedia"
+  },
+  "features": {
+    "recommendation": {
+      "title": "AI Kimchi Recommendation",
+      "description": "Answer 5 questions to find kimchi that matches your taste"
+    },
+    "wiki": {
+      "title": "KimchiPedia",
+      "description": "History, recipes, and nutrition info for 50 types of kimchi"
+    },
+    "community": {
+      "title": "Community",
+      "description": "Share recipes, kimchi diaries, and Q&A with others"
+    },
+    "level": {
+      "title": "Level System",
+      "description": "Level up with activities! Earn badges and special benefits"
+    }
+  },
+  "recommendation": {
+    "title": "Kimchi Recommendation Quiz",
+    "subtitle": "Answer 5 questions to find your perfect kimchi",
+    "question": "Question",
+    "of": "/",
+    "result": {
+      "title": "Recommended Kimchi",
+      "match": "Match",
+      "viewDetail": "View Details",
+      "retry": "Try Again",
+      "share": "Share Results"
+    }
+  },
+  "wiki": {
+    "title": "KimchiPedia",
+    "subtitle": "Discover the diverse world of Korean kimchi",
+    "totalTypes": "{count} types of kimchi",
+    "filter": {
+      "all": "All",
+      "region": "By Region",
+      "ingredient": "By Ingredient",
+      "spicy": "Spicy",
+      "mild": "Mild"
+    },
+    "detail": {
+      "origin": "Origin",
+      "ingredients": "Main Ingredients",
+      "spicyLevel": "Spice Level",
+      "fermentation": "Fermentation Level",
+      "pairing": "Pairs Well With",
+      "healthBenefits": "Health Benefits",
+      "recipe": "Recipe",
+      "history": "History"
+    }
+  },
+  "community": {
+    "title": "Community",
+    "subtitle": "A space for kimchi lovers",
+    "boards": {
+      "all": "All",
+      "free": "General",
+      "recipe": "Recipes",
+      "qna": "Q&A",
+      "review": "Reviews",
+      "diary": "Kimchi Diary"
+    },
+    "write": "Write",
+    "writePost": "Create New Post",
+    "noResults": "No posts found",
+    "views": "Views",
+    "likes": "Likes",
+    "comments": "Comments",
+    "share": "Share",
+    "bookmark": "Bookmark",
+    "report": "Report",
+    "levelRequired": "Level {level} or higher required to post"
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Purchase quality kimchi and related products from trusted sellers",
+    "affiliateNotice": "We may earn a commission from purchases through affiliate links",
+    "filter": {
+      "all": "All",
+      "kimchi": "Kimchi",
+      "ingredient": "Ingredients",
+      "equipment": "Equipment"
+    },
+    "sort": {
+      "popular": "Popular",
+      "priceLow": "Price: Low to High",
+      "priceHigh": "Price: High to Low"
+    },
+    "buyNow": "Buy Now",
+    "noProducts": "No products match your criteria"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Welcome to KimchuPa",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up"
+    },
+    "signup": {
+      "title": "Sign Up",
+      "subtitle": "Start your kimchi journey with KimchuPa",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "nickname": "Nickname",
+      "agreeTerms": "I agree to the Terms of Service",
+      "agreePrivacy": "I agree to the Privacy Policy",
+      "submit": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Login"
+    },
+    "social": {
+      "divider": "or",
+      "google": "Continue with Google",
+      "kakao": "Continue with Kakao",
+      "naver": "Continue with Naver"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "settings": "Settings",
+    "stats": {
+      "posts": "Posts",
+      "comments": "Comments",
+      "likes": "Likes Received",
+      "followers": "Followers",
+      "following": "Following",
+      "streak": "Streak"
+    },
+    "level": {
+      "title": "Level Progress",
+      "nextBenefits": "Next Level Benefits",
+      "canPost": "Can create posts",
+      "canSuggestWiki": "Can suggest wiki edits",
+      "canEditWiki": "Can edit wiki directly"
+    },
+    "xp": {
+      "title": "Recent XP Earned",
+      "history": "View All History",
+      "howTo": "How to Earn XP"
+    },
+    "badges": {
+      "title": "Badge Collection",
+      "earned": "Earned Badges",
+      "locked": "Locked Badges",
+      "viewAll": "View All"
+    },
+    "activity": {
+      "posts": "My Posts",
+      "comments": "My Comments",
+      "bookmarks": "Bookmarks",
+      "noPosts": "You haven't written any posts yet",
+      "noComments": "Your comments will appear here",
+      "noBookmarks": "Your bookmarked posts will appear here",
+      "firstPost": "Write your first post"
+    },
+    "attendance": {
+      "title": "This Month's Attendance",
+      "monthly": "This month",
+      "streak": "Streak"
+    }
+  },
+  "levels": {
+    "1": "Kimchi Sprout",
+    "2": "Kimchi Beginner",
+    "3": "Kimchi Enthusiast",
+    "4": "Kimchi Maniac",
+    "5": "Kimchi Expert",
+    "6": "Kimchi Master",
+    "7": "Kimchi Grandmaster"
+  },
+  "footer": {
+    "about": "About",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "copyright": "© {year} KimchuPa. All rights reserved.",
+    "madeWith": "Made with ❤️ for kimchi lovers"
+  }
+}
