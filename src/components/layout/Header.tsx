@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { signOut } from "next-auth/react";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 interface HeaderProps {
@@ -17,6 +19,9 @@ interface HeaderProps {
 export default function Header({ user }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const t = useTranslations("nav");
+  const common = useTranslations("common");
+  const profile = useTranslations("profile");
 
   const levelEmojis: Record<number, string> = {
     1: "🌱",
@@ -28,46 +33,50 @@ export default function Header({ user }: HeaderProps) {
     7: "👑",
   };
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
       <div className="container mx-auto px-4">
-        <nav className="flex items-center justify-between h-16">
+        <nav className="flex items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             <span className="text-2xl">🥬</span>
-            <span className="text-xl font-bold text-red-600">김추페</span>
+            <span className="text-xl font-bold text-red-600">{common("siteName")}</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex items-center justify-center gap-6 flex-1">
             <Link
               href="/recommendation"
               className="text-zinc-700 dark:text-zinc-300 hover:text-red-600 transition-colors"
             >
-              김치 추천
+              {t("recommendation")}
             </Link>
             <Link
               href="/wiki"
               className="text-zinc-700 dark:text-zinc-300 hover:text-red-600 transition-colors"
             >
-              김치피디아
+              {t("wiki")}
             </Link>
             <Link
               href="/community"
               className="text-zinc-700 dark:text-zinc-300 hover:text-red-600 transition-colors"
             >
-              커뮤니티
+              {t("community")}
             </Link>
             <Link
               href="/shop"
               className="text-zinc-700 dark:text-zinc-300 hover:text-red-600 transition-colors"
             >
-              구매처
+              {t("shop")}
             </Link>
           </div>
 
           {/* User Section */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 shrink-0">
             <LanguageSwitcher />
             {user ? (
               <div className="relative">
@@ -101,24 +110,30 @@ export default function Header({ user }: HeaderProps) {
                     <Link
                       href="/profile"
                       className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      내 프로필
+                      {t("profile")}
                     </Link>
                     <Link
                       href="/profile/badges"
                       className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      뱃지 & 업적
+                      {profile("badges.title")}
                     </Link>
                     <Link
                       href="/profile/bookmarks"
                       className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      북마크
+                      {profile("activity.bookmarks")}
                     </Link>
                     <hr className="my-2 border-zinc-200 dark:border-zinc-700" />
-                    <button className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                      로그아웃
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                    >
+                      {t("logout")}
                     </button>
                   </div>
                 )}
@@ -129,13 +144,13 @@ export default function Header({ user }: HeaderProps) {
                   href="/login"
                   className="px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:text-red-600 transition-colors"
                 >
-                  로그인
+                  {t("login")}
                 </Link>
                 <Link
                   href="/signup"
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
-                  회원가입
+                  {t("signup")}
                 </Link>
               </div>
             )}
@@ -143,7 +158,7 @@ export default function Header({ user }: HeaderProps) {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="md:hidden p-2 ml-auto"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg
@@ -181,26 +196,30 @@ export default function Header({ user }: HeaderProps) {
               <Link
                 href="/recommendation"
                 className="px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
+                onClick={() => setIsMenuOpen(false)}
               >
-                김치 추천
+                {t("recommendation")}
               </Link>
               <Link
                 href="/wiki"
                 className="px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
+                onClick={() => setIsMenuOpen(false)}
               >
-                김치피디아
+                {t("wiki")}
               </Link>
               <Link
                 href="/community"
                 className="px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
+                onClick={() => setIsMenuOpen(false)}
               >
-                커뮤니티
+                {t("community")}
               </Link>
               <Link
                 href="/shop"
                 className="px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
+                onClick={() => setIsMenuOpen(false)}
               >
-                구매처
+                {t("shop")}
               </Link>
               <hr className="my-2 border-zinc-200 dark:border-zinc-700" />
               {user ? (
@@ -208,11 +227,15 @@ export default function Header({ user }: HeaderProps) {
                   <Link
                     href="/profile"
                     className="px-4 py-2 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    내 프로필
+                    {t("profile")}
                   </Link>
-                  <button className="px-4 py-2 text-left text-red-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg">
-                    로그아웃
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 text-left text-red-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
+                  >
+                    {t("logout")}
                   </button>
                 </>
               ) : (
@@ -220,14 +243,16 @@ export default function Header({ user }: HeaderProps) {
                   <Link
                     href="/login"
                     className="flex-1 py-2 text-center text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-600 rounded-lg"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    로그인
+                    {t("login")}
                   </Link>
                   <Link
                     href="/signup"
                     className="flex-1 py-2 text-center bg-red-600 text-white rounded-lg"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    회원가입
+                    {t("signup")}
                   </Link>
                 </div>
               )}

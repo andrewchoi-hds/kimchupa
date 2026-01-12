@@ -19,7 +19,12 @@
     "close": "Close",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "cta": {
+      "title": "Get Started Now",
+      "description": "Sign up for free and explore the world of kimchi",
+      "button": "Sign Up Free"
+    }
   },
   "nav": {
     "home": "Home",
@@ -41,6 +46,9 @@
     "exploreCta": "Explore KimchiPedia"
   },
   "features": {
+    "section": {
+      "title": "Explore with KimchuPa"
+    },
     "recommendation": {
       "title": "AI Kimchi Recommendation",
       "description": "Answer 5 questions to find kimchi that matches your taste"

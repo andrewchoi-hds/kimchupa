@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import {
@@ -11,27 +12,40 @@ import {
   getDiscountPercent,
   type AffiliateProduct,
 } from "@/constants/affiliateProducts";
-import { CURRENT_USER } from "@/constants/mockData";
 import { handleAffiliateClick } from "@/lib/affiliate";
 
 type PartnerFilter = "all" | "coupang" | "naver" | "amazon" | "iherb";
 type CategoryFilter = "all" | "kimchi" | "ingredient" | "equipment";
 
 export default function ShopPage() {
+  const { data: session } = useSession();
+  const t = useTranslations("shop");
+  const levels = useTranslations("levels");
+
   const [partnerFilter, setPartnerFilter] = useState<PartnerFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
   const [sortBy, setSortBy] = useState<"popular" | "price-low" | "price-high">("popular");
+
+  const user = session?.user
+    ? {
+        nickname: session.user.name || "User",
+        level: 1,
+        levelName: levels("1"),
+        xp: 0,
+        profileImage: session.user.image || undefined,
+      }
+    : null;
 
   const filterProducts = (product: AffiliateProduct) => {
     if (partnerFilter !== "all" && product.partner !== partnerFilter) return false;
 
     if (categoryFilter !== "all") {
       const isKimchi = product.kimchiType !== undefined;
-      const isIngredient = product.tags.some((t) =>
-        ["재료", "양념", "고춧가루"].includes(t)
+      const isIngredient = product.tags.some((tag) =>
+        ["재료", "양념", "고춧가루"].includes(tag)
       );
-      const isEquipment = product.tags.some((t) =>
-        ["용기", "가전", "김치냉장고", "항아리"].includes(t)
+      const isEquipment = product.tags.some((tag) =>
+        ["용기", "가전", "김치냉장고", "항아리"].includes(tag)
       );
 
       if (categoryFilter === "kimchi" && !isKimchi) return false;
@@ -56,27 +70,24 @@ export default function ShopPage() {
   const filteredProducts = AFFILIATE_PRODUCTS.filter(filterProducts).sort(sortProducts);
 
   const handleProductClick = (product: AffiliateProduct) => {
-    // Track click via API and open affiliate link
     handleAffiliateClick(product);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
-      <Header user={CURRENT_USER} />
+      <Header user={user} />
 
       <main className="flex-1">
         {/* Hero */}
         <section className="bg-gradient-to-r from-orange-500 to-red-500 text-white py-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold mb-4">구매처 🛒</h1>
+              <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
               <p className="text-lg text-white/90 mb-4">
-                엄선된 김치와 관련 상품을 신뢰할 수 있는 판매처에서 구매하세요.
-                <br />
-                다양한 쇼핑몰의 가격을 비교하고 최적의 상품을 찾아보세요.
+                {t("subtitle")}
               </p>
               <p className="text-sm text-white/70">
-                * 제휴 링크를 통한 구매 시 소정의 수수료를 받을 수 있습니다
+                * {t("affiliateNotice")}
               </p>
             </div>
           </div>
@@ -96,7 +107,7 @@ export default function ShopPage() {
                       : "bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300"
                   }`}
                 >
-                  전체 쇼핑몰
+                  {t("filter.all")}
                 </button>
                 {Object.entries(AFFILIATE_PARTNERS).map(([key, partner]) => (
                   <button
@@ -117,10 +128,10 @@ export default function ShopPage() {
               {/* Category Filter */}
               <div className="flex gap-2 lg:ml-auto">
                 {[
-                  { id: "all", label: "전체" },
-                  { id: "kimchi", label: "김치" },
-                  { id: "ingredient", label: "재료/양념" },
-                  { id: "equipment", label: "용기/가전" },
+                  { id: "all", label: t("filter.all") },
+                  { id: "kimchi", label: t("filter.kimchi") },
+                  { id: "ingredient", label: t("filter.ingredient") },
+                  { id: "equipment", label: t("filter.equipment") },
                 ].map((cat) => (
                   <button
                     key={cat.id}
@@ -142,9 +153,9 @@ export default function ShopPage() {
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                 className="px-3 py-2 bg-zinc-100 dark:bg-zinc-700 rounded-lg text-sm border-none"
               >
-                <option value="popular">인기순</option>
-                <option value="price-low">낮은가격순</option>
-                <option value="price-high">높은가격순</option>
+                <option value="popular">{t("sort.popular")}</option>
+                <option value="price-low">{t("sort.priceLow")}</option>
+                <option value="price-high">{t("sort.priceHigh")}</option>
               </select>
             </div>
           </div>
@@ -228,7 +239,7 @@ export default function ShopPage() {
                       onClick={() => handleProductClick(product)}
                       className="w-full py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium flex items-center justify-center gap-2"
                     >
-                      <span>구매하러 가기</span>
+                      <span>{t("buyNow")}</span>
                       <span>→</span>
                     </button>
                   </div>
@@ -241,7 +252,7 @@ export default function ShopPage() {
             <div className="text-center py-16">
               <span className="text-6xl block mb-4">🔍</span>
               <p className="text-xl text-zinc-600 dark:text-zinc-400">
-                조건에 맞는 상품이 없습니다
+                {t("noProducts")}
               </p>
             </div>
           )}
@@ -249,12 +260,8 @@ export default function ShopPage() {
           {/* Affiliate Disclosure */}
           <div className="mt-12 p-6 bg-zinc-100 dark:bg-zinc-800 rounded-xl">
             <h3 className="font-bold text-zinc-900 dark:text-white mb-3">
-              제휴 링크 안내
+              {t("affiliateNotice")}
             </h3>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-              김추페는 아래 쇼핑몰의 제휴 파트너입니다. 제휴 링크를 통해 상품을 구매하시면
-              김추페 운영에 도움이 됩니다. 구매자에게 추가 비용은 발생하지 않습니다.
-            </p>
             <div className="flex flex-wrap gap-4">
               {Object.entries(AFFILIATE_PARTNERS).map(([key, partner]) => (
                 <div
@@ -267,7 +274,7 @@ export default function ShopPage() {
                       {partner.name}
                     </p>
                     <p className="text-xs text-zinc-500">
-                      수수료 {partner.commissionRate}
+                      {partner.commissionRate}
                     </p>
                   </div>
                 </div>

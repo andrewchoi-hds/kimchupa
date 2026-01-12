@@ -19,7 +19,12 @@
     "close": "닫기",
     "confirm": "확인",
     "yes": "예",
-    "no": "아니오"
+    "no": "아니오",
+    "cta": {
+      "title": "지금 바로 시작하세요",
+      "description": "무료로 가입하고 김치의 세계를 탐험하세요",
+      "button": "무료 가입하기"
+    }
   },
   "nav": {
     "home": "홈",
@@ -41,6 +46,9 @@
     "exploreCta": "김치백과 둘러보기"
   },
   "features": {
+    "section": {
+      "title": "김추페와 함께하세요"
+    },
     "recommendation": {
       "title": "AI 김치 추천",
       "description": "5가지 질문으로 당신의 입맛에 맞는 김치를 찾아드려요"
