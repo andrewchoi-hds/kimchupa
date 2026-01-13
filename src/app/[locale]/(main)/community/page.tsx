@@ -5,12 +5,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
-import { MOCK_POSTS, CURRENT_USER, type MockPost } from "@/constants/mockData";
+import { CURRENT_USER, type MockPost } from "@/constants/mockData";
 import { LEVEL_EMOJIS } from "@/constants/levels";
+import { usePostsStore } from "@/stores/postsStore";
 
 type PostFilter = "all" | "recipe" | "free" | "qna" | "review" | "diary";
 
 export default function CommunityPage() {
+  const posts = usePostsStore((state) => state.posts);
   const [filter, setFilter] = useState<PostFilter>("all");
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
 
@@ -23,7 +25,7 @@ export default function CommunityPage() {
     { id: "diary", label: "김치일기", emoji: "📔" },
   ];
 
-  const filteredPosts = MOCK_POSTS.filter(
+  const filteredPosts = posts.filter(
     (post) => filter === "all" || post.type === filter
   ).sort((a, b) => {
     if (sortBy === "popular") {

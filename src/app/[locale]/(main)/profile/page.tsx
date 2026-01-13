@@ -7,11 +7,17 @@ import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
 import XPProgressBar from "@/components/ui/XPProgressBar";
 import Badge from "@/components/ui/Badge";
-import { CURRENT_USER, MOCK_POSTS, MOCK_BADGES } from "@/constants/mockData";
+import AttendanceCalendar from "@/components/ui/AttendanceCalendar";
+import ProfileImageUpload from "@/components/ui/ProfileImageUpload";
+import { MOCK_POSTS, MOCK_BADGES } from "@/constants/mockData";
 import { LEVEL_EMOJIS, USER_LEVELS, XP_REWARDS } from "@/constants/levels";
+import { useAttendanceStore } from "@/stores/attendanceStore";
+import { useUserStore } from "@/stores/userStore";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<"posts" | "comments" | "bookmarks">("posts");
+  const currentStreak = useAttendanceStore((state) => state.currentStreak);
+  const { profile, setProfileImage } = useUserStore();
 
   const userPosts = MOCK_POSTS.filter((post) => post.author.id === "demo").slice(0, 3);
 
@@ -19,22 +25,28 @@ export default function ProfilePage() {
   const earnedBadges = MOCK_BADGES.slice(0, 5);
   const lockedBadges = MOCK_BADGES.slice(5);
 
-  // Mock stats
+  // Stats with live streak data
   const stats = {
     posts: 12,
     comments: 48,
     likes: 156,
     followers: 23,
     following: 45,
-    streak: 7,
+    streak: currentStreak,
   };
 
-  const currentLevelInfo = USER_LEVELS.find((l) => l.level === CURRENT_USER.level);
-  const nextLevelInfo = USER_LEVELS.find((l) => l.level === CURRENT_USER.level + 1);
+  const currentLevelInfo = USER_LEVELS.find((l) => l.level === profile.level);
+  const nextLevelInfo = USER_LEVELS.find((l) => l.level === profile.level + 1);
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
-      <Header user={CURRENT_USER} />
+      <Header user={{
+        nickname: profile.nickname,
+        level: profile.level,
+        levelName: profile.levelName,
+        xp: profile.xp,
+        profileImage: profile.profileImage ?? undefined,
+      }} />
 
       <main className="flex-1">
         {/* Profile Header */}
@@ -42,25 +54,23 @@ export default function ProfilePage() {
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
               {/* Avatar */}
-              <div className="relative">
-                <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-xl">
-                  <span className="text-6xl">{LEVEL_EMOJIS[CURRENT_USER.level]}</span>
-                </div>
-                <button className="absolute bottom-0 right-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-purple-700">
-                  📷
-                </button>
-              </div>
+              <ProfileImageUpload
+                currentImage={profile.profileImage ?? undefined}
+                fallbackEmoji={LEVEL_EMOJIS[profile.level]}
+                onImageChange={setProfileImage}
+                size="lg"
+              />
 
               {/* Info */}
               <div className="text-center md:text-left text-white">
-                <h1 className="text-3xl font-bold mb-2">{CURRENT_USER.nickname}</h1>
+                <h1 className="text-3xl font-bold mb-2">{profile.nickname}</h1>
                 <LevelBadge
-                  level={CURRENT_USER.level}
-                  levelName={CURRENT_USER.levelName}
+                  level={profile.level}
+                  levelName={profile.levelName}
                   size="lg"
                 />
                 <p className="mt-3 text-white/80">
-                  김치를 사랑하는 요리 입문자입니다 🥬
+                  {profile.bio} 🥬
                 </p>
               </div>
 
@@ -86,7 +96,7 @@ export default function ProfilePage() {
               { label: "받은 좋아요", value: stats.likes, icon: "❤️" },
               { label: "팔로워", value: stats.followers, icon: "👥" },
               { label: "팔로잉", value: stats.following, icon: "👤" },
-              { label: "연속 출석", value: `${stats.streak}일`, icon: "🔥" },
+              { label: "연속 출석", value: stats.streak > 0 ? `${stats.streak}일` : "-", icon: "🔥" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -111,13 +121,13 @@ export default function ProfilePage() {
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
                   레벨 진행도
                 </h2>
-                <XPProgressBar xp={CURRENT_USER.xp} />
+                <XPProgressBar xp={profile.xp} />
 
                 {/* Next Level Benefits */}
                 {nextLevelInfo && (
                   <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                     <p className="text-sm font-medium text-purple-700 dark:text-purple-400 mb-2">
-                      다음 레벨 혜택 (Lv.{nextLevelInfo.level} {USER_LEVELS[CURRENT_USER.level]?.name})
+                      다음 레벨 혜택 (Lv.{nextLevelInfo.level} {USER_LEVELS[profile.level]?.name})
                     </p>
                     <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
                       {nextLevelInfo.permissions.canPost && !currentLevelInfo?.permissions.canPost && (
@@ -329,35 +339,7 @@ export default function ProfilePage() {
               </div>
 
               {/* Attendance */}
-              <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  이번 달 출석
-                </h2>
-                <div className="grid grid-cols-7 gap-2">
-                  {[...Array(31)].map((_, i) => {
-                    const day = i + 1;
-                    const isAttended = day <= 12 && day !== 5 && day !== 8;
-                    const isToday = day === 12;
-                    return (
-                      <div
-                        key={day}
-                        className={`aspect-square rounded-lg flex items-center justify-center text-sm ${
-                          isToday
-                            ? "bg-purple-600 text-white font-bold"
-                            : isAttended
-                            ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                            : "bg-zinc-100 dark:bg-zinc-700 text-zinc-400"
-                        }`}
-                      >
-                        {day}
-                      </div>
-                    );
-                  })}
-                </div>
-                <p className="text-sm text-zinc-500 mt-4 text-center">
-                  이번 달 출석: <span className="font-medium text-purple-600">10일</span> | 연속: <span className="font-medium text-orange-500">7일 🔥</span>
-                </p>
-              </div>
+              <AttendanceCalendar />
             </div>
           </div>
         </div>

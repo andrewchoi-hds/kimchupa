@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { toast } from "@/stores/toastStore";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,7 +27,9 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+        toast.error("로그인 실패", "이메일 또는 비밀번호를 확인해주세요.");
       } else {
+        toast.success("로그인 성공!", "김추페에 오신 것을 환영합니다.");
         router.push("/");
         router.refresh();
       }

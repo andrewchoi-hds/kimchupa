@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
-import { MOCK_POSTS, MOCK_COMMENTS, CURRENT_USER } from "@/constants/mockData";
+import { CURRENT_USER } from "@/constants/mockData";
 import { LEVEL_EMOJIS } from "@/constants/levels";
+import { usePostsStore } from "@/stores/postsStore";
 
 interface PostDetailPageProps {
   params: Promise<{ id: string }>;
@@ -18,8 +19,14 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [commentText, setCommentText] = useState("");
 
-  const post = MOCK_POSTS.find((p) => p.id === id);
-  const comments = MOCK_COMMENTS.filter((c) => c.postId === id);
+  const { getPostById, getCommentsByPostId, addComment, toggleLike, incrementViewCount } = usePostsStore();
+  const post = getPostById(id);
+  const comments = getCommentsByPostId(id);
+
+  // Increment view count on mount
+  useEffect(() => {
+    incrementViewCount(id);
+  }, [id, incrementViewCount]);
 
   if (!post) {
     return (
@@ -61,9 +68,15 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
-    // TODO: Submit comment
-    alert("댓글이 등록되었습니다! (데모)");
+    addComment(id, commentText.trim());
     setCommentText("");
+  };
+
+  const handleToggleLike = () => {
+    if (!isLiked) {
+      toggleLike(id);
+    }
+    setIsLiked(!isLiked);
   };
 
   return (
@@ -154,7 +167,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
               <div className="px-6 py-4 bg-zinc-50 dark:bg-zinc-900/50 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={() => setIsLiked(!isLiked)}
+                    onClick={handleToggleLike}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                       isLiked
                         ? "bg-red-100 text-red-600 dark:bg-red-900/30"
@@ -162,7 +175,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
                     }`}
                   >
                     <span>{isLiked ? "❤️" : "🤍"}</span>
-                    <span>{post.likeCount + (isLiked ? 1 : 0)}</span>
+                    <span>{post.likeCount}</span>
                   </button>
                   <button
                     onClick={() => setIsBookmarked(!isBookmarked)}

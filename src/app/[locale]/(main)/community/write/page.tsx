@@ -5,17 +5,28 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ImageUpload from "@/components/ui/ImageUpload";
 import { CURRENT_USER } from "@/constants/mockData";
+import { usePostsStore } from "@/stores/postsStore";
+import { toast } from "@/stores/toastStore";
+
+interface UploadedImage {
+  url: string;
+  filename: string;
+  size: number;
+}
 
 type PostType = "recipe" | "free" | "qna" | "review" | "diary";
 
 export default function WritePage() {
   const router = useRouter();
+  const addPost = usePostsStore((state) => state.addPost);
   const [postType, setPostType] = useState<PostType>("free");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const [images, setImages] = useState<UploadedImage[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const postTypes: { id: PostType; label: string; emoji: string; description: string; minLevel: number }[] = [
@@ -50,11 +61,29 @@ export default function WritePage() {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Create excerpt from content
+      const excerpt = content.slice(0, 100) + (content.length > 100 ? "..." : "");
 
-    alert("게시글이 등록되었습니다! (데모)");
-    router.push("/community");
+      const postId = addPost({
+        type: postType,
+        title: title.trim(),
+        content: content.trim(),
+        excerpt,
+        tags,
+        images: images.map((img) => img.url),
+      });
+
+      // XP reward based on post type
+      const xpReward = postType === "recipe" ? 70 : postType === "diary" ? 15 : 20;
+      toast.success("게시글 등록 완료!", "커뮤니티에 글이 등록되었습니다.");
+      toast.xp(xpReward, postType === "recipe" ? "레시피 공유" : "게시글 작성");
+
+      router.push(`/community/${postId}`);
+    } catch {
+      toast.error("등록 실패", "게시글 등록에 실패했습니다. 다시 시도해주세요.");
+      setIsSubmitting(false);
+    }
   };
 
   const selectedType = postTypes.find((t) => t.id === postType);
@@ -158,25 +187,24 @@ export default function WritePage() {
                   rows={15}
                   required
                 />
-                <div className="flex items-center justify-between mt-2">
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      className="p-2 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
-                    >
-                      📷 이미지
-                    </button>
-                    <button
-                      type="button"
-                      className="p-2 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
-                    >
-                      🔗 링크
-                    </button>
-                  </div>
+                <div className="flex items-center justify-end mt-2">
                   <p className="text-xs text-zinc-500">
                     {content.length}/5000
                   </p>
                 </div>
+              </div>
+
+              {/* Image Upload */}
+              <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
+                  이미지 첨부 (선택)
+                </label>
+                <ImageUpload
+                  images={images}
+                  onImagesChange={setImages}
+                  maxImages={5}
+                  disabled={isSubmitting}
+                />
               </div>
 
               {/* Tags */}
