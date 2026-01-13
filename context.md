@@ -278,3 +278,93 @@ toast.levelUp(5, "김치 고수");  // 레벨 업 알림
 ### 인기 게시글 섹션
 - `postsStore`에서 좋아요 순 상위 4개 표시
 - 게시판 배지 + 통계 (좋아요, 댓글, 조회수)
+
+## Follow-up TODO (우선순위)
+
+### P0 - 긴급
+- [ ] **좋아요 상태 영속화**: `likedBy: string[]` 필드 추가, 사용자별 좋아요 추적
+- [ ] **회원가입 구현**: `/api/auth/signup` 라우트, 폼 검증, bcrypt 해싱
+- [ ] **Google OAuth 설정**: 환경변수 설정 및 테스트
+
+### P1 - 높음
+- [ ] **페이지네이션**: 커뮤니티 게시글 목록 (20개/페이지)
+- [ ] **북마크 기능**: `bookmarksStore` + 프로필 표시
+- [ ] **검색 기능**: 게시글/위키/유저 통합 검색
+- [ ] **레벨업 알림**: `addXp` 시 레벨 변경 감지 + toast.levelUp()
+- [ ] **댓글 답글**: `parentId` 필드, 중첩 댓글 UI
+
+### P2 - 보통
+- [ ] 게시글 수정/삭제 UI
+- [ ] 다크 모드 토글 영속화
+- [ ] 게시글 이미지 갤러리 표시
+- [ ] 프로필 실제 통계 연동
+- [ ] 인기 태그 동적 계산
+
+## TIL (Today I Learned)
+
+### 1. Zustand + localStorage Persist 패턴
+```typescript
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+export const useStore = create<State>()(
+  persist(
+    (set, get) => ({ /* state & actions */ }),
+    {
+      name: "storage-key",
+      partialize: (state) => ({ /* 저장할 필드만 선택 */ }),
+    }
+  )
+);
+```
+- `partialize`로 함수 제외, 필요한 상태만 저장
+- 이중 괄호 `()()` 필수 (middleware wrapping)
+
+### 2. Toast 시스템 - Provider 없이 전역 알림
+```typescript
+// Store에서 helper 객체 export
+export const toast = {
+  success: (msg, desc) => useToastStore.getState().addToast({ type: "success", ... }),
+  xp: (amount, reason) => { ... }
+};
+
+// 어디서든 호출 가능 (React 컴포넌트 외부에서도)
+toast.success("저장 완료!");
+```
+
+### 3. Next.js App Router 파일 업로드
+```typescript
+export async function POST(request: NextRequest) {
+  const formData = await request.formData();
+  const file = formData.get("file") as File;
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  await writeFile(path, buffer);
+}
+```
+- `FormData` 전송 시 Content-Type 헤더 설정하지 말 것 (브라우저가 자동 설정)
+
+### 4. 드래그앤드롭 이벤트
+```typescript
+const handleDragOver = (e) => {
+  e.preventDefault();  // 필수! 없으면 브라우저가 파일 열어버림
+  e.stopPropagation();
+};
+```
+
+### 5. 연속 출석 스트릭 계산
+- ISO 날짜 문자열(`YYYY-MM-DD`)로 저장 → 문자열 정렬 가능
+- 역순 정렬 후 하루씩 비교, 끊김 발견 시 break
+
+### 6. Styled JSX로 커스텀 애니메이션
+```typescript
+<style jsx>{`
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+`}</style>
+```
+- Tailwind에 없는 애니메이션은 styled-jsx로 해결
+- 컴포넌트 스코프로 격리됨
