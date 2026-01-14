@@ -9,29 +9,44 @@ import XPProgressBar from "@/components/ui/XPProgressBar";
 import Badge from "@/components/ui/Badge";
 import AttendanceCalendar from "@/components/ui/AttendanceCalendar";
 import ProfileImageUpload from "@/components/ui/ProfileImageUpload";
-import { MOCK_POSTS, MOCK_BADGES } from "@/constants/mockData";
 import { LEVEL_EMOJIS, USER_LEVELS, XP_REWARDS } from "@/constants/levels";
 import { useAttendanceStore } from "@/stores/attendanceStore";
 import { useUserStore } from "@/stores/userStore";
+import { useBookmarksStore } from "@/stores/bookmarksStore";
+import { usePostsStore } from "@/stores/postsStore";
+import { useBadgesStore } from "@/stores/badgesStore";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<"posts" | "comments" | "bookmarks">("posts");
   const currentStreak = useAttendanceStore((state) => state.currentStreak);
   const { profile, setProfileImage } = useUserStore();
+  const { bookmarkedPosts } = useBookmarksStore();
+  const { getPostById, getUserStats, getUserPosts, getUserComments } = usePostsStore();
+  const { getAllBadgesWithStatus, getEarnedCount } = useBadgesStore();
 
-  const userPosts = MOCK_POSTS.filter((post) => post.author.id === "demo").slice(0, 3);
+  // Real user statistics
+  const userStats = getUserStats(profile.id);
+  const userPosts = getUserPosts(profile.id).slice(0, 3);
+  const userComments = getUserComments(profile.id);
 
-  // Mock user badges (earned)
-  const earnedBadges = MOCK_BADGES.slice(0, 5);
-  const lockedBadges = MOCK_BADGES.slice(5);
+  // Get bookmarked posts data
+  const bookmarkedPostsData = bookmarkedPosts
+    .map((postId) => getPostById(postId))
+    .filter((post) => post !== undefined)
+    .slice(0, 5);
 
-  // Stats with live streak data
+  // Real badge data from badgesStore
+  const allBadges = getAllBadgesWithStatus();
+  const earnedBadges = allBadges.filter((b) => b.earned);
+  const lockedBadges = allBadges.filter((b) => !b.earned);
+
+  // Stats with real data
   const stats = {
-    posts: 12,
-    comments: 48,
-    likes: 156,
-    followers: 23,
-    following: 45,
+    posts: userStats.posts,
+    comments: userStats.comments,
+    likes: userStats.likesReceived,
+    followers: 0, // TODO: Phase 3에서 팔로우 기능 구현
+    following: 0, // TODO: Phase 3에서 팔로우 기능 구현
     streak: currentStreak,
   };
 
@@ -323,16 +338,81 @@ export default function ProfilePage() {
                   )}
 
                   {activeTab === "comments" && (
-                    <div className="text-center py-12 text-zinc-500">
-                      <span className="text-4xl block mb-2">💬</span>
-                      <p>작성한 댓글 목록이 표시됩니다</p>
+                    <div className="space-y-4">
+                      {userComments.length > 0 ? (
+                        userComments.slice(0, 5).map((comment) => (
+                          <Link
+                            key={comment.id}
+                            href={`/community/${comment.postId}`}
+                            className="block p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                          >
+                            <p className="text-zinc-900 dark:text-white line-clamp-2">
+                              {comment.content}
+                            </p>
+                            <div className="flex items-center gap-4 text-sm text-zinc-500 mt-2">
+                              <span>❤️ {comment.likeCount}</span>
+                              <span className="text-xs">
+                                {new Date(comment.createdAt).toLocaleDateString("ko-KR")}
+                              </span>
+                            </div>
+                          </Link>
+                        ))
+                      ) : (
+                        <div className="text-center py-12 text-zinc-500">
+                          <span className="text-4xl block mb-2">💬</span>
+                          <p>아직 작성한 댓글이 없습니다</p>
+                          <Link
+                            href="/community"
+                            className="inline-block mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                          >
+                            커뮤니티 둘러보기
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {activeTab === "bookmarks" && (
-                    <div className="text-center py-12 text-zinc-500">
-                      <span className="text-4xl block mb-2">⭐</span>
-                      <p>북마크한 게시글이 표시됩니다</p>
+                    <div className="space-y-4">
+                      {bookmarkedPostsData.length > 0 ? (
+                        <>
+                          {bookmarkedPostsData.map((post) => (
+                            <Link
+                              key={post.id}
+                              href={`/community/${post.id}`}
+                              className="block p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                            >
+                              <h3 className="font-medium text-zinc-900 dark:text-white mb-1">
+                                {post.title}
+                              </h3>
+                              <div className="flex items-center gap-4 text-sm text-zinc-500">
+                                <span>❤️ {post.likeCount}</span>
+                                <span>💬 {post.commentCount}</span>
+                                <span>👁️ {post.viewCount}</span>
+                              </div>
+                            </Link>
+                          ))}
+                          {bookmarkedPosts.length > 5 && (
+                            <Link
+                              href="/profile/bookmarks"
+                              className="block text-center text-sm text-purple-600 hover:underline py-2"
+                            >
+                              전체 {bookmarkedPosts.length}개 보기
+                            </Link>
+                          )}
+                        </>
+                      ) : (
+                        <div className="text-center py-12 text-zinc-500">
+                          <span className="text-4xl block mb-2">⭐</span>
+                          <p>아직 북마크한 게시글이 없습니다</p>
+                          <Link
+                            href="/community"
+                            className="inline-block mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                          >
+                            커뮤니티 둘러보기
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

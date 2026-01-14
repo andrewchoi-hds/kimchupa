@@ -16,6 +16,7 @@ export interface MockPost {
   excerpt: string;
   author: MockUser;
   likeCount: number;
+  likedBy: string[]; // 좋아요한 사용자 ID 배열
   commentCount: number;
   viewCount: number;
   tags: string[];
@@ -26,6 +27,7 @@ export interface MockPost {
 export interface MockComment {
   id: string;
   postId: string;
+  parentId: string | null; // 답글인 경우 부모 댓글 ID
   content: string;
   author: MockUser;
   likeCount: number;
@@ -69,6 +71,7 @@ export const MOCK_POSTS: MockPost[] = [
     excerpt: "60년 전통의 묵은지 비법을 공개합니다. 11월 김장철 배추와 천일염을 사용한 정통 레시피...",
     author: MOCK_USERS[0],
     likeCount: 342,
+    likedBy: [],
     commentCount: 56,
     viewCount: 4521,
     tags: ["묵은지", "전통레시피", "할머니손맛", "김장"],
@@ -83,6 +86,7 @@ export const MOCK_POSTS: MockPost[] = [
     excerpt: "바쁜 직장인도 5분이면 OK! 초간단 겉절이 레시피를 소개합니다.",
     author: MOCK_USERS[1],
     likeCount: 128,
+    likedBy: [],
     commentCount: 23,
     viewCount: 1892,
     tags: ["겉절이", "간단레시피", "직장인"],
@@ -97,6 +101,7 @@ export const MOCK_POSTS: MockPost[] = [
     excerpt: "일주일 된 김치가 너무 시어졌는데 활용법이 있을까요?",
     author: MOCK_USERS[2],
     likeCount: 15,
+    likedBy: [],
     commentCount: 42,
     viewCount: 856,
     tags: ["질문", "신김치", "활용법"],
@@ -111,6 +116,7 @@ export const MOCK_POSTS: MockPost[] = [
     excerpt: "배추김치 발효 3일차, 기포가 생기기 시작했습니다!",
     author: MOCK_USERS[4],
     likeCount: 67,
+    likedBy: [],
     commentCount: 12,
     viewCount: 432,
     tags: ["김치일기", "발효", "3일차"],
@@ -125,6 +131,7 @@ export const MOCK_POSTS: MockPost[] = [
     excerpt: "종가집 맛김치 솔직 후기, 맛은 좋지만 약간 달아요",
     author: MOCK_USERS[5],
     likeCount: 89,
+    likedBy: [],
     commentCount: 31,
     viewCount: 1234,
     tags: ["리뷰", "종가집", "시판김치"],
@@ -139,6 +146,7 @@ export const MOCK_POSTS: MockPost[] = [
     excerpt: "4인 가족 기준 김치냉장고 추천 부탁드립니다",
     author: MOCK_USERS[2],
     likeCount: 23,
+    likedBy: [],
     commentCount: 67,
     viewCount: 2341,
     tags: ["김치냉장고", "추천", "가전"],
@@ -151,26 +159,56 @@ export const MOCK_COMMENTS: MockComment[] = [
   {
     id: "c1",
     postId: "1",
+    parentId: null,
     content: "와 정말 자세한 레시피네요! 이번 김장때 꼭 따라해볼게요!",
     author: MOCK_USERS[1],
     likeCount: 12,
     createdAt: "2026-01-10T15:30:00Z",
   },
   {
+    id: "c1-1",
+    postId: "1",
+    parentId: "c1",
+    content: "저도 따라해봤는데 정말 맛있었어요!",
+    author: MOCK_USERS[2],
+    likeCount: 3,
+    createdAt: "2026-01-10T16:00:00Z",
+  },
+  {
     id: "c2",
     postId: "1",
+    parentId: null,
     content: "할머니 손맛의 비밀이 여기 있었군요 ㅎㅎ 감사합니다!",
     author: MOCK_USERS[4],
     likeCount: 8,
     createdAt: "2026-01-10T16:45:00Z",
   },
   {
+    id: "c2-1",
+    postId: "1",
+    parentId: "c2",
+    content: "맞아요, 저희 할머니도 비슷하게 담그시더라고요~",
+    author: MOCK_USERS[0],
+    likeCount: 5,
+    createdAt: "2026-01-10T17:30:00Z",
+  },
+  {
     id: "c3",
     postId: "3",
+    parentId: null,
     content: "신김치는 김치찌개나 김치볶음밥으로 활용하시면 아주 맛있어요!",
     author: MOCK_USERS[0],
     likeCount: 24,
     createdAt: "2026-01-12T11:45:00Z",
+  },
+  {
+    id: "c3-1",
+    postId: "3",
+    parentId: "c3",
+    content: "오 좋은 팁이네요! 김치전도 괜찮을까요?",
+    author: MOCK_USERS[2],
+    likeCount: 2,
+    createdAt: "2026-01-12T12:00:00Z",
   },
 ];
 

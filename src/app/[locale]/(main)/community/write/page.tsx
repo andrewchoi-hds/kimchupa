@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ImageUpload from "@/components/ui/ImageUpload";
-import { CURRENT_USER } from "@/constants/mockData";
 import { usePostsStore } from "@/stores/postsStore";
+import { useUserStore } from "@/stores/userStore";
+import { useDraftStore } from "@/stores/draftStore";
 import { toast } from "@/stores/toastStore";
 
 interface UploadedImage {
@@ -20,7 +22,10 @@ type PostType = "recipe" | "free" | "qna" | "review" | "diary";
 
 export default function WritePage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const { profile, initFromSession, addXp } = useUserStore();
   const addPost = usePostsStore((state) => state.addPost);
+  const { draft, saveDraft, clearDraft, hasDraft } = useDraftStore();
   const [postType, setPostType] = useState<PostType>("free");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -28,13 +33,95 @@ export default function WritePage() {
   const [tagInput, setTagInput] = useState("");
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDraftModal, setShowDraftModal] = useState(false);
+  const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const hasCheckedDraft = useRef(false);
+
+  // 세션 변경 시 프로필 동기화
+  useEffect(() => {
+    initFromSession(session);
+  }, [session, initFromSession]);
+
+  // 로그인 필요 - 비로그인 시 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      toast.error("로그인 필요", "글쓰기를 하려면 로그인이 필요합니다.");
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  // 임시저장된 글 확인 (페이지 로드 시 한 번만)
+  useEffect(() => {
+    if (!hasCheckedDraft.current && hasDraft()) {
+      hasCheckedDraft.current = true;
+      setShowDraftModal(true);
+    }
+  }, [hasDraft]);
+
+  // 자동 저장 함수
+  const performAutoSave = useCallback(() => {
+    if (title.trim() || content.trim()) {
+      saveDraft({
+        type: postType,
+        title,
+        content,
+        tags,
+        images: images.map((img) => img.url),
+      });
+      setLastSaved(new Date().toLocaleTimeString("ko-KR"));
+    }
+  }, [postType, title, content, tags, images, saveDraft]);
+
+  // 자동 저장 (30초마다)
+  useEffect(() => {
+    if (autoSaveTimerRef.current) {
+      clearInterval(autoSaveTimerRef.current);
+    }
+
+    autoSaveTimerRef.current = setInterval(() => {
+      performAutoSave();
+    }, 30000); // 30초마다 자동 저장
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearInterval(autoSaveTimerRef.current);
+      }
+    };
+  }, [performAutoSave]);
+
+  // 임시저장 복구
+  const restoreDraft = () => {
+    if (draft) {
+      setPostType(draft.type);
+      setTitle(draft.title);
+      setContent(draft.content);
+      setTags(draft.tags);
+      // 이미지는 URL만 있으므로 복구 시 간단한 형태로
+      setImages(draft.images.map((url) => ({ url, filename: "", size: 0 })));
+      toast.success("복구 완료", "임시저장된 글을 불러왔습니다.");
+    }
+    setShowDraftModal(false);
+  };
+
+  // 임시저장 무시
+  const ignoreDraft = () => {
+    clearDraft();
+    setShowDraftModal(false);
+  };
+
+  // 수동 임시저장
+  const handleManualSave = () => {
+    performAutoSave();
+    toast.success("임시저장 완료", "글이 임시저장되었습니다.");
+  };
 
   const postTypes: { id: PostType; label: string; emoji: string; description: string; minLevel: number }[] = [
-    { id: "free", label: "자유", emoji: "💬", description: "자유로운 이야기", minLevel: 3 },
-    { id: "recipe", label: "레시피", emoji: "👨‍🍳", description: "김치 레시피 공유", minLevel: 3 },
-    { id: "qna", label: "Q&A", emoji: "❓", description: "질문과 답변", minLevel: 2 },
-    { id: "review", label: "리뷰", emoji: "⭐", description: "상품 리뷰", minLevel: 3 },
-    { id: "diary", label: "김치일기", emoji: "📔", description: "발효 과정 기록", minLevel: 3 },
+    { id: "free", label: "자유", emoji: "💬", description: "자유로운 이야기", minLevel: 1 },
+    { id: "recipe", label: "레시피", emoji: "👨‍🍳", description: "김치 레시피 공유", minLevel: 2 },
+    { id: "qna", label: "Q&A", emoji: "❓", description: "질문과 답변", minLevel: 1 },
+    { id: "review", label: "리뷰", emoji: "⭐", description: "상품 리뷰", minLevel: 2 },
+    { id: "diary", label: "김치일기", emoji: "📔", description: "발효 과정 기록", minLevel: 1 },
   ];
 
   const handleAddTag = () => {
@@ -65,6 +152,15 @@ export default function WritePage() {
       // Create excerpt from content
       const excerpt = content.slice(0, 100) + (content.length > 100 ? "..." : "");
 
+      // 현재 사용자 정보를 author로 전달
+      const author = {
+        id: profile.id,
+        nickname: profile.nickname,
+        level: profile.level,
+        levelName: profile.levelName,
+        xp: profile.xp,
+      };
+
       const postId = addPost({
         type: postType,
         title: title.trim(),
@@ -72,10 +168,15 @@ export default function WritePage() {
         excerpt,
         tags,
         images: images.map((img) => img.url),
-      });
+      }, author);
 
       // XP reward based on post type
       const xpReward = postType === "recipe" ? 70 : postType === "diary" ? 15 : 20;
+      addXp(xpReward);
+
+      // 임시저장 삭제
+      clearDraft();
+
       toast.success("게시글 등록 완료!", "커뮤니티에 글이 등록되었습니다.");
       toast.xp(xpReward, postType === "recipe" ? "레시피 공유" : "게시글 작성");
 
@@ -87,11 +188,32 @@ export default function WritePage() {
   };
 
   const selectedType = postTypes.find((t) => t.id === postType);
-  const canPost = CURRENT_USER.level >= (selectedType?.minLevel || 3);
+  const canPost = profile.level >= (selectedType?.minLevel || 1);
+
+  // Header에 전달할 사용자 정보
+  const headerUser = session?.user ? {
+    nickname: profile.nickname,
+    level: profile.level,
+    levelName: profile.levelName,
+    xp: profile.xp,
+    profileImage: profile.profileImage || undefined,
+  } : null;
+
+  // 로딩 중이거나 비로그인 상태면 로딩 표시
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-zinc-600 dark:text-zinc-400">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
-      <Header user={CURRENT_USER} />
+      <Header user={headerUser} />
 
       <main className="flex-1">
         {/* Breadcrumb */}
@@ -121,7 +243,7 @@ export default function WritePage() {
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {postTypes.map((type) => {
-                    const isAvailable = CURRENT_USER.level >= type.minLevel;
+                    const isAvailable = profile.level >= type.minLevel;
                     return (
                       <button
                         key={type.id}
@@ -270,16 +392,25 @@ export default function WritePage() {
 
               {/* Submit */}
               <div className="flex items-center justify-between">
-                <Link
-                  href="/community"
-                  className="px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                >
-                  취소
-                </Link>
+                <div className="flex items-center gap-4">
+                  <Link
+                    href="/community"
+                    className="px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  >
+                    취소
+                  </Link>
+                  {lastSaved && (
+                    <span className="text-xs text-zinc-500">
+                      마지막 저장: {lastSaved}
+                    </span>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    className="px-6 py-3 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600"
+                    onClick={handleManualSave}
+                    disabled={!title.trim() && !content.trim()}
+                    className="px-6 py-3 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:opacity-50"
                   >
                     임시저장
                   </button>
@@ -303,7 +434,7 @@ export default function WritePage() {
               {!canPost && (
                 <p className="text-center text-red-500 text-sm">
                   {selectedType?.label} 게시판은 Lv.{selectedType?.minLevel} 이상부터 작성 가능합니다.
-                  현재 레벨: Lv.{CURRENT_USER.level}
+                  현재 레벨: Lv.{profile.level}
                 </p>
               )}
             </form>
@@ -312,6 +443,40 @@ export default function WritePage() {
       </main>
 
       <Footer />
+
+      {/* Draft Recovery Modal */}
+      {showDraftModal && draft && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 max-w-md mx-4 shadow-xl">
+            <div className="text-center">
+              <span className="text-5xl block mb-4">📝</span>
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
+                임시저장된 글이 있습니다
+              </h3>
+              <p className="text-zinc-600 dark:text-zinc-400 mb-2">
+                {new Date(draft.savedAt).toLocaleString("ko-KR")}에 저장됨
+              </p>
+              <p className="text-sm text-zinc-500 mb-6 line-clamp-2">
+                {draft.title || "(제목 없음)"} - {draft.content.slice(0, 50) || "(내용 없음)"}...
+              </p>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={ignoreDraft}
+                  className="px-6 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-colors"
+                >
+                  새로 작성
+                </button>
+                <button
+                  onClick={restoreDraft}
+                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  불러오기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

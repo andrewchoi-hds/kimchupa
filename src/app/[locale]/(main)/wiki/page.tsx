@@ -7,10 +7,12 @@ import Footer from "@/components/layout/Footer";
 import { KIMCHI_DATA, type KimchiType } from "@/constants/kimchi";
 
 type CategoryFilter = "all" | "popular" | "mild" | "spicy" | "water" | "regional";
+type SortOption = "name" | "popular" | "spicy" | "fermentation";
 
 export default function WikiPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
+  const [sortBy, setSortBy] = useState<SortOption>("name");
 
   const categories: { id: CategoryFilter; label: string; emoji: string }[] = [
     { id: "all", label: "전체", emoji: "📚" },
@@ -51,7 +53,30 @@ export default function WikiPage() {
     }
   };
 
-  const filteredKimchi = KIMCHI_DATA.filter(filterKimchi);
+  const sortKimchi = (kimchiList: KimchiType[]): KimchiType[] => {
+    return [...kimchiList].sort((a, b) => {
+      switch (sortBy) {
+        case "popular":
+          // 인기 김치를 먼저 보여줌
+          const popularIds = ["baechu", "kkakdugi", "dongchimi", "chonggak"];
+          const aPopular = popularIds.indexOf(a.id);
+          const bPopular = popularIds.indexOf(b.id);
+          if (aPopular !== -1 && bPopular !== -1) return aPopular - bPopular;
+          if (aPopular !== -1) return -1;
+          if (bPopular !== -1) return 1;
+          return a.name.localeCompare(b.name, "ko");
+        case "spicy":
+          return b.spicyLevel - a.spicyLevel; // 매운 것부터
+        case "fermentation":
+          return b.fermentationLevel - a.fermentationLevel; // 발효도 높은 것부터
+        case "name":
+        default:
+          return a.name.localeCompare(b.name, "ko");
+      }
+    });
+  };
+
+  const filteredKimchi = sortKimchi(KIMCHI_DATA.filter(filterKimchi));
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
@@ -117,11 +142,15 @@ export default function WikiPage() {
               <p className="text-zinc-600 dark:text-zinc-400">
                 총 <span className="font-semibold text-zinc-900 dark:text-white">{filteredKimchi.length}</span>개의 김치
               </p>
-              <select className="px-3 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm">
-                <option>이름순</option>
-                <option>인기순</option>
-                <option>매운맛순</option>
-                <option>발효도순</option>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="px-3 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm"
+              >
+                <option value="name">이름순</option>
+                <option value="popular">인기순</option>
+                <option value="spicy">매운맛순</option>
+                <option value="fermentation">발효도순</option>
               </select>
             </div>
 

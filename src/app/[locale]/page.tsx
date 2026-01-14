@@ -283,11 +283,12 @@ export default function Home() {
         {/* Level System Preview */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
               {/* Background decoration */}
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-10 left-10 text-8xl">🌱</div>
                 <div className="absolute bottom-10 right-10 text-8xl">👑</div>
+                <div className="absolute top-1/2 right-1/4 text-6xl">🌶️</div>
               </div>
 
               <div className="relative z-10">
@@ -324,7 +325,7 @@ export default function Home() {
                 <div className="text-center mt-8">
                   <Link
                     href="/profile"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-white text-purple-600 font-bold rounded-xl hover:bg-zinc-100 transition-colors"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600 font-bold rounded-xl hover:bg-zinc-100 transition-colors"
                   >
                     내 레벨 확인하기 →
                   </Link>

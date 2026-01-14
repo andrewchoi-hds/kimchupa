@@ -1,9 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { CURRENT_USER } from "@/constants/mockData";
+import { getUserByEmail } from "./authStore";
+import { toast } from "./toastStore";
+import { USER_LEVELS } from "@/constants/levels";
 
 interface UserProfile {
   id: string;
+  email: string;
   nickname: string;
   level: number;
   levelName: string;
@@ -14,26 +17,34 @@ interface UserProfile {
 
 interface UserState {
   profile: UserProfile;
+  isInitialized: boolean;
 
   // Actions
   setProfileImage: (url: string | null) => void;
   updateNickname: (nickname: string) => void;
   updateBio: (bio: string) => void;
   addXp: (amount: number) => void;
+  initFromSession: (session: { user?: { id?: string; email?: string | null; name?: string | null } } | null) => void;
+  syncFromAuthStore: (email: string) => void;
+  reset: () => void;
 }
+
+const DEFAULT_PROFILE: UserProfile = {
+  id: "",
+  email: "",
+  nickname: "게스트",
+  level: 1,
+  levelName: "김치 새싹",
+  xp: 0,
+  profileImage: null,
+  bio: "김치를 사랑하는 요리 입문자입니다",
+};
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
-      profile: {
-        id: CURRENT_USER.id,
-        nickname: CURRENT_USER.nickname,
-        level: CURRENT_USER.level,
-        levelName: CURRENT_USER.levelName,
-        xp: CURRENT_USER.xp,
-        profileImage: null,
-        bio: "김치를 사랑하는 요리 입문자입니다",
-      },
+    (set, get) => ({
+      profile: { ...DEFAULT_PROFILE },
+      isInitialized: false,
 
       setProfileImage: (url) =>
         set((state) => ({
@@ -50,51 +61,147 @@ export const useUserStore = create<UserState>()(
           profile: { ...state.profile, bio },
         })),
 
-      addXp: (amount) =>
-        set((state) => {
-          const newXp = state.profile.xp + amount;
-          // Simple level calculation (would be more complex in production)
-          let newLevel = state.profile.level;
-          let newLevelName = state.profile.levelName;
+      addXp: (amount) => {
+        const currentState = get();
+        const oldLevel = currentState.profile.level;
+        const newXp = currentState.profile.xp + amount;
 
-          if (newXp >= 50000) {
-            newLevel = 7;
-            newLevelName = "김치 명인";
-          } else if (newXp >= 15000) {
-            newLevel = 6;
-            newLevelName = "김치 달인";
-          } else if (newXp >= 5000) {
-            newLevel = 5;
-            newLevelName = "김치 장인";
-          } else if (newXp >= 2000) {
-            newLevel = 4;
-            newLevelName = "김치 요리사";
-          } else if (newXp >= 500) {
-            newLevel = 3;
-            newLevelName = "김치 수습생";
-          } else if (newXp >= 100) {
-            newLevel = 2;
-            newLevelName = "김치 입문자";
-          } else {
-            newLevel = 1;
-            newLevelName = "김치 새싹";
+        // 레벨 계산 (USER_LEVELS 사용)
+        let newLevel = 1;
+        let newLevelName = "김치 새싹";
+
+        for (let i = USER_LEVELS.length - 1; i >= 0; i--) {
+          if (newXp >= USER_LEVELS[i].minXp) {
+            newLevel = USER_LEVELS[i].level;
+            newLevelName = USER_LEVELS[i].name;
+            break;
           }
+        }
 
-          return {
+        // 상태 업데이트
+        set({
+          profile: {
+            ...currentState.profile,
+            xp: newXp,
+            level: newLevel,
+            levelName: newLevelName,
+          },
+        });
+
+        // 레벨업 시 알림 표시
+        if (newLevel > oldLevel) {
+          toast.levelUp(newLevel, newLevelName);
+
+          // 레벨업에 따른 새 권한 안내
+          const levelInfo = USER_LEVELS.find((l) => l.level === newLevel);
+          const prevLevelInfo = USER_LEVELS.find((l) => l.level === oldLevel);
+
+          if (levelInfo && prevLevelInfo) {
+            // 새로 얻은 권한 확인
+            if (levelInfo.permissions.canPost && !prevLevelInfo.permissions.canPost) {
+              setTimeout(() => toast.success("새 기능 해금", "게시글 작성이 가능해졌습니다!"), 1500);
+            }
+            if (levelInfo.permissions.canComment && !prevLevelInfo.permissions.canComment) {
+              setTimeout(() => toast.success("새 기능 해금", "댓글 작성이 가능해졌습니다!"), 1500);
+            }
+            if (levelInfo.permissions.canSuggestWikiEdit && !prevLevelInfo.permissions.canSuggestWikiEdit) {
+              setTimeout(() => toast.success("새 기능 해금", "위키 편집 제안이 가능해졌습니다!"), 1500);
+            }
+            if (levelInfo.permissions.canEditWiki && !prevLevelInfo.permissions.canEditWiki) {
+              setTimeout(() => toast.success("새 기능 해금", "위키 직접 편집이 가능해졌습니다!"), 1500);
+            }
+          }
+        }
+      },
+
+      // 세션으로부터 프로필 초기화
+      initFromSession: (session) => {
+        const email = session?.user?.email;
+
+        if (!email) {
+          // 로그아웃 상태
+          set({
+            profile: { ...DEFAULT_PROFILE },
+            isInitialized: true,
+          });
+          return;
+        }
+
+        const currentProfile = get().profile;
+
+        // 이미 같은 사용자로 초기화되어 있으면 스킵
+        if (currentProfile.email === email && get().isInitialized) {
+          return;
+        }
+
+        // authStore에서 사용자 정보 조회
+        const storedUser = getUserByEmail(email);
+
+        if (storedUser) {
+          // 등록된 사용자: authStore 정보 사용
+          set({
+            profile: {
+              id: storedUser.id,
+              email: storedUser.email,
+              nickname: storedUser.nickname,
+              level: storedUser.level,
+              levelName: storedUser.levelName,
+              xp: storedUser.xp,
+              profileImage: storedUser.profileImage,
+              bio: currentProfile.bio || "김치를 사랑하는 요리 입문자입니다",
+            },
+            isInitialized: true,
+          });
+        } else {
+          // 미등록 사용자 (소셜 로그인 등): 세션 정보로 초기화
+          const name = session?.user?.name;
+          set({
+            profile: {
+              id: session?.user?.id || `user_${Date.now()}`,
+              email: email,
+              nickname: name || email.split("@")[0],
+              level: 1,
+              levelName: "김치 새싹",
+              xp: 0,
+              profileImage: null,
+              bio: "김치를 사랑하는 요리 입문자입니다",
+            },
+            isInitialized: true,
+          });
+        }
+      },
+
+      // authStore에서 최신 정보 동기화
+      syncFromAuthStore: (email) => {
+        const storedUser = getUserByEmail(email);
+        if (storedUser) {
+          set((state) => ({
             profile: {
               ...state.profile,
-              xp: newXp,
-              level: newLevel,
-              levelName: newLevelName,
+              level: storedUser.level,
+              levelName: storedUser.levelName,
+              xp: storedUser.xp,
             },
-          };
+          }));
+        }
+      },
+
+      // 프로필 초기화 (로그아웃 시)
+      reset: () =>
+        set({
+          profile: { ...DEFAULT_PROFILE },
+          isInitialized: false,
         }),
     }),
     {
       name: "kimchupa-user",
       partialize: (state) => ({
         profile: state.profile,
+        isInitialized: state.isInitialized,
       }),
     }
   )
 );
+
+// 편의를 위한 타입 export
+export type { UserProfile };

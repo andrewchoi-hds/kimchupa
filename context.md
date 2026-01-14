@@ -279,26 +279,135 @@ toast.levelUp(5, "김치 고수");  // 레벨 업 알림
 - `postsStore`에서 좋아요 순 상위 4개 표시
 - 게시판 배지 + 통계 (좋아요, 댓글, 조회수)
 
-## Follow-up TODO (우선순위)
+## 개발 로드맵 (하이브리드 방식)
 
-### P0 - 긴급
-- [ ] **좋아요 상태 영속화**: `likedBy: string[]` 필드 추가, 사용자별 좋아요 추적
-- [ ] **회원가입 구현**: `/api/auth/signup` 라우트, 폼 검증, bcrypt 해싱
-- [ ] **Google OAuth 설정**: 환경변수 설정 및 테스트
+### Phase 1: 핵심 UX 수정 (localStorage 기반)
 
-### P1 - 높음
-- [ ] **페이지네이션**: 커뮤니티 게시글 목록 (20개/페이지)
-- [ ] **북마크 기능**: `bookmarksStore` + 프로필 표시
-- [ ] **검색 기능**: 게시글/위키/유저 통합 검색
-- [ ] **레벨업 알림**: `addXp` 시 레벨 변경 감지 + toast.levelUp()
-- [ ] **댓글 답글**: `parentId` 필드, 중첩 댓글 UI
+#### Sprint 1-1: 사용자 인증 정상화
+- [x] **회원가입 구현**: localStorage 기반 사용자 생성
+  - `authStore.ts` 생성 (SHA-256 해싱)
+  - 폼 검증 (이메일 중복, 비밀번호 강도, 실시간 유효성)
+  - 성공 시 자동 로그인 + 온보딩 토스트
+  - 비밀번호 강도 인디케이터 (4단계 시각화)
+- [ ] **사용자 정보 통합**: CURRENT_USER 상수 제거 (진행 중)
+  - 세션 유저와 userStore 동기화
+  - 게시글/댓글 작성 시 실제 로그인 유저 사용
+- [x] **비밀번호 찾기 페이지**: `/forgot-password` 생성 (UI만)
 
-### P2 - 보통
-- [ ] 게시글 수정/삭제 UI
-- [ ] 다크 모드 토글 영속화
-- [ ] 게시글 이미지 갤러리 표시
-- [ ] 프로필 실제 통계 연동
-- [ ] 인기 태그 동적 계산
+#### Sprint 1-2: 끊어진 링크 수정
+- [x] **프로필 하위 페이지 생성**
+  - `/profile/badges` - 뱃지 상세 (획득/미획득)
+  - `/profile/bookmarks` - 북마크한 글 목록
+  - `/profile/xp-history` - XP 획득 히스토리
+- [x] **북마크 기능 완성**
+  - `bookmarksStore` 생성 (localStorage persist)
+  - 게시글 상세에서 북마크 토글 연동
+  - 프로필에서 북마크 목록 표시
+
+#### Sprint 1-3: 게시글 UX 완성
+- [x] **좋아요 상태 영속화**
+  - `likedBy: string[]` 필드 추가
+  - 사용자별 좋아요/취소 로직 (`toggleLike`, `isLikedByUser`)
+- [x] **페이지네이션 구현**
+  - 커뮤니티: 20개/페이지
+  - URL 쿼리 파라미터 (`?page=2`)
+  - Suspense 래퍼 적용
+- [x] **게시글 수정/삭제**
+  - 본인 글만 수정/삭제 가능
+  - `/community/edit/[id]` 수정 페이지
+  - 삭제 확인 모달
+- [x] **이전/다음 글 네비게이션**
+  - `getAdjacentPosts()` 메서드
+
+### Phase 2: 기능 확장 (localStorage 기반)
+
+#### Sprint 2-1: 게이미피케이션 완성
+- [x] **레벨업 알림**: `addXp` 시 레벨 변경 감지
+  - `toast.levelUp()` 헬퍼 함수
+  - 새 기능 해금 알림 (순차적 표시)
+- [x] **뱃지 자동 획득**: 조건 달성 시 뱃지 부여
+  - `badgesStore.checkAndAwardBadges()` 자동 체크
+  - 8종 뱃지: 첫 글, 7/30일 연속, 레시피 10개, Q&A 50개 등
+- [x] **프로필 실제 통계**: 게시글/댓글 수 실시간 계산
+  - `getUserPosts()`, `getUserComments()`, `getUserStats()`
+
+#### Sprint 2-2: 소셜 기능
+- [x] **댓글 답글**: `parentId` 필드, 2단계 중첩
+  - `addComment(postId, content, author, parentId)` 지원
+  - `getReplies(commentId)` 메서드
+- [x] **공유 기능**: 클립보드 복사, Web Share API
+  - `navigator.clipboard.writeText()` 링크 복사
+  - `navigator.share()` 네이티브 공유 (모바일)
+- [x] **검색 기능**: 게시글/위키 통합 검색
+  - `SearchModal.tsx` 컴포넌트
+  - Header에 검색 버튼 추가
+
+#### Sprint 2-3: 기타 UX
+- [x] **임시저장**: 글쓰기 중 자동 저장
+  - `draftStore` 생성 (30초 자동저장)
+  - 복구 모달, 수동 저장 버튼
+- [x] **게시글 이미지 갤러리**: Lightbox 모달
+  - `ImageLightbox.tsx` 컴포넌트
+  - 좌/우 키보드 네비게이션, ESC 닫기
+- [x] **인기 태그 동적 계산**
+  - `postsStore.getPopularTags(limit)` 메서드
+- [x] **위키 정렬 기능**
+  - 이름순, 인기순, 매운맛순, 발효도순
+
+### Phase 3: 데이터베이스 연동 (점진적)
+
+#### Sprint 3-1: 기반 구축
+- [ ] Prisma + PostgreSQL (또는 MongoDB) 설정
+- [ ] User 모델 마이그레이션
+- [ ] NextAuth에 DB adapter 연결
+
+#### Sprint 3-2: 핵심 데이터 이관
+- [ ] Posts/Comments API 라우트
+- [ ] Zustand → API 호출로 전환
+- [ ] localStorage fallback 유지
+
+#### Sprint 3-3: 완전 이관
+- [ ] 모든 데이터 DB 저장
+- [ ] 실시간 알림 (선택)
+- [ ] 관리자 대시보드 (선택)
+
+---
+
+## 현재 이슈 상세
+
+### 존재하지 않는 페이지 (404)
+| 경로 | 링크 위치 | 우선순위 | 상태 |
+|------|----------|---------|------|
+| `/profile/badges` | 프로필 드롭다운 | P1 | ✅ 완료 |
+| `/profile/bookmarks` | 프로필 드롭다운 | P1 | ✅ 완료 |
+| `/profile/xp-history` | 프로필 페이지 | P2 | ✅ 완료 |
+| `/forgot-password` | 로그인 페이지 | P1 | ✅ 완료 |
+| `/wiki/[id]/recipe` | 위키 상세 | P2 | ⏳ 대기 |
+| `/community/challenge` | 커뮤니티 사이드바 | P3 | ⏳ 대기 |
+
+### 동작하지 않는 버튼
+| 버튼 | 위치 | 수정 방법 | 상태 |
+|------|------|----------|------|
+| 페이지네이션 | /community | state + slice 로직 | ✅ 완료 |
+| 이전/다음 글 | /community/[id] | posts 배열에서 인덱스 | ✅ 완료 |
+| 임시저장 | /community/write | draftStore 생성 | ✅ 완료 |
+| 복사/공유 | /community/[id] | navigator.clipboard, SDK | ✅ 완료 |
+| 북마크 | /community/[id] | bookmarksStore 연동 | ✅ 완료 |
+| 프로필 편집 | /profile | 편집 모달/페이지 | ⏳ 대기 |
+| 위키 정렬 | /wiki | sort 로직 추가 | ✅ 완료 |
+
+### 데이터 불일치
+```
+문제: 3곳에서 사용자 정보 관리
+- NextAuth session.user
+- userStore.profile
+- CURRENT_USER 상수 (mockData.ts)
+
+해결: userStore를 Single Source of Truth로
+- 로그인 시 session → userStore 동기화
+- CURRENT_USER 참조 모두 제거
+- 게시글 작성 시 userStore.profile 사용
+```
 
 ## TIL (Today I Learned)
 

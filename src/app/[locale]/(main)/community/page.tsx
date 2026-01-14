@@ -1,20 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
-import { CURRENT_USER, type MockPost } from "@/constants/mockData";
+import { type MockPost } from "@/constants/mockData";
 import { LEVEL_EMOJIS } from "@/constants/levels";
 import { usePostsStore } from "@/stores/postsStore";
+import { useUserStore } from "@/stores/userStore";
 
 type PostFilter = "all" | "recipe" | "free" | "qna" | "review" | "diary";
 
+const POSTS_PER_PAGE = 20;
+
+// Wrapper component with Suspense for useSearchParams
 export default function CommunityPage() {
+  return (
+    <Suspense fallback={<CommunityPageLoading />}>
+      <CommunityPageContent />
+    </Suspense>
+  );
+}
+
+function CommunityPageLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-900">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p className="text-zinc-600 dark:text-zinc-400">로딩 중...</p>
+      </div>
+    </div>
+  );
+}
+
+function CommunityPageContent() {
+  const { data: session } = useSession();
+  const { profile, initFromSession } = useUserStore();
   const posts = usePostsStore((state) => state.posts);
+  const getPopularTags = usePostsStore((state) => state.getPopularTags);
   const [filter, setFilter] = useState<PostFilter>("all");
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
+
+  // URL 쿼리 파라미터로 페이지 관리
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  // 세션 변경 시 프로필 동기화
+  useEffect(() => {
+    initFromSession(session);
+  }, [session, initFromSession]);
 
   const filters: { id: PostFilter; label: string; emoji: string }[] = [
     { id: "all", label: "전체", emoji: "📋" },
@@ -25,7 +64,8 @@ export default function CommunityPage() {
     { id: "diary", label: "김치일기", emoji: "📔" },
   ];
 
-  const filteredPosts = posts.filter(
+  // 필터링 및 정렬
+  const filteredAndSortedPosts = posts.filter(
     (post) => filter === "all" || post.type === filter
   ).sort((a, b) => {
     if (sortBy === "popular") {
@@ -33,6 +73,52 @@ export default function CommunityPage() {
     }
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
+
+  // 페이지네이션 계산
+  const totalPosts = filteredAndSortedPosts.length;
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const paginatedPosts = filteredAndSortedPosts.slice(startIndex, endIndex);
+
+  // 페이지 변경 함수
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (page === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", page.toString());
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  // 페이지 번호 배열 생성 (현재 페이지 주변 5개)
+  const getPageNumbers = () => {
+    const pages: number[] = [];
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 2);
+
+    // 시작이나 끝에 가까우면 5개 유지
+    if (currentPage <= 3) {
+      end = Math.min(5, totalPages);
+    }
+    if (currentPage >= totalPages - 2) {
+      start = Math.max(1, totalPages - 4);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  // 필터 변경 시 첫 페이지로 이동
+  const handleFilterChange = (newFilter: PostFilter) => {
+    setFilter(newFilter);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -58,16 +144,25 @@ export default function CommunityPage() {
     return labels[type];
   };
 
+  // Header에 전달할 사용자 정보
+  const headerUser = session?.user ? {
+    nickname: profile.nickname,
+    level: profile.level,
+    levelName: profile.levelName,
+    xp: profile.xp,
+    profileImage: profile.profileImage || undefined,
+  } : null;
+
   return (
     <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-900">
-      <Header user={CURRENT_USER} />
+      <Header user={headerUser} />
 
       <main className="flex-1">
         {/* Hero */}
         <section className="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold mb-4">커뮤니티 👥</h1>
+              <h1 className="text-4xl font-bold mb-4">커뮤니티</h1>
               <p className="text-lg text-white/90 mb-6">
                 김치 애호가들의 소통 공간. 레시피를 공유하고, 질문하고, 함께 성장하세요!
               </p>
@@ -93,7 +188,7 @@ export default function CommunityPage() {
                     {filters.map((f) => (
                       <button
                         key={f.id}
-                        onClick={() => setFilter(f.id)}
+                        onClick={() => handleFilterChange(f.id)}
                         className={`flex items-center gap-1 px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
                           filter === f.id
                             ? "bg-purple-600 text-white"
@@ -118,7 +213,7 @@ export default function CommunityPage() {
 
               {/* Posts List */}
               <div className="space-y-4">
-                {filteredPosts.map((post) => {
+                {paginatedPosts.map((post) => {
                   const typeInfo = getTypeLabel(post.type);
                   return (
                     <Link
@@ -194,65 +289,122 @@ export default function CommunityPage() {
               </div>
 
               {/* Pagination */}
-              <div className="flex justify-center mt-8 gap-2">
-                <button className="px-4 py-2 bg-white dark:bg-zinc-800 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                  ← 이전
-                </button>
-                {[1, 2, 3, 4, 5].map((page) => (
-                  <button
-                    key={page}
-                    className={`w-10 h-10 rounded-lg ${
-                      page === 1
-                        ? "bg-purple-600 text-white"
-                        : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-                <button className="px-4 py-2 bg-white dark:bg-zinc-800 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                  다음 →
-                </button>
-              </div>
+              {totalPages > 1 && (
+                <div className="flex flex-col items-center mt-8 gap-4">
+                  <p className="text-sm text-zinc-500">
+                    총 {totalPosts}개 중 {startIndex + 1}-{Math.min(endIndex, totalPosts)}개 표시
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`px-4 py-2 rounded-lg transition-colors ${
+                        currentPage === 1
+                          ? "bg-zinc-100 dark:bg-zinc-700 text-zinc-400 cursor-not-allowed"
+                          : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      }`}
+                    >
+                      ← 이전
+                    </button>
+                    {getPageNumbers().map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`w-10 h-10 rounded-lg transition-colors ${
+                          page === currentPage
+                            ? "bg-purple-600 text-white"
+                            : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={`px-4 py-2 rounded-lg transition-colors ${
+                        currentPage === totalPages
+                          ? "bg-zinc-100 dark:bg-zinc-700 text-zinc-400 cursor-not-allowed"
+                          : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      }`}
+                    >
+                      다음 →
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Empty state */}
+              {paginatedPosts.length === 0 && (
+                <div className="text-center py-12 bg-white dark:bg-zinc-800 rounded-xl">
+                  <span className="text-5xl block mb-4">📭</span>
+                  <p className="text-zinc-600 dark:text-zinc-400 mb-2">
+                    게시글이 없습니다
+                  </p>
+                  <p className="text-sm text-zinc-500">
+                    첫 번째 글을 작성해보세요!
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}
             <div className="lg:w-80 space-y-6">
               {/* My Activity */}
-              <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
-                <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
-                  내 활동
-                </h3>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
-                    <span className="text-xl">{LEVEL_EMOJIS[CURRENT_USER.level]}</span>
+              {session?.user && (
+                <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
+                  <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
+                    내 활동
+                  </h3>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+                      <span className="text-xl">{LEVEL_EMOJIS[profile.level]}</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-zinc-900 dark:text-white">
+                        {profile.nickname}
+                      </p>
+                      <LevelBadge
+                        level={profile.level}
+                        levelName={profile.levelName}
+                        size="sm"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-zinc-900 dark:text-white">
-                      {CURRENT_USER.nickname}
-                    </p>
-                    <LevelBadge
-                      level={CURRENT_USER.level}
-                      levelName={CURRENT_USER.levelName}
-                      size="sm"
-                    />
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+                      <p className="text-lg font-bold text-zinc-900 dark:text-white">12</p>
+                      <p className="text-xs text-zinc-500">게시글</p>
+                    </div>
+                    <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+                      <p className="text-lg font-bold text-zinc-900 dark:text-white">48</p>
+                      <p className="text-xs text-zinc-500">댓글</p>
+                    </div>
+                    <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+                      <p className="text-lg font-bold text-zinc-900 dark:text-white">156</p>
+                      <p className="text-xs text-zinc-500">좋아요</p>
+                    </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
-                    <p className="text-lg font-bold text-zinc-900 dark:text-white">12</p>
-                    <p className="text-xs text-zinc-500">게시글</p>
-                  </div>
-                  <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
-                    <p className="text-lg font-bold text-zinc-900 dark:text-white">48</p>
-                    <p className="text-xs text-zinc-500">댓글</p>
-                  </div>
-                  <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
-                    <p className="text-lg font-bold text-zinc-900 dark:text-white">156</p>
-                    <p className="text-xs text-zinc-500">좋아요</p>
-                  </div>
+              )}
+
+              {/* Login prompt for non-logged in users */}
+              {!session?.user && (
+                <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
+                  <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
+                    로그인하고 참여하세요!
+                  </h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
+                    로그인하면 글쓰기, 댓글, 좋아요 등 다양한 활동에 참여할 수 있어요.
+                  </p>
+                  <Link
+                    href="/login"
+                    className="block text-center py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                  >
+                    로그인
+                  </Link>
                 </div>
-              </div>
+              )}
 
               {/* Popular Tags */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
@@ -260,13 +412,15 @@ export default function CommunityPage() {
                   인기 태그
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {["배추김치", "김장", "레시피", "발효", "묵은지", "겉절이", "담그기", "보관법"].map((tag) => (
+                  {getPopularTags(10).map(({ tag, count }) => (
                     <Link
                       key={tag}
                       href={`/community?tag=${tag}`}
-                      className="px-3 py-1 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 rounded-full text-sm hover:bg-purple-100 hover:text-purple-600 dark:hover:bg-purple-900/30 transition-colors"
+                      className="px-3 py-1 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 rounded-full text-sm hover:bg-purple-100 hover:text-purple-600 dark:hover:bg-purple-900/30 transition-colors flex items-center gap-1"
+                      title={`${count}개의 게시글`}
                     >
                       #{tag}
+                      <span className="text-xs text-zinc-400">({count})</span>
                     </Link>
                   ))}
                 </div>
@@ -275,7 +429,7 @@ export default function CommunityPage() {
               {/* Today's Challenge */}
               <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl p-6">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-2">
-                  🔥 이번 주 챌린지
+                  이번 주 챌린지
                 </h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
                   나만의 김치볶음밥 레시피 공유하기
@@ -300,7 +454,7 @@ export default function CommunityPage() {
               {/* Ranking */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
-                  🏆 이번 주 활동왕
+                  이번 주 활동왕
                 </h3>
                 <div className="space-y-3">
                   {[
