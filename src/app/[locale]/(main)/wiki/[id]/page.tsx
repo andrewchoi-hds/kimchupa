@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { KIMCHI_DATA } from "@/constants/kimchi";
+import TasteRadarChart from "@/components/ui/TasteRadarChart";
+import KimchiDexButton from "@/components/ui/KimchiDexButton";
 
 interface WikiDetailPageProps {
   params: Promise<{ id: string }>;
@@ -15,6 +18,7 @@ export async function generateStaticParams() {
 }
 
 export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
+  const t = await getTranslations("wiki");
   const { id } = await params;
   const kimchi = KIMCHI_DATA.find((k) => k.id === id);
 
@@ -39,9 +43,9 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
         <div className="bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
           <div className="container mx-auto px-4 py-3">
             <nav className="flex items-center gap-2 text-sm text-zinc-500">
-              <Link href="/" className="hover:text-red-600">홈</Link>
+              <Link href="/" className="hover:text-red-600">{t("detail.home")}</Link>
               <span>/</span>
-              <Link href="/wiki" className="hover:text-red-600">김치피디아</Link>
+              <Link href="/wiki" className="hover:text-red-600">{t("title")}</Link>
               <span>/</span>
               <span className="text-zinc-900 dark:text-white">{kimchi.name}</span>
             </nav>
@@ -76,11 +80,11 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
               {/* Stats */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">
-                  특성
+                  {t("detail.characteristics")}
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
-                    <p className="text-sm text-zinc-500 mb-2">매운맛</p>
+                    <p className="text-sm text-zinc-500 mb-2">{t("detail.spicyLevel")}</p>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <span
@@ -93,7 +97,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 mb-2">발효도</p>
+                    <p className="text-sm text-zinc-500 mb-2">{t("detail.fermentation")}</p>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <span
@@ -106,7 +110,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 mb-2">아삭함</p>
+                    <p className="text-sm text-zinc-500 mb-2">{t("detail.crunchiness")}</p>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <span
@@ -119,7 +123,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 mb-2">짠맛</p>
+                    <p className="text-sm text-zinc-500 mb-2">{t("detail.saltiness")}</p>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <span
@@ -132,12 +136,31 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                     </div>
                   </div>
                 </div>
+
+                {/* Radar Chart */}
+                <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-700">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
+                    {t("detail.tasteProfile")}
+                  </h3>
+                  <div className="flex justify-center">
+                    <TasteRadarChart
+                      data={{
+                        spicyLevel: kimchi.spicyLevel,
+                        fermentationLevel: kimchi.fermentationLevel,
+                        saltiness: kimchi.saltiness,
+                        crunchiness: kimchi.crunchiness,
+                      }}
+                      name={kimchi.name}
+                      size="md"
+                    />
+                  </div>
+                </div>
               </section>
 
               {/* Ingredients */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
-                  주요 재료
+                  {t("detail.ingredients")}
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {kimchi.mainIngredients.map((ingredient) => (
@@ -154,7 +177,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
               {/* Best With */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
-                  이 음식과 함께
+                  {t("detail.pairWith")}
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {kimchi.bestWith.map((food) => (
@@ -174,7 +197,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
               {/* Health Benefits */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
-                  건강 효능
+                  {t("detail.healthBenefits")}
                 </h2>
                 <ul className="space-y-3">
                   {kimchi.healthBenefits.map((benefit) => (
@@ -196,17 +219,17 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-                      직접 담가보세요!
+                      {t("detail.tryMaking")}
                     </h2>
                     <p className="text-zinc-600 dark:text-zinc-400">
-                      단계별 레시피로 {kimchi.name}를 만들어보세요
+                      {t("detail.recipeHint", { name: kimchi.name })}
                     </p>
                   </div>
                   <Link
                     href={`/wiki/${kimchi.id}/recipe`}
                     className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium"
                   >
-                    레시피 보기
+                    {t("detail.viewRecipe")}
                   </Link>
                 </div>
               </section>
@@ -214,27 +237,30 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
 
             {/* Sidebar */}
             <div className="space-y-6">
+              {/* Kimchi Dex Button */}
+              <KimchiDexButton kimchiId={kimchi.id} kimchiName={kimchi.name} />
+
               {/* Buy Section */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  🛒 구매하기
+                  🛒 {t("detail.buy")}
                 </h2>
                 <p className="text-sm text-zinc-500 mb-4">
-                  신뢰할 수 있는 판매처에서 {kimchi.name}를 구매하세요
+                  {t("detail.buyHint", { name: kimchi.name })}
                 </p>
                 <div className="space-y-3">
                   <a
                     href="#"
                     className="flex items-center justify-between p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
                   >
-                    <span className="font-medium text-zinc-900 dark:text-white">쿠팡</span>
+                    <span className="font-medium text-zinc-900 dark:text-white">Coupang</span>
                     <span className="text-sm text-zinc-500">→</span>
                   </a>
                   <a
                     href="#"
                     className="flex items-center justify-between p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
                   >
-                    <span className="font-medium text-zinc-900 dark:text-white">네이버 쇼핑</span>
+                    <span className="font-medium text-zinc-900 dark:text-white">Naver Shopping</span>
                     <span className="text-sm text-zinc-500">→</span>
                   </a>
                   <a
@@ -246,14 +272,14 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                   </a>
                 </div>
                 <p className="text-xs text-zinc-400 mt-4">
-                  * 제휴 링크를 통한 구매 시 소정의 수수료를 받을 수 있습니다
+                  {t("detail.affiliateNotice")}
                 </p>
               </section>
 
               {/* Tags */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  태그
+                  {t("detail.tags")}
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {kimchi.tags.map((tag) => (
@@ -271,7 +297,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
               {/* Related Kimchi */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  관련 김치
+                  {t("detail.relatedKimchi")}
                 </h2>
                 <div className="space-y-3">
                   {relatedKimchi.map((related) => (
@@ -297,10 +323,10 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
               {/* Edit Wiki */}
               <section className="bg-zinc-100 dark:bg-zinc-700 rounded-2xl p-6">
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
-                  정보가 잘못되었거나 추가할 내용이 있나요?
+                  {t("detail.editSuggest")}
                 </p>
                 <button className="w-full py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-white dark:hover:bg-zinc-600 transition-colors text-sm">
-                  편집 제안하기 (Lv.4+)
+                  {t("detail.editButton")}
                 </button>
               </section>
             </div>

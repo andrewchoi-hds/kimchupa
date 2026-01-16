@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { KIMCHI_DATA, type KimchiType } from "@/constants/kimchi";
@@ -10,17 +11,18 @@ type CategoryFilter = "all" | "popular" | "mild" | "spicy" | "water" | "regional
 type SortOption = "name" | "popular" | "spicy" | "fermentation";
 
 export default function WikiPage() {
+  const t = useTranslations("wiki");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
   const [sortBy, setSortBy] = useState<SortOption>("name");
 
   const categories: { id: CategoryFilter; label: string; emoji: string }[] = [
-    { id: "all", label: "전체", emoji: "📚" },
-    { id: "popular", label: "인기", emoji: "🔥" },
-    { id: "mild", label: "순한맛", emoji: "🥗" },
-    { id: "spicy", label: "매운맛", emoji: "🌶️" },
-    { id: "water", label: "물김치", emoji: "💧" },
-    { id: "regional", label: "지역별", emoji: "🗺️" },
+    { id: "all", label: t("filter.all"), emoji: "📚" },
+    { id: "popular", label: t("filter.popular"), emoji: "🔥" },
+    { id: "mild", label: t("filter.mild"), emoji: "🥗" },
+    { id: "spicy", label: t("filter.spicy"), emoji: "🌶️" },
+    { id: "water", label: t("filter.water"), emoji: "💧" },
+    { id: "regional", label: t("filter.region"), emoji: "🗺️" },
   ];
 
   const filterKimchi = (kimchi: KimchiType): boolean => {
@@ -88,10 +90,10 @@ export default function WikiPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                김치피디아 📚
+                {t("title")} 📚
               </h1>
               <p className="text-lg text-white/90 mb-8">
-                200종 이상의 김치 정보를 한눈에. 역사, 레시피, 영양 정보까지!
+                {t("subtitle")}
               </p>
 
               {/* Search Bar */}
@@ -100,7 +102,7 @@ export default function WikiPage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="김치 이름이나 재료로 검색..."
+                  placeholder={t("searchPlaceholder")}
                   className="w-full px-6 py-4 pr-12 rounded-xl text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-white/30"
                 />
                 <button className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-red-600">
@@ -140,17 +142,17 @@ export default function WikiPage() {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
               <p className="text-zinc-600 dark:text-zinc-400">
-                총 <span className="font-semibold text-zinc-900 dark:text-white">{filteredKimchi.length}</span>개의 김치
+                {t("totalTypes", { count: filteredKimchi.length })}
               </p>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="px-3 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm"
               >
-                <option value="name">이름순</option>
-                <option value="popular">인기순</option>
-                <option value="spicy">매운맛순</option>
-                <option value="fermentation">발효도순</option>
+                <option value="name">{t("sort.name")}</option>
+                <option value="popular">{t("sort.popular")}</option>
+                <option value="spicy">{t("sort.spicy")}</option>
+                <option value="fermentation">{t("sort.fermentation")}</option>
               </select>
             </div>
 
@@ -207,10 +209,10 @@ export default function WikiPage() {
               <div className="text-center py-16">
                 <span className="text-6xl mb-4 block">🔍</span>
                 <p className="text-xl text-zinc-600 dark:text-zinc-400">
-                  검색 결과가 없습니다
+                  {t("noResults")}
                 </p>
                 <p className="text-zinc-500 mt-2">
-                  다른 검색어나 카테고리를 선택해보세요
+                  {t("noResultsHint")}
                 </p>
               </div>
             )}
@@ -221,7 +223,7 @@ export default function WikiPage() {
         <section className="py-12 bg-white dark:bg-zinc-800">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-8">
-              김치 탐험하기
+              {t("explore.title")}
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Link
@@ -230,10 +232,10 @@ export default function WikiPage() {
               >
                 <span className="text-4xl mb-4 block">📜</span>
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-                  김치의 역사
+                  {t("explore.history.title")}
                 </h3>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  삼국시대부터 현대까지, 김치의 발전 과정을 알아보세요
+                  {t("explore.history.description")}
                 </p>
               </Link>
               <Link
@@ -242,10 +244,10 @@ export default function WikiPage() {
               >
                 <span className="text-4xl mb-4 block">👨‍🍳</span>
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-                  김치 담그기
+                  {t("explore.recipe.title")}
                 </h3>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  초보자도 따라할 수 있는 단계별 레시피
+                  {t("explore.recipe.description")}
                 </p>
               </Link>
               <Link
@@ -254,10 +256,10 @@ export default function WikiPage() {
               >
                 <span className="text-4xl mb-4 block">💪</span>
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-                  김치와 건강
+                  {t("explore.health.title")}
                 </h3>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  과학적으로 증명된 김치의 건강 효능
+                  {t("explore.health.description")}
                 </p>
               </Link>
             </div>

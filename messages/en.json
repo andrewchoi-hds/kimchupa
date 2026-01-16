@@ -81,22 +81,64 @@
   },
   "wiki": {
     "title": "KimchiPedia",
-    "subtitle": "Discover the diverse world of Korean kimchi",
+    "subtitle": "Over 200 types of kimchi at a glance. History, recipes, and nutrition info!",
     "totalTypes": "{count} types of kimchi",
+    "searchPlaceholder": "Search by kimchi name or ingredient...",
+    "noResults": "No results found",
+    "noResultsHint": "Try a different search term or category",
     "filter": {
       "all": "All",
-      "region": "By Region",
-      "ingredient": "By Ingredient",
+      "popular": "Popular",
+      "mild": "Mild",
       "spicy": "Spicy",
-      "mild": "Mild"
+      "water": "Water Kimchi",
+      "region": "By Region",
+      "ingredient": "By Ingredient"
+    },
+    "sort": {
+      "name": "Name",
+      "popular": "Popular",
+      "spicy": "Spiciest",
+      "fermentation": "Most Fermented"
+    },
+    "explore": {
+      "title": "Explore Kimchi",
+      "history": {
+        "title": "History of Kimchi",
+        "description": "Discover the evolution of kimchi from ancient times to modern day"
+      },
+      "recipe": {
+        "title": "Making Kimchi",
+        "description": "Step-by-step recipes anyone can follow"
+      },
+      "health": {
+        "title": "Kimchi & Health",
+        "description": "Scientifically proven health benefits of kimchi"
+      }
     },
     "detail": {
-      "origin": "Origin",
+      "home": "Home",
+      "characteristics": "Characteristics",
+      "spicyLevel": "Spiciness",
+      "fermentation": "Fermentation",
+      "crunchiness": "Crunchiness",
+      "saltiness": "Saltiness",
+      "tasteProfile": "Taste Profile",
       "ingredients": "Main Ingredients",
-      "spicyLevel": "Spice Level",
-      "fermentation": "Fermentation Level",
-      "pairing": "Pairs Well With",
+      "pairWith": "Pairs Well With",
       "healthBenefits": "Health Benefits",
+      "tryMaking": "Try Making It!",
+      "recipeHint": "Make {name} with our step-by-step recipe",
+      "viewRecipe": "View Recipe",
+      "buy": "Buy Now",
+      "buyHint": "Purchase {name} from trusted sellers",
+      "affiliateNotice": "* We may earn a commission from affiliate purchases",
+      "tags": "Tags",
+      "relatedKimchi": "Related Kimchi",
+      "editSuggest": "Found incorrect info or have something to add?",
+      "editButton": "Suggest Edit (Lv.4+)",
+      "origin": "Origin",
+      "pairing": "Pairs Well With",
       "recipe": "Recipe",
       "history": "History"
     }
@@ -104,6 +146,7 @@
   "community": {
     "title": "Community",
     "subtitle": "A space for kimchi lovers",
+    "heroDescription": "A space for kimchi lovers. Share recipes, ask questions, and grow together!",
     "boards": {
       "all": "All",
       "free": "General",
@@ -115,13 +158,45 @@
     "write": "Write",
     "writePost": "Create New Post",
     "noResults": "No posts found",
+    "noResultsHint": "Be the first to write a post!",
     "views": "Views",
     "likes": "Likes",
     "comments": "Comments",
     "share": "Share",
     "bookmark": "Bookmark",
     "report": "Report",
-    "levelRequired": "Level {level} or higher required to post"
+    "levelRequired": "Level {level} or higher required to post",
+    "sort": {
+      "latest": "Latest",
+      "popular": "Popular"
+    },
+    "pagination": {
+      "showing": "Showing {start}-{end} of {total}",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "time": {
+      "justNow": "Just now",
+      "hoursAgo": "{hours}h ago",
+      "daysAgo": "{days}d ago"
+    },
+    "sidebar": {
+      "myActivity": "My Activity",
+      "posts": "Posts",
+      "comments": "Comments",
+      "likes": "Likes",
+      "loginPromptTitle": "Join the conversation!",
+      "loginPromptDesc": "Log in to write posts, comment, like, and participate in various activities.",
+      "login": "Log In",
+      "popularTags": "Popular Tags",
+      "postsCount": "{count} posts",
+      "challengeTitle": "Weekly Challenge",
+      "challengeDesc": "Share your kimchi fried rice recipe",
+      "participants": "Participants",
+      "participantCount": "{count}",
+      "participate": "Participate",
+      "weeklyTop": "Top Contributors"
+    }
   },
   "shop": {
     "title": "Shop",
@@ -216,6 +291,51 @@
       "title": "This Month's Attendance",
       "monthly": "This month",
       "streak": "Streak"
+    },
+    "kimchiDex": {
+      "title": "Kimchi Dex",
+      "myDex": "My Kimchi Dex",
+      "subtitle": "Experience and collect various types of kimchi!",
+      "home": "Home",
+      "profile": "Profile",
+      "progress": "Progress",
+      "totalCollected": "Total Collected",
+      "tried": "Tried",
+      "made": "Made",
+      "want": "Want to Try",
+      "collectionProgress": "Collection Progress",
+      "collectionComplete": "{count}/{total} Collected",
+      "filter": {
+        "all": "All",
+        "collected": "Collected",
+        "tried": "Tried",
+        "made": "Made",
+        "want": "Want to Try",
+        "uncollected": "Not Collected"
+      },
+      "sort": {
+        "name": "Name",
+        "region": "Region",
+        "spicy": "Spiciest"
+      },
+      "noResults": "No kimchi found",
+      "collectionStatus": "Collection Status",
+      "cancelCollection": "Remove from Collection",
+      "myRating": "My Rating",
+      "viewDetails": "View Details",
+      "selectKimchi": "Select a kimchi",
+      "selectKimchiHint": "to see its details",
+      "backToProfile": "Back to Profile",
+      "addToDex": "Add to My Dex",
+      "change": "Change",
+      "removeFromDex": "Remove from Dex",
+      "addMemo": "Add memo...",
+      "saveMemo": "Save",
+      "cancelMemo": "Cancel",
+      "memoSaved": "Memo Saved",
+      "memoSavedDesc": "Your memo has been saved!",
+      "addedToDex": "Added to Dex",
+      "addedToDexDesc": "{name} registered as \"{status}\"!"
     }
   },
   "levels": {

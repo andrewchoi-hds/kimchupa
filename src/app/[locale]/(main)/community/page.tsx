@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
@@ -26,29 +27,44 @@ export default function CommunityPage() {
 }
 
 function CommunityPageLoading() {
+  const t = useTranslations("common");
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-900">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-        <p className="text-zinc-600 dark:text-zinc-400">로딩 중...</p>
+        <p className="text-zinc-600 dark:text-zinc-400">{t("loading")}</p>
       </div>
     </div>
   );
 }
 
 function CommunityPageContent() {
+  const t = useTranslations("community");
   const { data: session } = useSession();
   const { profile, initFromSession } = useUserStore();
   const posts = usePostsStore((state) => state.posts);
   const getPopularTags = usePostsStore((state) => state.getPopularTags);
-  const [filter, setFilter] = useState<PostFilter>("all");
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
 
-  // URL 쿼리 파라미터로 페이지 관리
+  // URL 쿼리 파라미터로 페이지 및 필터 관리
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const currentPage = Number(searchParams.get("page")) || 1;
+
+  // board 쿼리 파라미터에서 필터 읽기
+  const boardParam = searchParams.get("board") as PostFilter | null;
+  const [filter, setFilter] = useState<PostFilter>(boardParam || "all");
+
+  // board 파라미터 변경 시 필터 동기화
+  useEffect(() => {
+    const validFilters: PostFilter[] = ["all", "recipe", "free", "qna", "review", "diary"];
+    if (boardParam && validFilters.includes(boardParam)) {
+      setFilter(boardParam);
+    } else if (!boardParam) {
+      setFilter("all");
+    }
+  }, [boardParam]);
 
   // 세션 변경 시 프로필 동기화
   useEffect(() => {
@@ -56,12 +72,12 @@ function CommunityPageContent() {
   }, [session, initFromSession]);
 
   const filters: { id: PostFilter; label: string; emoji: string }[] = [
-    { id: "all", label: "전체", emoji: "📋" },
-    { id: "recipe", label: "레시피", emoji: "👨‍🍳" },
-    { id: "free", label: "자유", emoji: "💬" },
-    { id: "qna", label: "Q&A", emoji: "❓" },
-    { id: "review", label: "리뷰", emoji: "⭐" },
-    { id: "diary", label: "김치일기", emoji: "📔" },
+    { id: "all", label: t("boards.all"), emoji: "📋" },
+    { id: "recipe", label: t("boards.recipe"), emoji: "👨‍🍳" },
+    { id: "free", label: t("boards.free"), emoji: "💬" },
+    { id: "qna", label: t("boards.qna"), emoji: "❓" },
+    { id: "review", label: t("boards.review"), emoji: "⭐" },
+    { id: "diary", label: t("boards.diary"), emoji: "📔" },
   ];
 
   // 필터링 및 정렬
@@ -112,12 +128,18 @@ function CommunityPageContent() {
     return pages;
   };
 
-  // 필터 변경 시 첫 페이지로 이동
+  // 필터 변경 시 URL 업데이트 및 첫 페이지로 이동
   const handleFilterChange = (newFilter: PostFilter) => {
     setFilter(newFilter);
     const params = new URLSearchParams(searchParams.toString());
     params.delete("page");
-    router.push(`${pathname}?${params.toString()}`);
+    if (newFilter === "all") {
+      params.delete("board");
+    } else {
+      params.set("board", newFilter);
+    }
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
 
   const formatDate = (dateStr: string) => {
@@ -127,19 +149,19 @@ function CommunityPageContent() {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return "방금 전";
-    if (hours < 24) return `${hours}시간 전`;
-    if (days < 7) return `${days}일 전`;
-    return date.toLocaleDateString("ko-KR");
+    if (hours < 1) return t("time.justNow");
+    if (hours < 24) return t("time.hoursAgo", { hours });
+    if (days < 7) return t("time.daysAgo", { days });
+    return date.toLocaleDateString();
   };
 
   const getTypeLabel = (type: MockPost["type"]) => {
     const labels = {
-      recipe: { label: "레시피", color: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" },
-      free: { label: "자유", color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300" },
-      qna: { label: "Q&A", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
-      review: { label: "리뷰", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" },
-      diary: { label: "김치일기", color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" },
+      recipe: { label: t("boards.recipe"), color: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" },
+      free: { label: t("boards.free"), color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300" },
+      qna: { label: t("boards.qna"), color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
+      review: { label: t("boards.review"), color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" },
+      diary: { label: t("boards.diary"), color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" },
     };
     return labels[type];
   };
@@ -162,16 +184,16 @@ function CommunityPageContent() {
         <section className="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-12">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold mb-4">커뮤니티</h1>
+              <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
               <p className="text-lg text-white/90 mb-6">
-                김치 애호가들의 소통 공간. 레시피를 공유하고, 질문하고, 함께 성장하세요!
+                {t("heroDescription")}
               </p>
               <Link
                 href="/community/write"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white text-purple-600 rounded-xl font-semibold hover:bg-zinc-100 transition-colors"
               >
                 <span>✏️</span>
-                글쓰기
+                {t("write")}
               </Link>
             </div>
           </div>
@@ -205,8 +227,8 @@ function CommunityPageContent() {
                     onChange={(e) => setSortBy(e.target.value as "latest" | "popular")}
                     className="px-3 py-2 bg-zinc-100 dark:bg-zinc-700 rounded-lg text-sm border-none"
                   >
-                    <option value="latest">최신순</option>
-                    <option value="popular">인기순</option>
+                    <option value="latest">{t("sort.latest")}</option>
+                    <option value="popular">{t("sort.popular")}</option>
                   </select>
                 </div>
               </div>
@@ -292,7 +314,7 @@ function CommunityPageContent() {
               {totalPages > 1 && (
                 <div className="flex flex-col items-center mt-8 gap-4">
                   <p className="text-sm text-zinc-500">
-                    총 {totalPosts}개 중 {startIndex + 1}-{Math.min(endIndex, totalPosts)}개 표시
+                    {t("pagination.showing", { total: totalPosts, start: startIndex + 1, end: Math.min(endIndex, totalPosts) })}
                   </p>
                   <div className="flex gap-2">
                     <button
@@ -304,7 +326,7 @@ function CommunityPageContent() {
                           : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
                       }`}
                     >
-                      ← 이전
+                      ← {t("pagination.prev")}
                     </button>
                     {getPageNumbers().map((page) => (
                       <button
@@ -328,7 +350,7 @@ function CommunityPageContent() {
                           : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
                       }`}
                     >
-                      다음 →
+                      {t("pagination.next")} →
                     </button>
                   </div>
                 </div>
@@ -339,10 +361,10 @@ function CommunityPageContent() {
                 <div className="text-center py-12 bg-white dark:bg-zinc-800 rounded-xl">
                   <span className="text-5xl block mb-4">📭</span>
                   <p className="text-zinc-600 dark:text-zinc-400 mb-2">
-                    게시글이 없습니다
+                    {t("noResults")}
                   </p>
                   <p className="text-sm text-zinc-500">
-                    첫 번째 글을 작성해보세요!
+                    {t("noResultsHint")}
                   </p>
                 </div>
               )}
@@ -354,7 +376,7 @@ function CommunityPageContent() {
               {session?.user && (
                 <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                   <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
-                    내 활동
+                    {t("sidebar.myActivity")}
                   </h3>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
@@ -374,15 +396,15 @@ function CommunityPageContent() {
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
                       <p className="text-lg font-bold text-zinc-900 dark:text-white">12</p>
-                      <p className="text-xs text-zinc-500">게시글</p>
+                      <p className="text-xs text-zinc-500">{t("sidebar.posts")}</p>
                     </div>
                     <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
                       <p className="text-lg font-bold text-zinc-900 dark:text-white">48</p>
-                      <p className="text-xs text-zinc-500">댓글</p>
+                      <p className="text-xs text-zinc-500">{t("sidebar.comments")}</p>
                     </div>
                     <div className="p-2 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
                       <p className="text-lg font-bold text-zinc-900 dark:text-white">156</p>
-                      <p className="text-xs text-zinc-500">좋아요</p>
+                      <p className="text-xs text-zinc-500">{t("sidebar.likes")}</p>
                     </div>
                   </div>
                 </div>
@@ -392,16 +414,16 @@ function CommunityPageContent() {
               {!session?.user && (
                 <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                   <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
-                    로그인하고 참여하세요!
+                    {t("sidebar.loginPromptTitle")}
                   </h3>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-                    로그인하면 글쓰기, 댓글, 좋아요 등 다양한 활동에 참여할 수 있어요.
+                    {t("sidebar.loginPromptDesc")}
                   </p>
                   <Link
                     href="/login"
                     className="block text-center py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
                   >
-                    로그인
+                    {t("sidebar.login")}
                   </Link>
                 </div>
               )}
@@ -409,7 +431,7 @@ function CommunityPageContent() {
               {/* Popular Tags */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
-                  인기 태그
+                  {t("sidebar.popularTags")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {getPopularTags(10).map(({ tag, count }) => (
@@ -417,7 +439,7 @@ function CommunityPageContent() {
                       key={tag}
                       href={`/community?tag=${tag}`}
                       className="px-3 py-1 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 rounded-full text-sm hover:bg-purple-100 hover:text-purple-600 dark:hover:bg-purple-900/30 transition-colors flex items-center gap-1"
-                      title={`${count}개의 게시글`}
+                      title={t("sidebar.postsCount", { count })}
                     >
                       #{tag}
                       <span className="text-xs text-zinc-400">({count})</span>
@@ -429,15 +451,15 @@ function CommunityPageContent() {
               {/* Today's Challenge */}
               <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl p-6">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-2">
-                  이번 주 챌린지
+                  {t("sidebar.challengeTitle")}
                 </h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-                  나만의 김치볶음밥 레시피 공유하기
+                  {t("sidebar.challengeDesc")}
                 </p>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-zinc-500">참여자</span>
+                  <span className="text-sm text-zinc-500">{t("sidebar.participants")}</span>
                   <span className="text-sm font-medium text-zinc-900 dark:text-white">
-                    127명
+                    {t("sidebar.participantCount", { count: 127 })}
                   </span>
                 </div>
                 <div className="h-2 bg-white dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -447,14 +469,14 @@ function CommunityPageContent() {
                   href="/community/challenge"
                   className="block mt-4 text-center py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium"
                 >
-                  참여하기
+                  {t("sidebar.participate")}
                 </Link>
               </div>
 
               {/* Ranking */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <h3 className="font-bold text-zinc-900 dark:text-white mb-4">
-                  이번 주 활동왕
+                  {t("sidebar.weeklyTop")}
                 </h3>
                 <div className="space-y-3">
                   {[

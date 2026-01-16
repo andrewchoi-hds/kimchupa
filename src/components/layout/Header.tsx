@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import SearchModal from "@/components/ui/SearchModal";
+import { useUserStore } from "@/stores/userStore";
 
 interface HeaderProps {
   user?: {
@@ -64,6 +65,11 @@ function NavIcon({ name, className }: { name: string; className?: string }) {
         <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
       </svg>
     ),
+    collection: (
+      <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+      </svg>
+    ),
     logout: (
       <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -78,7 +84,7 @@ function NavIcon({ name, className }: { name: string; className?: string }) {
   return <>{icons[name]}</>;
 }
 
-export default function Header({ user }: HeaderProps) {
+export default function Header({ user: userProp }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -86,7 +92,20 @@ export default function Header({ user }: HeaderProps) {
   const profileRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("nav");
   const common = useTranslations("common");
-  const profile = useTranslations("profile");
+  const profileT = useTranslations("profile");
+
+  // Get user from session/store if not passed as prop
+  const { data: session } = useSession();
+  const { profile: storeProfile } = useUserStore();
+
+  // Use prop if provided, otherwise get from store/session
+  const user = userProp ?? (session?.user ? {
+    nickname: storeProfile.nickname || session.user.name || "사용자",
+    level: storeProfile.level,
+    levelName: storeProfile.levelName,
+    xp: storeProfile.xp,
+    profileImage: storeProfile.profileImage ?? session.user.image ?? undefined,
+  } : null);
 
   const levelEmojis: Record<number, string> = {
     1: "🌱",
@@ -266,7 +285,7 @@ export default function Header({ user }: HeaderProps) {
                         onClick={() => setIsProfileOpen(false)}
                       >
                         <NavIcon name="badge" className="w-4 h-4" />
-                        {profile("badges.title")}
+                        {profileT("badges.title")}
                       </Link>
                       <Link
                         href="/profile/bookmarks"
@@ -274,7 +293,15 @@ export default function Header({ user }: HeaderProps) {
                         onClick={() => setIsProfileOpen(false)}
                       >
                         <NavIcon name="bookmark" className="w-4 h-4" />
-                        {profile("activity.bookmarks")}
+                        {profileT("activity.bookmarks")}
+                      </Link>
+                      <Link
+                        href="/profile/kimchi-dex"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <NavIcon name="collection" className="w-4 h-4" />
+                        김치 도감
                       </Link>
                     </div>
 
