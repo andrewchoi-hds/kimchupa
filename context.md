@@ -91,7 +91,26 @@ const t = useTranslations("namespace");
 ```
 
 ### 번역 파일 구조
-네임스페이스: `common`, `nav`, `hero`, `features`, `auth`, `profile`, `footer`, `levels`
+네임스페이스: `common`, `nav`, `hero`, `features`, `auth`, `wiki`, `community`, `profile`, `profile.kimchiDex`, `shop`, `footer`, `levels`
+
+### i18n 적용 현황
+
+**적용 완료:**
+- [x] Header, Footer, LanguageSwitcher 컴포넌트
+- [x] wiki/page.tsx - 카테고리, 정렬, 검색
+- [x] wiki/[id]/page.tsx - 상세 페이지
+- [x] community/page.tsx - 게시판, 페이지네이션
+- [x] profile/kimchi-dex/page.tsx - 김치 도감
+- [x] KimchiDexButton.tsx - 도감 위젯
+
+**미적용 (P1):**
+- [ ] profile/page.tsx
+- [ ] community/write/page.tsx
+- [ ] community/edit/[id]/page.tsx
+
+**향후 (P2-P3):**
+- [ ] toastStore 메시지
+- [ ] 영어 번역 품질 검토
 
 ## 인증 (NextAuth) 구현
 

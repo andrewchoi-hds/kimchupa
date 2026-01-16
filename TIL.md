@@ -222,6 +222,40 @@ UI에서 실시간 힌트, Submit에서 최종 검증으로 이중 방어.
 
 ---
 
+## 2026-01-16
+
+### 12. next-intl 변수 보간 (Interpolation)
+
+번역 메시지에 동적 값을 삽입하는 패턴:
+
+```json
+// messages/ko.json
+{
+  "wiki": {
+    "totalTypes": "총 {count}개의 김치",
+    "pagination": "총 {total}개 중 {start}-{end}개 표시"
+  }
+}
+```
+
+```typescript
+const t = useTranslations("wiki");
+
+// 단일 변수
+t("totalTypes", { count: 45 });  // "총 45개의 김치"
+
+// 복수 변수
+t("pagination", { total: 100, start: 1, end: 20 });
+// "총 100개 중 1-20개 표시"
+```
+
+- 중괄호 `{variable}` 형식으로 변수 선언
+- 객체로 변수값 전달
+- 숫자, 문자열 모두 지원
+- **주의**: 변수명 오타 시 그대로 출력됨 (에러 없음)
+
+---
+
 ## 참고: context.md의 기존 TIL
 
 context.md에 추가로 6개의 TIL 항목이 있습니다:

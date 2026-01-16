@@ -24,6 +24,28 @@
 
 ## P1 - 높음 (빠른 시일 내)
 
+### [ ] i18n 번역 완료 (남은 페이지)
+
+**설명**: 영어 전환 시 한글이 그대로 표시되는 페이지들 국제화
+
+**작업 내용**:
+1. `profile/page.tsx` - 프로필 메인 페이지 i18n
+2. `community/write/page.tsx` - 글쓰기 페이지 i18n
+3. `community/edit/[id]/page.tsx` - 글 수정 페이지 i18n
+
+**패턴**:
+```typescript
+"use client";
+import { useTranslations } from "next-intl";
+const t = useTranslations("namespace");
+```
+
+**관련 파일**:
+- `messages/ko.json` (번역 키 추가)
+- `messages/en.json` (영어 번역 추가)
+
+---
+
 ### [ ] 프로필 편집 기능
 
 **설명**: 닉네임, 자기소개, 프로필 이미지 편집 기능 구현
@@ -84,6 +106,14 @@
 
 ## P2 - 중간 (여유 있을 때)
 
+### [ ] toastStore 메시지 i18n
+
+**설명**: Toast 알림 메시지들 국제화
+
+**작업 내용**:
+1. `messages/ko.json`, `en.json`에 `toasts` 네임스페이스 추가
+2. 각 toast 호출처에서 번역된 메시지 전달
+
 ### [ ] 태그 자동완성
 
 게시글 작성 시 인기/최근 태그 추천
@@ -91,6 +121,10 @@
 ### [ ] 다크모드 토글
 
 Header에 다크모드 전환 버튼 추가
+
+### [ ] 영어 번역 품질 검토
+
+번역 일관성, 문법, 어조 검토
 
 ---
 
@@ -112,4 +146,4 @@ Header에 다크모드 전환 버튼 추가
 
 ---
 
-**마지막 업데이트**: 2026-01-15
+**마지막 업데이트**: 2026-01-16
