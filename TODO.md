@@ -24,25 +24,27 @@
 
 ## P1 - 높음 (빠른 시일 내)
 
-### [ ] i18n 번역 완료 (남은 페이지)
+### [x] i18n 번역 완료 (P1 페이지) ✅ 2026-01-19
 
-**설명**: 영어 전환 시 한글이 그대로 표시되는 페이지들 국제화
+**완료**:
+- `profile/page.tsx` - 프로필 메인 페이지 i18n
+- `community/write/page.tsx` - 글쓰기 페이지 i18n
+- `community/edit/[id]/page.tsx` - 글 수정 페이지 i18n
+
+---
+
+### [ ] i18n 번역 품질 검증 및 누락 항목 보완
+
+**설명**: messages/ko.json과 en.json의 번역 키 일치 확인 및 품질 검토
 
 **작업 내용**:
-1. `profile/page.tsx` - 프로필 메인 페이지 i18n
-2. `community/write/page.tsx` - 글쓰기 페이지 i18n
-3. `community/edit/[id]/page.tsx` - 글 수정 페이지 i18n
-
-**패턴**:
-```typescript
-"use client";
-import { useTranslations } from "next-intl";
-const t = useTranslations("namespace");
-```
+1. 양쪽 언어 파일 키 동기화 검증
+2. 영어 번역 자연스러움 검토 (특히 김치 관련 전문 용어)
+3. 누락된 번역 키 보완
 
 **관련 파일**:
-- `messages/ko.json` (번역 키 추가)
-- `messages/en.json` (영어 번역 추가)
+- `messages/ko.json`
+- `messages/en.json`
 
 ---
 
@@ -122,9 +124,53 @@ const t = useTranslations("namespace");
 
 Header에 다크모드 전환 버튼 추가
 
-### [ ] 영어 번역 품질 검토
+### [ ] 영어 번역 품질 검토 (High 상향 검토)
 
-번역 일관성, 문법, 어조 검토
+**설명**: 번역 일관성, 문법, 어조 검토
+
+**작업 내용**:
+1. 김치 관련 전문 용어 (fermentation, pairing 등) 검토
+2. 커뮤니티 섹션 친근한 어조 확인
+3. UI 텍스트 일관성 검토
+
+---
+
+### [ ] 위키 레시피 페이지 구현
+
+**설명**: `/wiki/[id]/recipe` 경로에 김치 레시피 상세 페이지 생성
+
+**작업 내용**:
+1. recipe 페이지 생성
+2. mockData에 레시피 데이터 추가 (재료, 단계별 설명, 난이도)
+3. 단계별 이미지 포함 UI 구현
+
+**관련 파일**:
+- `src/app/[locale]/(main)/wiki/[id]/recipe/page.tsx`
+- `src/mockData.ts`
+
+---
+
+### [ ] 게시글 조회수 중복 방지 시스템
+
+**설명**: 같은 사용자의 24시간 내 중복 조회 방지
+
+**작업 내용**:
+1. `viewHistoryStore.ts` 생성 (localStorage: { postId: lastViewedAt })
+2. `postsStore.incrementViewCount()` 수정
+3. 24시간 경과 후 재카운트 허용
+
+---
+
+### [ ] 다크모드 토글 구현
+
+**설명**: Header에 다크모드 전환 버튼 추가
+
+**작업 내용**:
+1. `themeStore.ts` 생성 (localStorage persist)
+2. Header에 해/달 아이콘 토글 버튼 추가
+3. `<html>` 태그에 dark 클래스 토글
+
+**참고**: Tailwind dark: 클래스 이미 적용됨
 
 ---
 
@@ -146,4 +192,4 @@ Header에 다크모드 전환 버튼 추가
 
 ---
 
-**마지막 업데이트**: 2026-01-16
+**마지막 업데이트**: 2026-01-19

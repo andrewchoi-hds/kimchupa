@@ -102,11 +102,9 @@ const t = useTranslations("namespace");
 - [x] community/page.tsx - 게시판, 페이지네이션
 - [x] profile/kimchi-dex/page.tsx - 김치 도감
 - [x] KimchiDexButton.tsx - 도감 위젯
-
-**미적용 (P1):**
-- [ ] profile/page.tsx
-- [ ] community/write/page.tsx
-- [ ] community/edit/[id]/page.tsx
+- [x] profile/page.tsx - 프로필 페이지 ✅ 2026-01-19
+- [x] community/write/page.tsx - 글쓰기 페이지 ✅ 2026-01-19
+- [x] community/edit/[id]/page.tsx - 글 수정 페이지 ✅ 2026-01-19
 
 **향후 (P2-P3):**
 - [ ] toastStore 메시지

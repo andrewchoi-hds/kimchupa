@@ -256,6 +256,210 @@ t("pagination", { total: 100, start: 1, end: 20 });
 
 ---
 
+## 2026-01-19
+
+### 13. next-intl 클라이언트/서버 컴포넌트 분리 패턴
+
+next-intl을 사용할 때 컴포넌트 타입에 따라 다른 함수 사용:
+
+```typescript
+// 클라이언트 컴포넌트
+"use client";
+import { useTranslations } from "next-intl";
+const t = useTranslations("community");
+
+// 서버 컴포넌트
+import { getTranslations } from "next-intl/server";
+const t = await getTranslations("community");
+```
+
+- SSR/CSR 최적화와 연계되어 번들 사이즈 감소
+- 서버 컴포넌트에서는 반드시 `await` 사용
+
+---
+
+### 14. i18n 메시지 네임스페이스 구조화
+
+대규모 번역 파일 관리 패턴:
+
+```json
+{
+  "community": {
+    "title": "커뮤니티",
+    "form": {
+      "title": "제목",
+      "content": "내용"
+    },
+    "toast": {
+      "loginRequired": "로그인 필요"
+    },
+    "breadcrumb": {
+      "home": "홈",
+      "edit": "수정"
+    }
+  }
+}
+```
+
+- 네임스페이스별 분리로 유지보수 용이
+- 번역 키 충돌 방지
+- 필요한 네임스페이스만 로드 가능
+
+---
+
+### 15. React 19 use() 훅으로 Promise params 처리
+
+Next.js 16 (React 19 기반)에서 동적 라우트 params 처리:
+
+```typescript
+import { use } from "react";
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function Page({ params }: PageProps) {
+  const { id } = use(params); // Promise unwrap
+}
+```
+
+- Next.js 15 이전: `params: { id: string }` 직접 접근
+- Next.js 16+: `params: Promise<{ id: string }>` → `use()` 필수
+
+---
+
+### 16. Breadcrumb 네비게이션 i18n 패턴
+
+```typescript
+<nav>
+  <Link href="/">{t("breadcrumb.home")}</Link>
+  <span>/</span>
+  <Link href="/community">{t("title")}</Link>
+  <span>/</span>
+  <span>{t("breadcrumb.edit")}</span>
+</nav>
+```
+
+- 각 레벨별 번역 키 분리
+- 동적 경로는 URL 파라미터 유지 + 번역된 텍스트 표시
+
+---
+
+### 17. 게시글 수정 권한 검증 3단계 패턴
+
+```typescript
+// 1. 로그인 여부
+if (status === "unauthenticated") {
+  toast.error(t("toast.loginRequired"));
+  router.push("/login");
+}
+
+// 2. 작성자 본인 확인
+if (post.author.id !== profile.id) {
+  toast.error(t("toast.noPermission"));
+  router.push(`/community/${id}`);
+}
+
+// 3. 로딩 중 보호
+if (status === "loading" || !post) {
+  return <Loading />;
+}
+```
+
+- 보안 + UX 동시 고려
+- 각 단계별 적절한 에러 메시지 표시
+
+---
+
+### 18. 폼 자동저장 타이머 클린업 패턴
+
+```typescript
+const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+useEffect(() => {
+  if (autoSaveTimerRef.current) {
+    clearInterval(autoSaveTimerRef.current);
+  }
+
+  autoSaveTimerRef.current = setInterval(() => {
+    performAutoSave();
+  }, 30000);
+
+  return () => {
+    if (autoSaveTimerRef.current) {
+      clearInterval(autoSaveTimerRef.current);
+    }
+  };
+}, [performAutoSave]);
+```
+
+- `useRef`로 타이머 ID 저장 (리렌더링 방지)
+- cleanup 함수로 메모리 누수 방지
+- 의존성 변경 시 기존 타이머 제거 후 재시작
+
+---
+
+### 19. 게시판별 레벨 제한 UI/UX 패턴
+
+```typescript
+const postTypes = [
+  { id: "free", minLevel: 1 },
+  { id: "recipe", minLevel: 2 },
+];
+
+const isAvailable = profile.level >= type.minLevel;
+
+<button
+  disabled={!isAvailable}
+  className={isAvailable ? "bg-purple-600" : "opacity-50 cursor-not-allowed"}
+>
+  {type.label}
+  {!isAvailable && <span>Lv.{type.minLevel}+</span>}
+</button>
+```
+
+- 접근 불가 시 disable + 레벨 요구사항 표시
+- Submit 시 재검증으로 이중 방어
+
+---
+
+### 20. i18n 번역 누락 시 폴백 동작
+
+next-intl에서 번역 키가 없을 때:
+- `t('community.editPost')` 호출
+- `messages/ko.json`에 해당 키가 없음
+- 화면에 `community.editPost` 그대로 출력 (에러 없음)
+
+**예방책:**
+1. TypeScript 타입 안전성 활용 (next-intl-plugin)
+2. 번역 키 추가 시 ko/en.json 함께 업데이트
+3. CI/CD에서 번역 누락 검증 스크립트 실행
+
+---
+
+### 21. 프로필 이미지 폴백 이모지 패턴
+
+```typescript
+<ProfileImageUpload
+  currentImage={profile.profileImage ?? undefined}
+  fallbackEmoji={LEVEL_EMOJIS[profile.level]}
+  onImageChange={setProfileImage}
+/>
+
+// LEVEL_EMOJIS 매핑
+export const LEVEL_EMOJIS = [
+  "🌱", // Lv.1 김치 새싹
+  "🥬", // Lv.2 김치 입문자
+  // ...
+];
+```
+
+- 기본 상태에서도 시각적 피드백 제공
+- 레벨 시스템과 연계하여 성장 동기 부여
+- 서버 저장공간 절약
+
+---
+
 ## 참고: context.md의 기존 TIL
 
 context.md에 추가로 6개의 TIL 항목이 있습니다:
