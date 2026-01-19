@@ -196,7 +196,74 @@
       "participantCount": "{count}",
       "participate": "Participate",
       "weeklyTop": "Top Contributors"
-    }
+    },
+    "form": {
+      "selectBoard": "Select Board",
+      "title": "Title",
+      "titlePlaceholder": "Enter a title",
+      "content": "Content",
+      "contentPlaceholder": "Enter content",
+      "imageUpload": "Attach Images (optional)",
+      "tags": "Tags (max 5)",
+      "tagPlaceholder": "Enter tag and press Enter",
+      "addTag": "Add",
+      "cancel": "Cancel",
+      "saveDraft": "Save Draft",
+      "submitting": "Submitting...",
+      "submit": "Submit",
+      "updating": "Updating...",
+      "update": "Update",
+      "lastSaved": "Last saved: {time}",
+      "levelRequiredBoard": "{board} board requires Lv.{level} or higher. Your level: Lv.{currentLevel}"
+    },
+    "xpNotice": {
+      "title": "+{xp} XP for posting!",
+      "recipe": "Recipe posts earn +50 bonus XP",
+      "diary": "Kimchi diary earns +15 XP",
+      "qna": "Questions earn +10 XP"
+    },
+    "draft": {
+      "title": "You have a saved draft",
+      "savedAt": "Saved at {time}",
+      "noTitle": "(No title)",
+      "noContent": "(No content)",
+      "writeNew": "Start New",
+      "restore": "Restore"
+    },
+    "toast": {
+      "loginRequired": "Login Required",
+      "loginRequiredDesc": "Please log in to write a post.",
+      "editLoginRequiredDesc": "Please log in to edit this post.",
+      "noPermission": "No Permission",
+      "noPermissionDesc": "You can only edit your own posts.",
+      "draftRestored": "Draft Restored",
+      "draftRestoredDesc": "Your saved draft has been loaded.",
+      "draftSaved": "Draft Saved",
+      "draftSavedDesc": "Your post has been saved as draft.",
+      "postCreated": "Post Created!",
+      "postCreatedDesc": "Your post has been published to the community.",
+      "postFailed": "Failed",
+      "postFailedDesc": "Failed to create post. Please try again.",
+      "editSuccess": "Updated!",
+      "editSuccessDesc": "Your post has been updated.",
+      "editFailed": "Update Failed",
+      "editFailedDesc": "Failed to update post. Please try again.",
+      "recipeShared": "Recipe Shared",
+      "postWritten": "Post Written"
+    },
+    "boardDesc": {
+      "free": "General discussion",
+      "recipe": "Share kimchi recipes",
+      "qna": "Questions and answers",
+      "review": "Product reviews",
+      "diary": "Fermentation logs"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "post": "Post",
+      "edit": "Edit"
+    },
+    "editPost": "Edit Post"
   },
   "shop": {
     "title": "Shop",
@@ -270,7 +337,17 @@
     "xp": {
       "title": "Recent XP Earned",
       "history": "View All History",
-      "howTo": "How to Earn XP"
+      "howTo": "How to Earn XP",
+      "rewards": {
+        "attendance": "Daily Check-in",
+        "post_created": "Post Created",
+        "comment_created": "Comment Created",
+        "recipe_shared": "Recipe Shared",
+        "wiki_edit": "Wiki Edit",
+        "wiki_suggestion": "Wiki Suggestion",
+        "post_liked": "Post Liked",
+        "challenge_completed": "Challenge Completed"
+      }
     },
     "badges": {
       "title": "Badge Collection",
@@ -283,9 +360,11 @@
       "comments": "My Comments",
       "bookmarks": "Bookmarks",
       "noPosts": "You haven't written any posts yet",
-      "noComments": "Your comments will appear here",
-      "noBookmarks": "Your bookmarked posts will appear here",
-      "firstPost": "Write your first post"
+      "noComments": "You haven't written any comments yet",
+      "noBookmarks": "You haven't bookmarked any posts yet",
+      "firstPost": "Write your first post",
+      "browseCommunity": "Browse Community",
+      "viewAll": "View all {count}"
     },
     "attendance": {
       "title": "This Month's Attendance",

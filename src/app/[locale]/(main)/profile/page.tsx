@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
@@ -17,6 +18,7 @@ import { usePostsStore } from "@/stores/postsStore";
 import { useBadgesStore } from "@/stores/badgesStore";
 
 export default function ProfilePage() {
+  const t = useTranslations("profile");
   const [activeTab, setActiveTab] = useState<"posts" | "comments" | "bookmarks">("posts");
   const currentStreak = useAttendanceStore((state) => state.currentStreak);
   const { profile, setProfileImage } = useUserStore();
@@ -92,10 +94,10 @@ export default function ProfilePage() {
               {/* Actions */}
               <div className="md:ml-auto flex gap-2">
                 <button className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30">
-                  프로필 수정
+                  {t("editProfile")}
                 </button>
                 <button className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30">
-                  설정
+                  {t("settings")}
                 </button>
               </div>
             </div>
@@ -106,12 +108,12 @@ export default function ProfilePage() {
         <div className="container mx-auto px-4 -mt-12">
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             {[
-              { label: "게시글", value: stats.posts, icon: "📝" },
-              { label: "댓글", value: stats.comments, icon: "💬" },
-              { label: "받은 좋아요", value: stats.likes, icon: "❤️" },
-              { label: "팔로워", value: stats.followers, icon: "👥" },
-              { label: "팔로잉", value: stats.following, icon: "👤" },
-              { label: "연속 출석", value: stats.streak > 0 ? `${stats.streak}일` : "-", icon: "🔥" },
+              { label: t("stats.posts"), value: stats.posts, icon: "📝" },
+              { label: t("stats.comments"), value: stats.comments, icon: "💬" },
+              { label: t("stats.likes"), value: stats.likes, icon: "❤️" },
+              { label: t("stats.followers"), value: stats.followers, icon: "👥" },
+              { label: t("stats.following"), value: stats.following, icon: "👤" },
+              { label: t("stats.streak"), value: stats.streak > 0 ? `${stats.streak}` : "-", icon: "🔥" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -134,7 +136,7 @@ export default function ProfilePage() {
               {/* XP Progress */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  레벨 진행도
+                  {t("level.title")}
                 </h2>
                 <XPProgressBar xp={profile.xp} />
 
@@ -142,17 +144,17 @@ export default function ProfilePage() {
                 {nextLevelInfo && (
                   <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                     <p className="text-sm font-medium text-purple-700 dark:text-purple-400 mb-2">
-                      다음 레벨 혜택 (Lv.{nextLevelInfo.level} {USER_LEVELS[profile.level]?.name})
+                      {t("level.nextBenefits")} (Lv.{nextLevelInfo.level} {USER_LEVELS[profile.level]?.name})
                     </p>
                     <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
                       {nextLevelInfo.permissions.canPost && !currentLevelInfo?.permissions.canPost && (
-                        <li>✓ 게시글 작성 가능</li>
+                        <li>✓ {t("level.canPost")}</li>
                       )}
                       {nextLevelInfo.permissions.canSuggestWikiEdit && !currentLevelInfo?.permissions.canSuggestWikiEdit && (
-                        <li>✓ 위키 편집 제안 가능</li>
+                        <li>✓ {t("level.canSuggestWiki")}</li>
                       )}
                       {nextLevelInfo.permissions.canEditWiki && !currentLevelInfo?.permissions.canEditWiki && (
-                        <li>✓ 위키 직접 편집 가능</li>
+                        <li>✓ {t("level.canEditWiki")}</li>
                       )}
                     </ul>
                   </div>
@@ -162,15 +164,15 @@ export default function ProfilePage() {
               {/* XP History */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  최근 XP 획득
+                  {t("xp.title")}
                 </h2>
                 <div className="space-y-3">
                   {[
-                    { action: "출석 체크", xp: 5, time: "오늘" },
-                    { action: "댓글 작성", xp: 5, time: "오늘" },
-                    { action: "게시글 좋아요 받음", xp: 2, time: "어제" },
-                    { action: "게시글 작성", xp: 20, time: "어제" },
-                    { action: "출석 체크", xp: 5, time: "2일 전" },
+                    { action: t("xp.rewards.attendance"), xp: 5, time: "today" },
+                    { action: t("xp.rewards.comment_created"), xp: 5, time: "today" },
+                    { action: t("xp.rewards.post_liked"), xp: 2, time: "yesterday" },
+                    { action: t("xp.rewards.post_created"), xp: 20, time: "yesterday" },
+                    { action: t("xp.rewards.attendance"), xp: 5, time: "2d" },
                   ].map((item, idx) => (
                     <div
                       key={idx}
@@ -192,34 +194,24 @@ export default function ProfilePage() {
                   href="/profile/xp-history"
                   className="block text-center text-sm text-purple-600 mt-4 hover:underline"
                 >
-                  전체 기록 보기
+                  {t("xp.history")}
                 </Link>
               </div>
 
               {/* XP Guide */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">
-                  XP 획득 방법
+                  {t("xp.howTo")}
                 </h2>
                 <div className="space-y-2">
                   {Object.entries(XP_REWARDS).map(([action, xp]) => {
-                    const labels: Record<string, string> = {
-                      attendance: "출석 체크",
-                      post_created: "게시글 작성",
-                      comment_created: "댓글 작성",
-                      recipe_shared: "레시피 공유",
-                      wiki_edit: "위키 편집",
-                      wiki_suggestion: "위키 제안",
-                      post_liked: "좋아요 받음",
-                      challenge_completed: "챌린지 완료",
-                    };
                     return (
                       <div
                         key={action}
                         className="flex items-center justify-between text-sm"
                       >
                         <span className="text-zinc-600 dark:text-zinc-400">
-                          {labels[action] || action}
+                          {t(`xp.rewards.${action}`)}
                         </span>
                         <span className="font-medium text-purple-600">+{xp} XP</span>
                       </div>
@@ -235,19 +227,19 @@ export default function ProfilePage() {
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
-                    뱃지 컬렉션
+                    {t("badges.title")}
                   </h2>
                   <Link
                     href="/profile/badges"
                     className="text-sm text-purple-600 hover:underline"
                   >
-                    전체 보기
+                    {t("badges.viewAll")}
                   </Link>
                 </div>
 
                 <div>
                   <p className="text-sm text-zinc-500 mb-3">
-                    획득한 뱃지 ({earnedBadges.length})
+                    {t("badges.earned")} ({earnedBadges.length})
                   </p>
                   <div className="flex flex-wrap gap-4">
                     {earnedBadges.map((badge) => (
@@ -264,7 +256,7 @@ export default function ProfilePage() {
 
                 <div className="mt-6">
                   <p className="text-sm text-zinc-500 mb-3">
-                    미획득 뱃지 ({lockedBadges.length})
+                    {t("badges.locked")} ({lockedBadges.length})
                   </p>
                   <div className="flex flex-wrap gap-4">
                     {lockedBadges.map((badge) => (
@@ -284,9 +276,9 @@ export default function ProfilePage() {
               <div className="bg-white dark:bg-zinc-800 rounded-xl overflow-hidden">
                 <div className="flex border-b border-zinc-200 dark:border-zinc-700">
                   {[
-                    { id: "posts", label: "내 게시글" },
-                    { id: "comments", label: "내 댓글" },
-                    { id: "bookmarks", label: "북마크" },
+                    { id: "posts", label: t("activity.posts") },
+                    { id: "comments", label: t("activity.comments") },
+                    { id: "bookmarks", label: t("activity.bookmarks") },
                   ].map((tab) => (
                     <button
                       key={tab.id}
@@ -325,12 +317,12 @@ export default function ProfilePage() {
                       ) : (
                         <div className="text-center py-12 text-zinc-500">
                           <span className="text-4xl block mb-2">📝</span>
-                          <p>아직 작성한 게시글이 없습니다</p>
+                          <p>{t("activity.noPosts")}</p>
                           <Link
                             href="/community/write"
                             className="inline-block mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                           >
-                            첫 글 작성하기
+                            {t("activity.firstPost")}
                           </Link>
                         </div>
                       )}
@@ -360,12 +352,12 @@ export default function ProfilePage() {
                       ) : (
                         <div className="text-center py-12 text-zinc-500">
                           <span className="text-4xl block mb-2">💬</span>
-                          <p>아직 작성한 댓글이 없습니다</p>
+                          <p>{t("activity.noComments")}</p>
                           <Link
                             href="/community"
                             className="inline-block mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                           >
-                            커뮤니티 둘러보기
+                            {t("activity.browseCommunity")}
                           </Link>
                         </div>
                       )}
@@ -397,19 +389,19 @@ export default function ProfilePage() {
                               href="/profile/bookmarks"
                               className="block text-center text-sm text-purple-600 hover:underline py-2"
                             >
-                              전체 {bookmarkedPosts.length}개 보기
+                              {t("activity.viewAll", { count: bookmarkedPosts.length })}
                             </Link>
                           )}
                         </>
                       ) : (
                         <div className="text-center py-12 text-zinc-500">
                           <span className="text-4xl block mb-2">⭐</span>
-                          <p>아직 북마크한 게시글이 없습니다</p>
+                          <p>{t("activity.noBookmarks")}</p>
                           <Link
                             href="/community"
                             className="inline-block mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                           >
-                            커뮤니티 둘러보기
+                            {t("activity.browseCommunity")}
                           </Link>
                         </div>
                       )}

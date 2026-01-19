@@ -138,6 +138,7 @@ export const useStore = create<State>()(
 **클라이언트 컴포넌트:**
 ```typescript
 "use client";
+
 import { useTranslations } from "next-intl";
 
 const t = useTranslations("namespace");
@@ -148,31 +149,6 @@ const t = useTranslations("namespace");
 import { getTranslations } from "next-intl/server";
 
 const t = await getTranslations("namespace");
-```
-
-### 네임스페이스 구조
-
-번역 파일은 기능/페이지별로 네임스페이스로 구분:
-
-| 네임스페이스 | 용도 |
-|-------------|------|
-| `common` | 공통 UI (버튼, 로딩, 에러) |
-| `nav` | 네비게이션 메뉴 |
-| `hero` | 메인 히어로 섹션 |
-| `features` | 기능 소개 카드 |
-| `auth` | 로그인/회원가입 |
-| `wiki` | 김치백과 (필터, 정렬, 상세) |
-| `community` | 커뮤니티 (게시판, 페이지네이션) |
-| `profile` | 프로필 (통계, 뱃지, XP) |
-| `profile.kimchiDex` | 김치 도감 |
-| `shop` | 구매처 |
-| `footer` | 푸터 |
-| `levels` | 레벨명 |
-
-**변수 보간:**
-```typescript
-// messages/ko.json: { "total": "총 {count}개" }
-t("total", { count: 45 });  // "총 45개"
 ```
 
 ---
@@ -208,4 +184,4 @@ npm run lint     # ESLint 검사
 
 ---
 
-**마지막 업데이트**: 2026-01-16
+**마지막 업데이트**: 2026-01-15

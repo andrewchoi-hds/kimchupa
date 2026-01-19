@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ImageUpload from "@/components/ui/ImageUpload";
@@ -21,6 +22,8 @@ interface UploadedImage {
 type PostType = "recipe" | "free" | "qna" | "review" | "diary";
 
 export default function WritePage() {
+  const t = useTranslations("community");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const { data: session, status } = useSession();
   const { profile, initFromSession, addXp } = useUserStore();
@@ -46,10 +49,10 @@ export default function WritePage() {
   // 로그인 필요 - 비로그인 시 로그인 페이지로 리다이렉트
   useEffect(() => {
     if (status === "unauthenticated") {
-      toast.error("로그인 필요", "글쓰기를 하려면 로그인이 필요합니다.");
+      toast.error(t("toast.loginRequired"), t("toast.loginRequiredDesc"));
       router.push("/login");
     }
-  }, [status, router]);
+  }, [status, router, t]);
 
   // 임시저장된 글 확인 (페이지 로드 시 한 번만)
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function WritePage() {
       setTags(draft.tags);
       // 이미지는 URL만 있으므로 복구 시 간단한 형태로
       setImages(draft.images.map((url) => ({ url, filename: "", size: 0 })));
-      toast.success("복구 완료", "임시저장된 글을 불러왔습니다.");
+      toast.success(t("toast.draftRestored"), t("toast.draftRestoredDesc"));
     }
     setShowDraftModal(false);
   };
@@ -113,15 +116,15 @@ export default function WritePage() {
   // 수동 임시저장
   const handleManualSave = () => {
     performAutoSave();
-    toast.success("임시저장 완료", "글이 임시저장되었습니다.");
+    toast.success(t("toast.draftSaved"), t("toast.draftSavedDesc"));
   };
 
   const postTypes: { id: PostType; label: string; emoji: string; description: string; minLevel: number }[] = [
-    { id: "free", label: "자유", emoji: "💬", description: "자유로운 이야기", minLevel: 1 },
-    { id: "recipe", label: "레시피", emoji: "👨‍🍳", description: "김치 레시피 공유", minLevel: 2 },
-    { id: "qna", label: "Q&A", emoji: "❓", description: "질문과 답변", minLevel: 1 },
-    { id: "review", label: "리뷰", emoji: "⭐", description: "상품 리뷰", minLevel: 2 },
-    { id: "diary", label: "김치일기", emoji: "📔", description: "발효 과정 기록", minLevel: 1 },
+    { id: "free", label: t("boards.free"), emoji: "💬", description: t("boardDesc.free"), minLevel: 1 },
+    { id: "recipe", label: t("boards.recipe"), emoji: "👨‍🍳", description: t("boardDesc.recipe"), minLevel: 2 },
+    { id: "qna", label: t("boards.qna"), emoji: "❓", description: t("boardDesc.qna"), minLevel: 1 },
+    { id: "review", label: t("boards.review"), emoji: "⭐", description: t("boardDesc.review"), minLevel: 2 },
+    { id: "diary", label: t("boards.diary"), emoji: "📔", description: t("boardDesc.diary"), minLevel: 1 },
   ];
 
   const handleAddTag = () => {
@@ -177,12 +180,12 @@ export default function WritePage() {
       // 임시저장 삭제
       clearDraft();
 
-      toast.success("게시글 등록 완료!", "커뮤니티에 글이 등록되었습니다.");
-      toast.xp(xpReward, postType === "recipe" ? "레시피 공유" : "게시글 작성");
+      toast.success(t("toast.postCreated"), t("toast.postCreatedDesc"));
+      toast.xp(xpReward, postType === "recipe" ? t("toast.recipeShared") : t("toast.postWritten"));
 
       router.push(`/community/${postId}`);
     } catch {
-      toast.error("등록 실패", "게시글 등록에 실패했습니다. 다시 시도해주세요.");
+      toast.error(t("toast.postFailed"), t("toast.postFailedDesc"));
       setIsSubmitting(false);
     }
   };
@@ -205,7 +208,7 @@ export default function WritePage() {
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-zinc-600 dark:text-zinc-400">로딩 중...</p>
+          <p className="text-zinc-600 dark:text-zinc-400">{tCommon("loading")}</p>
         </div>
       </div>
     );
@@ -220,11 +223,11 @@ export default function WritePage() {
         <div className="bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
           <div className="container mx-auto px-4 py-3">
             <nav className="flex items-center gap-2 text-sm text-zinc-500">
-              <Link href="/" className="hover:text-purple-600">홈</Link>
+              <Link href="/" className="hover:text-purple-600">{t("breadcrumb.home")}</Link>
               <span>/</span>
-              <Link href="/community" className="hover:text-purple-600">커뮤니티</Link>
+              <Link href="/community" className="hover:text-purple-600">{t("title")}</Link>
               <span>/</span>
-              <span className="text-zinc-900 dark:text-white">글쓰기</span>
+              <span className="text-zinc-900 dark:text-white">{t("write")}</span>
             </nav>
           </div>
         </div>
@@ -232,14 +235,14 @@ export default function WritePage() {
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
-              새 글 작성
+              {t("writePost")}
             </h1>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Post Type Selection */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                  게시판 선택
+                  {t("form.selectBoard")}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {postTypes.map((type) => {
@@ -275,14 +278,14 @@ export default function WritePage() {
                   htmlFor="title"
                   className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
                 >
-                  제목
+                  {t("form.title")}
                 </label>
                 <input
                   type="text"
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="제목을 입력하세요"
+                  placeholder={t("form.titlePlaceholder")}
                   className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   maxLength={100}
                   required
@@ -298,13 +301,13 @@ export default function WritePage() {
                   htmlFor="content"
                   className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
                 >
-                  내용
+                  {t("form.content")}
                 </label>
                 <textarea
                   id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="내용을 입력하세요"
+                  placeholder={t("form.contentPlaceholder")}
                   className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
                   rows={15}
                   required
@@ -319,7 +322,7 @@ export default function WritePage() {
               {/* Image Upload */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-3">
-                  이미지 첨부 (선택)
+                  {t("form.imageUpload")}
                 </label>
                 <ImageUpload
                   images={images}
@@ -332,7 +335,7 @@ export default function WritePage() {
               {/* Tags */}
               <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-                  태그 (최대 5개)
+                  {t("form.tags")}
                 </label>
                 <div className="flex flex-wrap gap-2 mb-3">
                   {tags.map((tag) => (
@@ -357,7 +360,7 @@ export default function WritePage() {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="태그 입력 후 Enter"
+                    placeholder={t("form.tagPlaceholder")}
                     className="flex-1 px-4 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     maxLength={20}
                     disabled={tags.length >= 5}
@@ -368,7 +371,7 @@ export default function WritePage() {
                     disabled={tags.length >= 5 || !tagInput.trim()}
                     className="px-4 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:opacity-50"
                   >
-                    추가
+                    {t("form.addTag")}
                   </button>
                 </div>
               </div>
@@ -379,12 +382,12 @@ export default function WritePage() {
                   <span className="text-2xl">✨</span>
                   <div>
                     <p className="font-medium text-zinc-900 dark:text-white">
-                      게시글 작성 시 +20 XP 획득!
+                      {t("xpNotice.title", { xp: 20 })}
                     </p>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                      {postType === "recipe" && "레시피 게시글은 +50 XP를 추가로 획득합니다"}
-                      {postType === "diary" && "김치일기는 +15 XP를 획득합니다"}
-                      {postType === "qna" && "질문은 +10 XP를 획득합니다"}
+                      {postType === "recipe" && t("xpNotice.recipe")}
+                      {postType === "diary" && t("xpNotice.diary")}
+                      {postType === "qna" && t("xpNotice.qna")}
                     </p>
                   </div>
                 </div>
@@ -397,11 +400,11 @@ export default function WritePage() {
                     href="/community"
                     className="px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                   >
-                    취소
+                    {tCommon("cancel")}
                   </Link>
                   {lastSaved && (
                     <span className="text-xs text-zinc-500">
-                      마지막 저장: {lastSaved}
+                      {t("form.lastSaved", { time: lastSaved })}
                     </span>
                   )}
                 </div>
@@ -412,7 +415,7 @@ export default function WritePage() {
                     disabled={!title.trim() && !content.trim()}
                     className="px-6 py-3 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:opacity-50"
                   >
-                    임시저장
+                    {t("form.saveDraft")}
                   </button>
                   <button
                     type="submit"
@@ -422,19 +425,18 @@ export default function WritePage() {
                     {isSubmitting ? (
                       <>
                         <span className="animate-spin">⏳</span>
-                        등록 중...
+                        {t("form.submitting")}
                       </>
                     ) : (
-                      "등록하기"
+                      t("form.submit")
                     )}
                   </button>
                 </div>
               </div>
 
-              {!canPost && (
+              {!canPost && selectedType && (
                 <p className="text-center text-red-500 text-sm">
-                  {selectedType?.label} 게시판은 Lv.{selectedType?.minLevel} 이상부터 작성 가능합니다.
-                  현재 레벨: Lv.{profile.level}
+                  {t("form.levelRequiredBoard", { board: selectedType.label, level: selectedType.minLevel, currentLevel: profile.level })}
                 </p>
               )}
             </form>
@@ -451,26 +453,26 @@ export default function WritePage() {
             <div className="text-center">
               <span className="text-5xl block mb-4">📝</span>
               <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
-                임시저장된 글이 있습니다
+                {t("draft.title")}
               </h3>
               <p className="text-zinc-600 dark:text-zinc-400 mb-2">
-                {new Date(draft.savedAt).toLocaleString("ko-KR")}에 저장됨
+                {t("draft.savedAt", { time: new Date(draft.savedAt).toLocaleString() })}
               </p>
               <p className="text-sm text-zinc-500 mb-6 line-clamp-2">
-                {draft.title || "(제목 없음)"} - {draft.content.slice(0, 50) || "(내용 없음)"}...
+                {draft.title || t("draft.noTitle")} - {draft.content.slice(0, 50) || t("draft.noContent")}...
               </p>
               <div className="flex gap-3 justify-center">
                 <button
                   onClick={ignoreDraft}
                   className="px-6 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-colors"
                 >
-                  새로 작성
+                  {t("draft.writeNew")}
                 </button>
                 <button
                   onClick={restoreDraft}
                   className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 >
-                  불러오기
+                  {t("draft.restore")}
                 </button>
               </div>
             </div>
