@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Header from "@/components/layout/Header";
@@ -6,9 +7,21 @@ import Footer from "@/components/layout/Footer";
 import { KIMCHI_DATA } from "@/constants/kimchi";
 import TasteRadarChart from "@/components/ui/TasteRadarChart";
 import KimchiDexButton from "@/components/ui/KimchiDexButton";
+import prisma from "@/lib/prisma";
 
 interface WikiDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+interface NutritionInfo {
+  calories?: number;
+  carbohydrates?: number;
+  protein?: number;
+  fat?: number;
+  fiber?: number;
+  sodium?: number;
+  vitaminC?: number;
+  probiotics?: string;
 }
 
 export async function generateStaticParams() {
@@ -20,11 +33,41 @@ export async function generateStaticParams() {
 export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
   const t = await getTranslations("wiki");
   const { id } = await params;
-  const kimchi = KIMCHI_DATA.find((k) => k.id === id);
 
-  if (!kimchi) {
+  // 상수 파일에서 기본 데이터 가져오기
+  const kimchiConstant = KIMCHI_DATA.find((k) => k.id === id);
+
+  if (!kimchiConstant) {
     notFound();
   }
+
+  // DB에서 상세 데이터 가져오기
+  let kimchiDB = null;
+  try {
+    kimchiDB = await prisma.kimchi.findUnique({
+      where: { slug: id },
+      include: {
+        ingredients: true,
+        pairings: true,
+        healthBenefits: true,
+        tags: true,
+      },
+    });
+  } catch (error) {
+    console.error("DB 조회 실패:", error);
+  }
+
+  // 상수 + DB 데이터 병합
+  const kimchi = {
+    ...kimchiConstant,
+    imageUrl: kimchiDB?.imageUrl || kimchiConstant.imageUrl,
+    history: kimchiDB?.history || null,
+    makingProcess: kimchiDB?.makingProcess || null,
+    storageMethod: kimchiDB?.storageMethod || null,
+    nutritionInfo: kimchiDB?.nutritionInfo as NutritionInfo | null,
+    variations: kimchiDB?.variations || null,
+    descriptionEn: kimchiDB?.descriptionEn || kimchiConstant.nameEn,
+  };
 
   const relatedKimchi = KIMCHI_DATA.filter(
     (k) =>
@@ -56,8 +99,21 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
         <section className="bg-gradient-to-r from-red-600 to-orange-500 text-white py-12">
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="w-48 h-48 bg-white/20 rounded-2xl flex items-center justify-center">
-                <span className="text-8xl">🥬</span>
+              <div className="w-48 h-48 bg-white/20 rounded-2xl overflow-hidden relative">
+                {kimchi.imageUrl && kimchi.imageUrl.startsWith("http") ? (
+                  <Image
+                    src={kimchi.imageUrl}
+                    alt={kimchi.name}
+                    fill
+                    className="object-cover"
+                    sizes="192px"
+                    priority
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-8xl">🥬</span>
+                  </div>
+                )}
               </div>
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -156,6 +212,129 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                   </div>
                 </div>
               </section>
+
+              {/* History - DB 데이터 */}
+              {kimchi.history && (
+                <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span>📜</span> 역사 & 유래
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <p className="text-zinc-700 dark:text-zinc-300 whitespace-pre-line leading-relaxed">
+                      {kimchi.history}
+                    </p>
+                  </div>
+                </section>
+              )}
+
+              {/* Making Process - DB 데이터 */}
+              {kimchi.makingProcess && (
+                <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span>👨‍🍳</span> 만드는 방법
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <div className="text-zinc-700 dark:text-zinc-300 whitespace-pre-line leading-relaxed">
+                      {kimchi.makingProcess}
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* Storage Method - DB 데이터 */}
+              {kimchi.storageMethod && (
+                <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span>🧊</span> 보관 방법
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <p className="text-zinc-700 dark:text-zinc-300 whitespace-pre-line leading-relaxed">
+                      {kimchi.storageMethod}
+                    </p>
+                  </div>
+                </section>
+              )}
+
+              {/* Nutrition Info - DB 데이터 */}
+              {kimchi.nutritionInfo && (
+                <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span>🥗</span> 영양 정보 (100g 기준)
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {kimchi.nutritionInfo.calories !== undefined && (
+                      <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl text-center">
+                        <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                          {kimchi.nutritionInfo.calories}
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">kcal</p>
+                      </div>
+                    )}
+                    {kimchi.nutritionInfo.carbohydrates !== undefined && (
+                      <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl text-center">
+                        <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                          {kimchi.nutritionInfo.carbohydrates}g
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">탄수화물</p>
+                      </div>
+                    )}
+                    {kimchi.nutritionInfo.protein !== undefined && (
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-center">
+                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                          {kimchi.nutritionInfo.protein}g
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">단백질</p>
+                      </div>
+                    )}
+                    {kimchi.nutritionInfo.fiber !== undefined && (
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl text-center">
+                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                          {kimchi.nutritionInfo.fiber}g
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">식이섬유</p>
+                      </div>
+                    )}
+                    {kimchi.nutritionInfo.sodium !== undefined && (
+                      <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-center">
+                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                          {kimchi.nutritionInfo.sodium}mg
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">나트륨</p>
+                      </div>
+                    )}
+                    {kimchi.nutritionInfo.vitaminC !== undefined && (
+                      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl text-center">
+                        <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                          {kimchi.nutritionInfo.vitaminC}mg
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">비타민 C</p>
+                      </div>
+                    )}
+                    {kimchi.nutritionInfo.probiotics && (
+                      <div className="p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl text-center col-span-2">
+                        <p className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                          {kimchi.nutritionInfo.probiotics}
+                        </p>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">유산균</p>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* Variations - DB 데이터 */}
+              {kimchi.variations && (
+                <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
+                  <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span>🗺️</span> 지역별 특징
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <p className="text-zinc-700 dark:text-zinc-300 whitespace-pre-line leading-relaxed">
+                      {kimchi.variations}
+                    </p>
+                  </div>
+                </section>
+              )}
 
               {/* Ingredients */}
               <section className="bg-white dark:bg-zinc-800 rounded-2xl p-6">
@@ -306,8 +485,20 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                       href={`/wiki/${related.id}`}
                       className="flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
                     >
-                      <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
-                        <span className="text-2xl">🥬</span>
+                      <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-lg overflow-hidden relative">
+                        {related.imageUrl && related.imageUrl.startsWith("http") ? (
+                          <Image
+                            src={related.imageUrl}
+                            alt={related.name}
+                            fill
+                            className="object-cover"
+                            sizes="48px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-2xl">🥬</span>
+                          </div>
+                        )}
                       </div>
                       <div>
                         <p className="font-medium text-zinc-900 dark:text-white">

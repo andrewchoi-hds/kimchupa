@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -165,11 +166,23 @@ export default function WikiPage() {
                     className="group bg-white dark:bg-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
                   >
                     {/* Image */}
-                    <div className="relative h-48 bg-gradient-to-br from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 flex items-center justify-center">
-                      <span className="text-6xl group-hover:scale-110 transition-transform">🥬</span>
+                    <div className="relative h-48 bg-gradient-to-br from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 overflow-hidden">
+                      {kimchi.imageUrl && kimchi.imageUrl.startsWith("http") ? (
+                        <Image
+                          src={kimchi.imageUrl}
+                          alt={kimchi.name}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-6xl group-hover:scale-110 transition-transform">🥬</span>
+                        </div>
+                      )}
                       {/* Spicy Level Indicator */}
-                      <div className="absolute top-3 right-3 flex">
-                        {[...Array(kimchi.spicyLevel)].map((_, i) => (
+                      <div className="absolute top-3 right-3 flex bg-white/80 dark:bg-black/50 rounded-full px-2 py-1">
+                        {[...Array(Math.max(1, kimchi.spicyLevel))].map((_, i) => (
                           <span key={i} className="text-sm">🌶️</span>
                         ))}
                       </div>

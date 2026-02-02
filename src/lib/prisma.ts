@@ -10,19 +10,14 @@ function createPrismaClient() {
 
   if (!connectionString) {
     console.warn("DATABASE_URL not set, Prisma client may not work properly");
-    return new PrismaClient();
-  }
-
-  // For serverless environments (Vercel), use Neon adapter
-  if (process.env.VERCEL || process.env.USE_NEON_ADAPTER === "true") {
-    const adapter = new PrismaNeon({ connectionString });
+    // Prisma 7에서는 adapter가 필수이므로 더미 연결 생성
+    const adapter = new PrismaNeon({ connectionString: "postgresql://dummy:dummy@localhost:5432/dummy" });
     return new PrismaClient({ adapter });
   }
 
-  // For local development with direct connection
-  return new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-  });
+  // Prisma 7에서는 항상 adapter 필요
+  const adapter = new PrismaNeon({ connectionString });
+  return new PrismaClient({ adapter });
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();

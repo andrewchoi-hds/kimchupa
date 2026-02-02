@@ -29,7 +29,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "고춧가루", "젓갈", "마늘", "생강"],
     bestWith: ["삼겹살", "김치찌개", "김치볶음밥", "라면"],
     healthBenefits: ["유산균 풍부", "비타민 C", "식이섬유", "면역력 강화"],
-    imageUrl: "/images/kimchi/baechu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["전통", "발효", "매운맛", "기본"],
   },
   {
@@ -45,7 +45,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무", "고춧가루", "젓갈", "마늘", "파"],
     bestWith: ["설렁탕", "곰탕", "순대국", "수육"],
     healthBenefits: ["소화 촉진", "비타민 C", "식이섬유"],
-    imageUrl: "/images/kimchi/kkakdugi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800",
     tags: ["아삭함", "국물요리", "담백"],
   },
   {
@@ -61,7 +61,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["총각무", "고춧가루", "젓갈", "마늘"],
     bestWith: ["고기구이", "비빔밥", "보쌈"],
     healthBenefits: ["소화 촉진", "항산화 작용"],
-    imageUrl: "/images/kimchi/chonggak.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800",
     tags: ["알싸함", "아삭함", "전통"],
   },
   {
@@ -77,7 +77,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무", "배추", "미나리", "쪽파"],
     bestWith: ["면요리", "밥", "여름철 식사"],
     healthBenefits: ["수분 보충", "소화 촉진", "청량감"],
-    imageUrl: "/images/kimchi/nabak.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800",
     tags: ["시원함", "물김치", "여름"],
   },
   {
@@ -93,7 +93,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무", "배", "대파", "마늘"],
     bestWith: ["냉면", "만두", "겨울철 식사"],
     healthBenefits: ["소화 촉진", "해독 작용", "수분 보충"],
-    imageUrl: "/images/kimchi/dongchimi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800",
     tags: ["시원함", "물김치", "겨울", "냉면"],
   },
   {
@@ -109,7 +109,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["열무", "고춧가루", "멸치액젓"],
     bestWith: ["비빔밥", "비빔국수", "열무냉면"],
     healthBenefits: ["비타민 풍부", "청량감"],
-    imageUrl: "/images/kimchi/yeolmu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["여름", "상큼함", "비빔"],
   },
   {
@@ -125,7 +125,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["오이", "부추", "고춧가루", "마늘"],
     bestWith: ["보리밥", "된장찌개", "삼겹살"],
     healthBenefits: ["수분 보충", "비타민 K", "청량감"],
-    imageUrl: "/images/kimchi/oisobagi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800",
     tags: ["여름", "아삭함", "시원함"],
   },
   {
@@ -141,7 +141,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["갓", "고춧가루", "젓갈", "마늘"],
     bestWith: ["고기구이", "굴밥", "밥"],
     healthBenefits: ["항암 효과", "비타민 A", "철분"],
-    imageUrl: "/images/kimchi/gat.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["전라도", "알싸함", "향긋함"],
   },
   {
@@ -157,7 +157,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["쪽파", "고춧가루", "젓갈", "마늘"],
     bestWith: ["삼겹살", "불고기", "제육볶음"],
     healthBenefits: ["혈액순환", "항균 작용", "비타민 C"],
-    imageUrl: "/images/kimchi/pa.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["고기안주", "향긋함"],
   },
   {
@@ -173,7 +173,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "굴", "낙지", "밤", "대추", "배"],
     bestWith: ["특별한 식사", "명절", "손님상"],
     healthBenefits: ["단백질", "미네랄", "영양 균형"],
-    imageUrl: "/images/kimchi/bossam.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["고급", "궁중", "해산물", "특별"],
   },
   {
@@ -189,7 +189,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "무", "배", "밤", "대추"],
     bestWith: ["어린이 식사", "환자식", "담백한 식사"],
     healthBenefits: ["소화 촉진", "위장 보호"],
-    imageUrl: "/images/kimchi/baek.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800",
     tags: ["순한맛", "어린이", "담백"],
   },
   {
@@ -205,7 +205,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["부추", "고춧가루", "멸치액젓"],
     bestWith: ["비빔밥", "국수", "고기"],
     healthBenefits: ["스태미나", "비타민 A", "철분"],
-    imageUrl: "/images/kimchi/buchu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["향긋함", "부드러움", "스태미나"],
   },
   // 추가 김치 종류 (13-50)
@@ -222,7 +222,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무말랭이", "고춧가루", "간장", "참기름"],
     bestWith: ["도시락", "밥", "술안주"],
     healthBenefits: ["식이섬유", "소화 촉진"],
-    imageUrl: "/images/kimchi/mumallaengi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800",
     tags: ["쫄깃함", "고소함", "밑반찬"],
   },
   {
@@ -238,7 +238,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["고들빼기", "고춧가루", "젓갈", "마늘"],
     bestWith: ["보리밥", "된장국", "고기"],
     healthBenefits: ["간 건강", "해독 작용", "소화 촉진"],
-    imageUrl: "/images/kimchi/godeulppaegi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["전라도", "쌉싸름", "향토"],
   },
   {
@@ -254,7 +254,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["깻잎", "간장", "고춧가루", "마늘"],
     bestWith: ["쌈밥", "고기", "비빔밥"],
     healthBenefits: ["철분", "칼슘", "항알러지"],
-    imageUrl: "/images/kimchi/kkaennip.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["향긋함", "쌈", "밑반찬"],
   },
   {
@@ -270,7 +270,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["미나리", "고춧가루", "멸치액젓", "마늘"],
     bestWith: ["삼겹살", "매운탕", "해장국"],
     healthBenefits: ["해독 작용", "혈액 정화", "비타민"],
-    imageUrl: "/images/kimchi/minari.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["봄", "향긋함", "해독"],
   },
   {
@@ -286,7 +286,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무", "배추", "고춧가루", "젓갈"],
     bestWith: ["칼국수", "수제비", "면요리"],
     healthBenefits: ["소화 촉진", "비타민 C"],
-    imageUrl: "/images/kimchi/seokbakji.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800",
     tags: ["시원함", "면요리", "담백"],
   },
   {
@@ -302,7 +302,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무", "고춧가루", "식초", "설탕"],
     bestWith: ["불고기", "갈비", "고기요리"],
     healthBenefits: ["소화 촉진", "비타민 C", "칼륨"],
-    imageUrl: "/images/kimchi/museongchae.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800",
     tags: ["즉석", "아삭함", "새콤달콤"],
   },
   {
@@ -318,7 +318,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["고구마줄기", "된장", "고춧가루", "들깨"],
     bestWith: ["보리밥", "된장찌개", "비빔밥"],
     healthBenefits: ["식이섬유", "철분", "비타민"],
-    imageUrl: "/images/kimchi/goguma.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["여름", "구수함", "시골"],
   },
   {
@@ -334,7 +334,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["콩나물", "고춧가루", "파", "마늘"],
     bestWith: ["해장국", "비빔밥", "밥"],
     healthBenefits: ["아스파라긴산", "해독", "숙취해소"],
-    imageUrl: "/images/kimchi/kongnamul.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["즉석", "아삭함", "해장"],
   },
   {
@@ -350,7 +350,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["양배추", "고춧가루", "멸치액젓", "마늘"],
     bestWith: ["돈까스", "양식", "샌드위치"],
     healthBenefits: ["위장 건강", "비타민 U", "항산화"],
-    imageUrl: "/images/kimchi/yangbaechu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["부드러움", "달콤함", "퓨전"],
   },
   {
@@ -366,7 +366,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["풋배추", "고춧가루", "멸치액젓", "마늘"],
     bestWith: ["삼겹살", "된장찌개", "보리밥"],
     healthBenefits: ["비타민 C", "엽산", "칼슘"],
-    imageUrl: "/images/kimchi/putbaechu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["봄", "어린배추", "신선함"],
   },
   {
@@ -382,7 +382,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["알타리무", "고춧가루", "젓갈", "마늘"],
     bestWith: ["삼겹살", "보쌈", "수육"],
     healthBenefits: ["소화 촉진", "항산화"],
-    imageUrl: "/images/kimchi/altari.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=800",
     tags: ["아삭함", "알싸함", "고기"],
   },
   {
@@ -398,7 +398,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "막걸리", "고춧가루", "마늘"],
     bestWith: ["밥", "국", "한정식"],
     healthBenefits: ["유산균", "소화 촉진"],
-    imageUrl: "/images/kimchi/sulkimchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["충청도", "달큼함", "부드러움"],
   },
   {
@@ -414,7 +414,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "간장", "마늘", "생강"],
     bestWith: ["한정식", "밥", "죽"],
     healthBenefits: ["소화 촉진", "위장 보호"],
-    imageUrl: "/images/kimchi/jangkimchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800",
     tags: ["담백함", "순한맛", "간장"],
   },
   {
@@ -430,7 +430,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["시금치", "콩나물", "고춧가루", "참기름"],
     bestWith: ["비빔밥", "밥", "한정식"],
     healthBenefits: ["철분", "비타민", "식이섬유"],
-    imageUrl: "/images/kimchi/sukchae.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["부드러움", "즉석", "나물"],
   },
   {
@@ -446,7 +446,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["우엉", "간장", "고춧가루", "참기름"],
     bestWith: ["도시락", "밥", "김밥"],
     healthBenefits: ["식이섬유", "혈당 조절", "해독"],
-    imageUrl: "/images/kimchi/ueong.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["쫄깃함", "향긋함", "밑반찬"],
   },
   {
@@ -462,7 +462,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["도라지", "고춧가루", "간장", "참기름"],
     bestWith: ["한정식", "밥", "나물"],
     healthBenefits: ["기관지 건강", "면역력", "사포닌"],
-    imageUrl: "/images/kimchi/doraji.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["쌉싸름", "기관지", "건강"],
   },
   {
@@ -478,7 +478,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["멸치젓", "무", "고춧가루", "마늘"],
     bestWith: ["밥", "비빔밥", "술안주"],
     healthBenefits: ["칼슘", "단백질", "오메가3"],
-    imageUrl: "/images/kimchi/myeolchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["짭짤함", "젓갈", "남해안"],
   },
   {
@@ -494,7 +494,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["고추", "젓갈", "마늘", "생강"],
     bestWith: ["삼겹살", "소주", "밥"],
     healthBenefits: ["비타민 C", "캡사이신", "신진대사"],
-    imageUrl: "/images/kimchi/gochu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["매운맛", "고추", "술안주"],
   },
   {
@@ -510,7 +510,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["마늘", "간장", "고춧가루"],
     bestWith: ["고기", "밥", "술안주"],
     healthBenefits: ["항균", "면역력", "피로회복"],
-    imageUrl: "/images/kimchi/maneul.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["마늘", "감칠맛", "건강"],
   },
   {
@@ -526,7 +526,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["창난젓", "무", "고춧가루", "참기름"],
     bestWith: ["밥", "술안주", "비빔밥"],
     healthBenefits: ["단백질", "오메가3"],
-    imageUrl: "/images/kimchi/changnan.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["강원도", "젓갈", "짭짤함"],
   },
   {
@@ -542,7 +542,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["시금치", "고춧가루", "참기름", "깨"],
     bestWith: ["비빔밥", "밥", "한정식"],
     healthBenefits: ["철분", "엽산", "비타민 K"],
-    imageUrl: "/images/kimchi/sigeumchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["부드러움", "나물", "영양"],
   },
   {
@@ -558,7 +558,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["숙주나물", "고춧가루", "파", "마늘"],
     bestWith: ["쌀국수", "비빔밥", "불고기"],
     healthBenefits: ["비타민 C", "해독", "저칼로리"],
-    imageUrl: "/images/kimchi/sukjunamul.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["즉석", "아삭함", "가벼움"],
   },
   {
@@ -574,7 +574,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "굴", "고춧가루", "젓갈"],
     bestWith: ["밥", "굴밥", "한정식"],
     healthBenefits: ["아연", "철분", "타우린"],
-    imageUrl: "/images/kimchi/gulkimchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["겨울", "굴", "바다"],
   },
   {
@@ -590,7 +590,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "무", "고춧가루", "새우젓"],
     bestWith: ["족발", "보쌈", "막국수"],
     healthBenefits: ["비타민 C", "소화 촉진"],
-    imageUrl: "/images/kimchi/jokbal.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["겉절이", "족발", "신선함"],
   },
   {
@@ -606,7 +606,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "새우젓국", "마늘", "생강"],
     bestWith: ["밥", "국", "찌개"],
     healthBenefits: ["유산균", "단백질"],
-    imageUrl: "/images/kimchi/jeotgal.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["젓갈", "깊은맛", "전통"],
   },
   {
@@ -622,7 +622,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["애호박", "새우젓", "고춧가루", "마늘"],
     bestWith: ["밥", "된장찌개", "여름밥상"],
     healthBenefits: ["비타민 A", "저칼로리", "수분"],
-    imageUrl: "/images/kimchi/hobak.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["여름", "호박", "가벼움"],
   },
   {
@@ -638,7 +638,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["가지", "간장", "고춧가루", "참기름"],
     bestWith: ["밥", "비빔밥", "고기"],
     healthBenefits: ["안토시아닌", "항산화", "식이섬유"],
-    imageUrl: "/images/kimchi/gaji.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["여름", "부드러움", "가지"],
   },
   {
@@ -654,7 +654,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["달래", "고춧가루", "멸치액젓", "참기름"],
     bestWith: ["삼겹살", "된장찌개", "봄나물"],
     healthBenefits: ["비타민 C", "철분", "봄철 피로회복"],
-    imageUrl: "/images/kimchi/dalrae.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["봄", "향긋함", "달래"],
   },
   {
@@ -670,7 +670,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["냉이", "된장", "고춧가루", "마늘"],
     bestWith: ["보리밥", "된장국", "봄나물밥"],
     healthBenefits: ["비타민 A", "칼슘", "간 건강"],
-    imageUrl: "/images/kimchi/naengi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["봄", "구수함", "냉이"],
   },
   {
@@ -686,7 +686,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["쑥", "고춧가루", "된장", "마늘"],
     bestWith: ["밥", "삼계탕", "보양식"],
     healthBenefits: ["철분", "항산화", "여성 건강"],
-    imageUrl: "/images/kimchi/ssuk.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["봄", "건강", "쑥"],
   },
   {
@@ -702,7 +702,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["부추", "고춧가루", "멸치액젓", "참기름"],
     bestWith: ["삼겹살", "오리고기", "불고기"],
     healthBenefits: ["스태미나", "비타민 A", "혈액순환"],
-    imageUrl: "/images/kimchi/buchukimchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["겉절이", "고기", "신선함"],
   },
   {
@@ -718,7 +718,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["상추", "고춧가루", "멸치액젓", "참기름"],
     bestWith: ["삼겹살", "불고기", "쌈밥"],
     healthBenefits: ["식이섬유", "비타민", "저칼로리"],
-    imageUrl: "/images/kimchi/sangchu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["겉절이", "가벼움", "쌈"],
   },
   {
@@ -734,7 +734,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "율무", "고춧가루", "마늘"],
     bestWith: ["밥", "죽", "건강식"],
     healthBenefits: ["피부 건강", "부종 완화", "다이어트"],
-    imageUrl: "/images/kimchi/yulmukimchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["건강", "율무", "다이어트"],
   },
   {
@@ -750,7 +750,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "쭈꾸미", "고춧가루", "젓갈"],
     bestWith: ["밥", "술안주", "봄 별미"],
     healthBenefits: ["타우린", "단백질", "철분"],
-    imageUrl: "/images/kimchi/jukkumi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["봄", "해산물", "별미"],
   },
   {
@@ -766,7 +766,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "조개젓", "고춧가루", "마늘"],
     bestWith: ["밥", "해물탕", "칼국수"],
     healthBenefits: ["철분", "아연", "타우린"],
-    imageUrl: "/images/kimchi/jogaejeotgal.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["서해안", "조개", "감칠맛"],
   },
   {
@@ -782,7 +782,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "코다리", "고춧가루", "젓갈"],
     bestWith: ["밥", "된장찌개", "막국수"],
     healthBenefits: ["단백질", "오메가3", "칼슘"],
-    imageUrl: "/images/kimchi/kodari.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["강원도", "코다리", "향토"],
   },
   {
@@ -798,7 +798,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["깻잎", "간장", "고춧가루", "마늘"],
     bestWith: ["밥", "보쌈", "한정식"],
     healthBenefits: ["철분", "향균", "소화촉진"],
-    imageUrl: "/images/kimchi/meokgalkimchi.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["전라도", "삭힌", "깊은맛"],
   },
   {
@@ -814,7 +814,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["꽈리고추", "간장", "마늘", "참기름"],
     bestWith: ["밥", "도시락", "비빔밥"],
     healthBenefits: ["비타민 C", "캡사이신"],
-    imageUrl: "/images/kimchi/ggwarigochu.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["밑반찬", "간장", "도시락"],
   },
   {
@@ -830,7 +830,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "오징어젓", "고춧가루", "마늘"],
     bestWith: ["밥", "술안주", "비빔밥"],
     healthBenefits: ["타우린", "단백질"],
-    imageUrl: "/images/kimchi/ojingeo.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["동해안", "오징어", "감칠맛"],
   },
   {
@@ -846,7 +846,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "미나리", "젓갈", "마늘"],
     bestWith: ["비빔밥", "한정식", "밥"],
     healthBenefits: ["비타민", "미네랄"],
-    imageUrl: "/images/kimchi/jinju.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["경상남도", "진주", "담백"],
   },
   {
@@ -862,7 +862,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "간장", "마늘", "생강"],
     bestWith: ["안동찜닭", "간고등어", "한정식"],
     healthBenefits: ["발효식품", "유산균"],
-    imageUrl: "/images/kimchi/andong.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800",
     tags: ["경상북도", "안동", "간장"],
   },
   {
@@ -878,7 +878,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "멸치", "굴", "새우"],
     bestWith: ["회", "해물찜", "밥"],
     healthBenefits: ["오메가3", "미네랄", "타우린"],
-    imageUrl: "/images/kimchi/geoje.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["섬김치", "해산물", "거제도"],
   },
   {
@@ -894,7 +894,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "전복", "톳", "멸치"],
     bestWith: ["흑돼지", "해물뚝배기", "제주음식"],
     healthBenefits: ["타우린", "미네랄", "항산화"],
-    imageUrl: "/images/kimchi/jeju.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1583224944034-80ab2cdcce35?w=800",
     tags: ["제주도", "전복", "섬김치"],
   },
 ];
