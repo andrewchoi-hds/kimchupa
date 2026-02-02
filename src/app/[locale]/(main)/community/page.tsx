@@ -54,17 +54,15 @@ function CommunityPageContent() {
 
   // board 쿼리 파라미터에서 필터 읽기
   const boardParam = searchParams.get("board") as PostFilter | null;
-  const [filter, setFilter] = useState<PostFilter>(boardParam || "all");
+  const validFilters: PostFilter[] = ["all", "recipe", "free", "qna", "review", "diary"];
+  const initialFilter = boardParam && validFilters.includes(boardParam) ? boardParam : "all";
+  const [filter, setFilter] = useState<PostFilter>(initialFilter);
 
-  // board 파라미터 변경 시 필터 동기화
-  useEffect(() => {
-    const validFilters: PostFilter[] = ["all", "recipe", "free", "qna", "review", "diary"];
-    if (boardParam && validFilters.includes(boardParam)) {
-      setFilter(boardParam);
-    } else if (!boardParam) {
-      setFilter("all");
-    }
-  }, [boardParam]);
+  // board 파라미터 변경 시 필터 동기화 (URL 직접 변경 시)
+  const currentFilter = boardParam && validFilters.includes(boardParam) ? boardParam : "all";
+  if (filter !== currentFilter) {
+    setFilter(currentFilter);
+  }
 
   // 세션 변경 시 프로필 동기화
   useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { usePostsStore } from "@/stores/postsStore";
 import { KIMCHI_DATA } from "@/constants/kimchi";
@@ -23,17 +23,18 @@ interface SearchResult {
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState<SearchTab>("all");
-  const [results, setResults] = useState<SearchResult[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const { posts } = usePostsStore();
 
-  // 모달 열릴 때 input에 포커스
+  // 모달 열릴 때 input에 포커스 및 상태 초기화
+  const prevIsOpenRef = useRef(isOpen);
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !prevIsOpenRef.current) {
+      // 모달이 열릴 때 포커스 및 쿼리 초기화 (microtask로 지연)
       inputRef.current?.focus();
-      setQuery("");
-      setResults([]);
+      queueMicrotask(() => setQuery(""));
     }
+    prevIsOpenRef.current = isOpen;
   }, [isOpen]);
 
   // ESC 키로 모달 닫기
@@ -53,11 +54,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     };
   }, [isOpen, onClose]);
 
-  // 검색 실행
-  useEffect(() => {
+  // 검색 결과 계산 (useMemo 사용)
+  const results = useMemo<SearchResult[]>(() => {
     if (query.trim().length < 2) {
-      setResults([]);
-      return;
+      return [];
     }
 
     const lowerQuery = query.toLowerCase();
@@ -102,7 +102,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       });
     }
 
-    setResults(searchResults);
+    return searchResults;
   }, [query, activeTab, posts]);
 
   if (!isOpen) return null;

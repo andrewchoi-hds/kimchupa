@@ -167,7 +167,7 @@ export default function KimchiDexButton({
               >
                 {entry?.memo ? (
                   <span className="text-zinc-700 dark:text-zinc-300">
-                    "{entry.memo}"
+                    &quot;{entry.memo}&quot;
                   </span>
                 ) : (
                   `📝 ${t("addMemo")}`

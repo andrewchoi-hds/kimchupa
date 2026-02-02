@@ -136,8 +136,15 @@ export default function Header({ user: userProp }: HeaderProps) {
   }, []);
 
   // Close mobile menu on route change
+  const prevPathnameRef = useRef(pathname);
   useEffect(() => {
-    setIsMenuOpen(false);
+    // Only close if pathname actually changed
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      // Defer state update to avoid cascading renders
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsMenuOpen(false);
+    }
   }, [pathname]);
 
   const handleLogout = () => {

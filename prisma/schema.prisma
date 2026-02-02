@@ -1,0 +1,334 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============ User & Authentication ============
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  nickname      String?
+  image         String?
+  bio           String?
+  level         Int       @default(1)
+  xp            Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  posts         Post[]
+  comments      Comment[]
+  likes         Like[]
+  bookmarks     Bookmark[]
+  kimchiDex     KimchiDexEntry[]
+  badges        UserBadge[]
+  xpHistory     XpHistory[]
+  attendance    Attendance[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============ Kimchi Encyclopedia ============
+
+model Kimchi {
+  id                String   @id @default(cuid())
+  slug              String   @unique // URL-friendly identifier (e.g., "baechu", "kkakdugi")
+  name              String
+  nameEn            String
+  description       String   @db.Text
+  descriptionEn     String?  @db.Text
+  region            String
+  spicyLevel        Int      @default(3) // 1-5
+  fermentationLevel Int      @default(3) // 1-5
+  saltiness         Int      @default(3) // 1-5
+  crunchiness       Int      @default(3) // 1-5
+  imageUrl          String?
+
+  // Detailed information
+  history           String?  @db.Text // 김치의 역사
+  makingProcess     String?  @db.Text // 제조 과정
+  storageMethod     String?  @db.Text // 보관 방법
+  nutritionInfo     Json?    // 영양 정보 (JSON)
+  variations        String?  @db.Text // 지역별 변형
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  ingredients       KimchiIngredient[]
+  pairings          KimchiPairing[]
+  healthBenefits    KimchiHealthBenefit[]
+  tags              KimchiTag[]
+  dexEntries        KimchiDexEntry[]
+}
+
+model KimchiIngredient {
+  id        String  @id @default(cuid())
+  kimchiId  String
+  name      String
+  nameEn    String?
+  amount    String? // e.g., "500g", "1컵"
+  isMain    Boolean @default(false)
+
+  kimchi    Kimchi  @relation(fields: [kimchiId], references: [id], onDelete: Cascade)
+
+  @@index([kimchiId])
+}
+
+model KimchiPairing {
+  id        String  @id @default(cuid())
+  kimchiId  String
+  name      String  // e.g., "삼겹살", "김치찌개"
+  nameEn    String?
+  category  String? // e.g., "meat", "soup", "rice"
+
+  kimchi    Kimchi  @relation(fields: [kimchiId], references: [id], onDelete: Cascade)
+
+  @@index([kimchiId])
+}
+
+model KimchiHealthBenefit {
+  id          String  @id @default(cuid())
+  kimchiId    String
+  benefit     String
+  benefitEn   String?
+  description String? @db.Text
+
+  kimchi      Kimchi  @relation(fields: [kimchiId], references: [id], onDelete: Cascade)
+
+  @@index([kimchiId])
+}
+
+model KimchiTag {
+  id        String  @id @default(cuid())
+  kimchiId  String
+  tag       String
+
+  kimchi    Kimchi  @relation(fields: [kimchiId], references: [id], onDelete: Cascade)
+
+  @@index([kimchiId])
+  @@index([tag])
+}
+
+// ============ Community Posts ============
+
+model Post {
+  id          String   @id @default(cuid())
+  type        PostType
+  title       String
+  content     String   @db.Text
+  excerpt     String
+  authorId    String
+  likeCount   Int      @default(0)
+  commentCount Int     @default(0)
+  viewCount   Int      @default(0)
+  images      String[] // Array of image URLs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+  bookmarks   Bookmark[]
+  tags        PostTag[]
+
+  @@index([authorId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum PostType {
+  recipe
+  free
+  qna
+  review
+  diary
+}
+
+model PostTag {
+  id     String @id @default(cuid())
+  postId String
+  tag    String
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([tag])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  parentId  String?  // For nested replies
+  content   String   @db.Text
+  likeCount Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([postId])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+}
+
+// ============ Gamification ============
+
+model KimchiDexEntry {
+  id        String          @id @default(cuid())
+  userId    String
+  kimchiId  String
+  status    KimchiDexStatus
+  rating    Int?            // 1-5 stars
+  memo      String?         @db.Text
+  triedAt   DateTime?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kimchi    Kimchi          @relation(fields: [kimchiId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kimchiId])
+  @@index([userId])
+}
+
+enum KimchiDexStatus {
+  want_to_try
+  tried
+  favorite
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  nameEn      String?
+  description String
+  descriptionEn String?
+  icon        String      // emoji or icon class
+  category    String      // e.g., "activity", "community", "kimchi"
+  requirement String      @db.Text // JSON description of requirements
+  xpReward    Int         @default(0)
+  createdAt   DateTime    @default(now())
+
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  earnedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+}
+
+model XpHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int
+  reason    String   // e.g., "post_created", "comment_added", "attendance"
+  metadata  Json?    // Additional data like postId, badgeId, etc.
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date
+  streak    Int      @default(1)
+  xpEarned  Int      @default(10)
+  bonus     String?  // e.g., "7_day_streak", "30_day_streak"
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}

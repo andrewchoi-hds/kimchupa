@@ -28,10 +28,11 @@ export default function EditPage({ params }: EditPageProps) {
 
   const post = getPostById(id);
 
-  const [postType, setPostType] = useState<PostType>("free");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  // 게시글 데이터로 초기값 설정
+  const [postType, setPostType] = useState<PostType>(post?.type || "free");
+  const [title, setTitle] = useState(post?.title || "");
+  const [content, setContent] = useState(post?.content || "");
+  const [tags, setTags] = useState<string[]>(post?.tags || []);
   const [tagInput, setTagInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,16 +40,6 @@ export default function EditPage({ params }: EditPageProps) {
   useEffect(() => {
     initFromSession(session);
   }, [session, initFromSession]);
-
-  // 게시글 데이터 로드
-  useEffect(() => {
-    if (post) {
-      setPostType(post.type);
-      setTitle(post.title);
-      setContent(post.content);
-      setTags(post.tags);
-    }
-  }, [post]);
 
   // 로그인 필요 및 권한 확인
   useEffect(() => {

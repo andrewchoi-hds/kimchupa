@@ -65,10 +65,10 @@ export default function Home() {
               </div>
 
               {/* Main Title with Emoji */}
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                <span className="inline-block animate-bounce-slow">🥬</span>{" "}
-                {hero("title")}{" "}
-                <span className="inline-block animate-bounce-slow delay-100">🌶️</span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                <span className="hidden sm:inline-block animate-bounce-slow">🥬</span>{" "}
+                <span className="whitespace-nowrap">{hero("title")}</span>{" "}
+                <span className="hidden sm:inline-block animate-bounce-slow delay-100">🌶️</span>
               </h1>
 
               <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">

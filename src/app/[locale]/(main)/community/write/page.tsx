@@ -39,7 +39,6 @@ export default function WritePage() {
   const [showDraftModal, setShowDraftModal] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const hasCheckedDraft = useRef(false);
 
   // 세션 변경 시 프로필 동기화
   useEffect(() => {
@@ -54,13 +53,13 @@ export default function WritePage() {
     }
   }, [status, router, t]);
 
-  // 임시저장된 글 확인 (페이지 로드 시 한 번만)
+  // 임시저장된 글 확인 (마운트 시 한 번만)
   useEffect(() => {
-    if (!hasCheckedDraft.current && hasDraft()) {
-      hasCheckedDraft.current = true;
+    if (hasDraft()) {
       setShowDraftModal(true);
     }
-  }, [hasDraft]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 자동 저장 함수
   const performAutoSave = useCallback(() => {
