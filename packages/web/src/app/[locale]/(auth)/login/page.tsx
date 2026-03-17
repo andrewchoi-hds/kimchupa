@@ -149,7 +149,20 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-3 gap-3">
+            {/* HireVisa SSO */}
+            <div className="mt-6">
+              <button
+                onClick={() => handleSocialLogin("hirevisa")}
+                className="w-full flex items-center justify-center gap-3 h-12 rounded-[var(--radius)] bg-[#1a1a2e] hover:bg-[#16213e] text-white font-medium transition-colors"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                HireVisa 계정으로 로그인
+              </button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-3 gap-3">
               <Button
                 variant="outline"
                 size="lg"
