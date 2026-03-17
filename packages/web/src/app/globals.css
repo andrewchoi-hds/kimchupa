@@ -134,7 +134,7 @@
   --color-warning: var(--warning);
   --color-error: var(--error);
   --color-info: var(--info);
-  --font-sans: var(--font-pretendard), var(--font-inter), system-ui, sans-serif;
+  --font-sans: "Pretendard Variable", var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 }
 

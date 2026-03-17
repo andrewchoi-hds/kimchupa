@@ -56,7 +56,6 @@ export default function WritePage() {
     if (hasDraft()) {
       setShowDraftModal(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 자동 저장 함수
