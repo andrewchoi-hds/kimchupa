@@ -271,48 +271,48 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                       </div>
                     )}
                     {kimchi.nutritionInfo.carbohydrates !== undefined && (
-                      <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-[var(--radius)] text-center">
-                        <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                      <div className="p-4 bg-accent/10 rounded-[var(--radius)] text-center">
+                        <p className="text-2xl font-bold text-accent-dark">
                           {kimchi.nutritionInfo.carbohydrates}g
                         </p>
                         <p className="text-sm text-muted-foreground">탄수화물</p>
                       </div>
                     )}
                     {kimchi.nutritionInfo.protein !== undefined && (
-                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-[var(--radius)] text-center">
-                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      <div className="p-4 bg-info/10 rounded-[var(--radius)] text-center">
+                        <p className="text-2xl font-bold text-info">
                           {kimchi.nutritionInfo.protein}g
                         </p>
                         <p className="text-sm text-muted-foreground">단백질</p>
                       </div>
                     )}
                     {kimchi.nutritionInfo.fiber !== undefined && (
-                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-[var(--radius)] text-center">
-                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      <div className="p-4 bg-success/10 rounded-[var(--radius)] text-center">
+                        <p className="text-2xl font-bold text-success">
                           {kimchi.nutritionInfo.fiber}g
                         </p>
                         <p className="text-sm text-muted-foreground">식이섬유</p>
                       </div>
                     )}
                     {kimchi.nutritionInfo.sodium !== undefined && (
-                      <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-[var(--radius)] text-center">
-                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                      <div className="p-4 bg-primary-100 rounded-[var(--radius)] text-center">
+                        <p className="text-2xl font-bold text-primary">
                           {kimchi.nutritionInfo.sodium}mg
                         </p>
                         <p className="text-sm text-muted-foreground">나트륨</p>
                       </div>
                     )}
                     {kimchi.nutritionInfo.vitaminC !== undefined && (
-                      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-[var(--radius)] text-center">
-                        <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                      <div className="p-4 bg-warning/10 rounded-[var(--radius)] text-center">
+                        <p className="text-2xl font-bold text-warning">
                           {kimchi.nutritionInfo.vitaminC}mg
                         </p>
                         <p className="text-sm text-muted-foreground">비타민 C</p>
                       </div>
                     )}
                     {kimchi.nutritionInfo.probiotics && (
-                      <div className="p-4 bg-teal-50 dark:bg-teal-900/20 rounded-[var(--radius)] text-center col-span-2">
-                        <p className="text-lg font-bold text-teal-600 dark:text-teal-400">
+                      <div className="p-4 bg-secondary-50 rounded-[var(--radius)] text-center col-span-2">
+                        <p className="text-lg font-bold text-secondary">
                           {kimchi.nutritionInfo.probiotics}
                         </p>
                         <p className="text-sm text-muted-foreground">유산균</p>
@@ -384,7 +384,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                       key={benefit}
                       className="flex items-center gap-3 text-foreground/80"
                     >
-                      <span className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600">
+                      <span className="w-8 h-8 bg-success/15 rounded-full flex items-center justify-center text-success">
                         ✓
                       </span>
                       {benefit}
@@ -394,7 +394,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
               </section>
 
               {/* Recipe Link */}
-              <section className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-[var(--radius-lg)] p-6">
+              <section className="bg-gradient-to-r from-accent/10 to-primary-50 rounded-[var(--radius-lg)] p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xl font-bold text-foreground mb-2">
@@ -516,7 +516,7 @@ export default async function WikiDetailPage({ params }: WikiDetailPageProps) {
                 <p className="text-sm text-muted-foreground mb-3">
                   {t("detail.editSuggest")}
                 </p>
-                <button className="w-full py-2 border border-zinc-300 dark:border-zinc-600 text-foreground/80 rounded-lg hover:bg-white dark:hover:bg-zinc-600 transition-colors text-sm">
+                <button className="w-full py-2 border border-border text-foreground/80 rounded-lg hover:bg-card transition-colors text-sm">
                   {t("detail.editButton")}
                 </button>
               </section>
