@@ -232,7 +232,8 @@ function CommunityPageContent() {
                   {sortedPosts.map((post: Record<string, unknown>) => {
                     const typeInfo = getTypeLabel(post.type as string);
                     const author = post.author as { nickname: string; level: number } | undefined;
-                    const tags = (post.tags as string[]) ?? [];
+                    const rawTags = (post.tags ?? []) as Array<string | { tag: string }>;
+                    const tagStrings = rawTags.map((t: string | { tag: string }) => typeof t === "string" ? t : t.tag);
                     return (
                       <Link
                         key={post.id as string}
@@ -264,7 +265,7 @@ function CommunityPageContent() {
 
                               {/* Tags */}
                               <div className="flex flex-wrap gap-1 mb-3">
-                                {tags.slice(0, 3).map((tag: string) => (
+                                {tagStrings.slice(0, 3).map((tag: string) => (
                                   <Tag key={tag} variant="default">
                                     #{tag}
                                   </Tag>
