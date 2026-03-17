@@ -81,12 +81,12 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
                 <Link href="/recommendation">
-                  <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-lg px-8">
+                  <Button variant="outline" size="lg" className="px-8 shadow-lg" style={{ background: "white", color: "var(--primary)", borderColor: "white" }}>
                     <Sparkles className="w-5 h-5" /> 나에게 맞는 김치 찾기
                   </Button>
                 </Link>
                 <Link href="/community">
-                  <Button variant="ghost" size="lg" className="text-white border-2 border-white/40 hover:bg-white/10 px-8">
+                  <Button variant="outline" size="lg" className="px-8" style={{ background: "transparent", color: "white", borderColor: "rgba(255,255,255,0.4)" }}>
                     <Users className="w-5 h-5" /> 커뮤니티 참여하기
                   </Button>
                 </Link>
