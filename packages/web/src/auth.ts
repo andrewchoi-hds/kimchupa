@@ -22,11 +22,23 @@ function HireVisa(): OIDCConfig<{
     clientId: process.env.HIREVISA_CLIENT_ID,
     clientSecret: process.env.HIREVISA_CLIENT_SECRET,
     authorization: {
+      url: "https://accounts.hirevisa.com/oauth/authorize",
       params: {
         scope: "openid email profile",
+        response_type: "code",
       },
     },
+    token: {
+      url: "https://accounts.hirevisa.com/oauth/token",
+    },
+    userinfo: {
+      url: "https://accounts.hirevisa.com/oauth/userinfo",
+    },
+    jwks_endpoint: "https://accounts.hirevisa.com/.well-known/jwks.json",
     checks: ["state"],
+    client: {
+      token_endpoint_auth_method: "client_secret_basic",
+    },
     profile(profile) {
       return {
         id: profile.sub,
