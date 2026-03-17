@@ -426,7 +426,13 @@ export default function SignupPage() {
             {/* HireVisa SSO */}
             <div className="mt-6">
               <button
-                onClick={() => handleSocialLogin("hirevisa")}
+                onClick={() => {
+                  if (process.env.NEXT_PUBLIC_HIREVISA_ENABLED === "true") {
+                    handleSocialLogin("hirevisa");
+                  } else {
+                    toast.info("HireVisa SSO", "현재 연동 준비 중입니다.");
+                  }
+                }}
                 className="w-full flex items-center justify-center gap-3 h-12 rounded-[var(--radius)] bg-[#1a1a2e] hover:bg-[#16213e] text-white font-medium transition-colors"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
