@@ -208,13 +208,13 @@ body {
 /* ============ Utilities ============ */
 
 .glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 [data-theme="dark"] .glass {
-  background: rgba(10, 10, 10, 0.8);
+  background: rgba(10, 10, 10, 0.95);
 }
 
 /* Custom scrollbar */
