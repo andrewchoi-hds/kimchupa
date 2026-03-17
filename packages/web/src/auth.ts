@@ -26,7 +26,7 @@ function HireVisa(): OIDCConfig<{
         scope: "openid email profile",
       },
     },
-    checks: ["state", "pkce"],
+    checks: ["state"],
     profile(profile) {
       return {
         id: profile.sub,
