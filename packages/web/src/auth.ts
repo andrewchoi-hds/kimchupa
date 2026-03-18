@@ -25,9 +25,21 @@ function HireVisa(): OAuthConfig<{
         response_type: "code",
       },
     },
-    token: "https://accounts.hirevisa.com/oauth/token",
+    token: {
+      url: "https://accounts.hirevisa.com/oauth/token",
+      params: { grant_type: "authorization_code" },
+      conform: async (response: Response) => {
+        // HireVisa 서버 응답이 비표준일 수 있으므로 수동 처리
+        if (response.ok) return response;
+        // 에러여도 JSON 바디가 있으면 NextAuth에 전달
+        return response;
+      },
+    },
     userinfo: "https://accounts.hirevisa.com/oauth/userinfo",
     checks: ["state"],
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
+    },
     profile(profile) {
       return {
         id: profile.sub,
