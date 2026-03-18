@@ -38,7 +38,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
       if (res.ok) {
         const json = await res.json();
-        const posts: SearchResult[] = (json.success && Array.isArray(json.data) ? json.data : []).map(
+        const apiData = json.success ? json.data : null;
+        const postResults: SearchResult[] = (
+          Array.isArray(apiData?.posts) ? apiData.posts : []
+        ).map(
           (post: { id: string; title: string; excerpt?: string }) => ({
             type: "post" as const,
             id: post.id,
@@ -47,7 +50,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             url: `/community/${post.id}`,
           })
         );
-        setPostResults(posts);
+        setPostResults(postResults);
       }
     } catch {
       setPostResults([]);

@@ -12,7 +12,7 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHero from "@/components/ui/PageHero";
 import { useProfile } from "@/hooks/useProfile";
-import { useKimchiDex, useUpdateKimchiDex } from "@/hooks/useKimchiDex";
+import { useKimchiDex, useUpdateKimchiDex, useDeleteKimchiDex } from "@/hooks/useKimchiDex";
 import { KIMCHI_DATA } from "@/constants/kimchi";
 import { ArrowLeft, Search } from "lucide-react";
 
@@ -66,6 +66,7 @@ export default function KimchiDexPage() {
   const { data: profileData, isLoading: profileLoading } = useProfile();
   const { data: dexData, isLoading: dexLoading } = useKimchiDex();
   const updateDex = useUpdateKimchiDex();
+  const deleteDex = useDeleteKimchiDex();
 
   const profile = profileData?.data;
   const entries: DexEntry[] = dexData?.data ?? [];
@@ -156,8 +157,7 @@ export default function KimchiDexPage() {
 
   const handleSetStatus = (kimchiId: string, status: LocalStatus | null) => {
     if (status === null) {
-      // Reset - set to want_to_try as a workaround (API may not support delete)
-      // or we skip the mutation
+      deleteDex.mutateAsync(kimchiId);
       return;
     }
     updateDex.mutateAsync({

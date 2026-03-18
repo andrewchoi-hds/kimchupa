@@ -36,3 +36,22 @@ export function useUpdateKimchiDex() {
     },
   });
 }
+
+export function useDeleteKimchiDex() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (kimchiId: string) => {
+      const res = await fetch("/api/kimchi-dex", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kimchiId }),
+      });
+      if (!res.ok) throw new Error("Failed to delete KimchiDex entry");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["kimchi-dex"] });
+    },
+  });
+}

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useKimchiDex, useUpdateKimchiDex } from "@/hooks/useKimchiDex";
+import { useKimchiDex, useUpdateKimchiDex, useDeleteKimchiDex } from "@/hooks/useKimchiDex";
 import { toast } from "@/stores/toastStore";
+import { KIMCHI_DATA } from "@/constants/kimchi";
 
 export type CollectionStatus = "want_to_try" | "tried" | "favorite" | null;
 
@@ -48,13 +49,28 @@ export default function KimchiDexButton({
 
   const { data: dexRes, isLoading } = useKimchiDex();
   const updateMutation = useUpdateKimchiDex();
+  const deleteMutation = useDeleteKimchiDex();
 
-  const dexData = dexRes?.success ? dexRes.data : null;
-  const entries: Record<string, { status: CollectionStatus; rating?: number; memo?: string }> =
-    dexData?.entries ?? {};
-  const entry = entries[kimchiId] ?? null;
-  const collected = dexData?.collectedCount ?? 0;
-  const total = dexData?.totalCount ?? 0;
+  // API returns { success: true, data: KimchiDexEntry[] }
+  const dexEntries: Array<{
+    kimchiId: string;
+    status: string;
+    rating?: number | null;
+    memo?: string | null;
+  }> = dexRes?.success ? (Array.isArray(dexRes.data) ? dexRes.data : []) : [];
+
+  const entry = dexEntries.find((e) => e.kimchiId === kimchiId) ?? null;
+  const currentEntry: { status: CollectionStatus; rating?: number; memo?: string } | null = entry
+    ? {
+        status: entry.status as CollectionStatus,
+        rating: entry.rating ?? undefined,
+        memo: entry.memo ?? undefined,
+      }
+    : null;
+  const collected = dexEntries.filter(
+    (e) => e.status === "tried" || e.status === "favorite"
+  ).length;
+  const total = KIMCHI_DATA.length;
   const progress = total > 0 ? Math.round((collected / total) * 100) : 0;
 
   const handleStatusChange = (status: CollectionStatus) => {
@@ -71,20 +87,26 @@ export default function KimchiDexButton({
           },
         }
       );
+    } else {
+      deleteMutation.mutate(kimchiId, {
+        onSuccess: () => {
+          toast.success(t("removedFromDex"), t("removedFromDexDesc", { name: kimchiName }));
+        },
+      });
     }
     setShowOptions(false);
   };
 
   const handleRating = (rating: number) => {
-    if (entry?.status) {
-      updateMutation.mutate({ kimchiId, status: entry.status, rating });
+    if (currentEntry?.status) {
+      updateMutation.mutate({ kimchiId, status: currentEntry.status, rating });
     }
   };
 
   const handleSaveMemo = () => {
-    if (entry?.status) {
+    if (currentEntry?.status) {
       updateMutation.mutate(
-        { kimchiId, status: entry.status, memo: memoText },
+        { kimchiId, status: currentEntry.status, memo: memoText },
         {
           onSuccess: () => {
             toast.success(t("memoSaved"), t("memoSavedDesc"));
@@ -95,7 +117,7 @@ export default function KimchiDexButton({
     setShowMemo(false);
   };
 
-  const currentStatus = entry?.status ?? null;
+  const currentStatus = currentEntry?.status ?? null;
 
   if (isLoading) {
     return (
@@ -172,7 +194,7 @@ export default function KimchiDexButton({
                     key={star}
                     onClick={() => handleRating(star)}
                     className={`text-2xl transition-transform hover:scale-110 ${
-                      entry?.rating && star <= entry.rating
+                      currentEntry?.rating && star <= currentEntry.rating
                         ? "opacity-100"
                         : "opacity-30"
                     }`}
@@ -213,14 +235,14 @@ export default function KimchiDexButton({
             ) : (
               <button
                 onClick={() => {
-                  setMemoText(entry?.memo || "");
+                  setMemoText(currentEntry?.memo || "");
                   setShowMemo(true);
                 }}
                 className="w-full p-3 border border-dashed border-zinc-300 dark:border-zinc-600 rounded-lg text-sm text-zinc-500 hover:border-amber-500 hover:text-amber-500 transition-colors text-left"
               >
-                {entry?.memo ? (
+                {currentEntry?.memo ? (
                   <span className="text-zinc-700 dark:text-zinc-300">
-                    &quot;{entry.memo}&quot;
+                    &quot;{currentEntry.memo}&quot;
                   </span>
                 ) : (
                   `📝 ${t("addMemo")}`
@@ -229,7 +251,7 @@ export default function KimchiDexButton({
             )}
           </div>
 
-          {/* Reset - remove from dex not supported via API mutation, just change status */}
+          {/* Remove from dex */}
           <button
             onClick={() => handleStatusChange(null)}
             className="w-full py-2 text-sm text-zinc-500 hover:text-red-500 transition-colors"

@@ -23,3 +23,15 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ success: true, data: entry });
 }
+
+export async function DELETE(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ success: false, error: { code: "UNAUTHORIZED", message: "로그인이 필요합니다" } }, { status: 401 });
+  }
+
+  const { kimchiId } = await request.json();
+  await kimchiDexService.removeEntry(session.user.id, kimchiId);
+
+  return NextResponse.json({ success: true, data: null });
+}

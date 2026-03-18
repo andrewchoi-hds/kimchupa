@@ -115,6 +115,16 @@ export const attendanceRepository = {
     return result._sum.xpEarned || 0;
   },
 
+  async getAttendedDates(userId: string): Promise<string[]> {
+    const records = await prisma.attendance.findMany({
+      where: { userId },
+      orderBy: { date: "asc" },
+      select: { date: true },
+    });
+
+    return records.map((r) => r.date.toISOString().split("T")[0]);
+  },
+
   async getLongestStreak(userId: string): Promise<number> {
     const records = await prisma.attendance.findMany({
       where: { userId },

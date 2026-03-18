@@ -102,11 +102,12 @@ export const attendanceService = {
 
   /** Get full attendance summary */
   async getSummary(userId: string) {
-    const [currentStreak, longestStreak, totalXpEarned, canCheckIn] = await Promise.all([
+    const [currentStreak, longestStreak, totalXpEarned, canCheckIn, attendedDates] = await Promise.all([
       attendanceRepository.getStreak(userId),
       attendanceRepository.getLongestStreak(userId),
       attendanceRepository.getTotalXpEarned(userId),
       this.canCheckInToday(userId),
+      attendanceRepository.getAttendedDates(userId),
     ]);
 
     return {
@@ -114,6 +115,7 @@ export const attendanceService = {
       longestStreak,
       totalXpEarned,
       canCheckInToday: canCheckIn,
+      attendedDates,
     };
   },
 };
