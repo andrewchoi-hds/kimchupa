@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -11,6 +12,34 @@ import prisma from "@/lib/prisma";
 
 interface WikiDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: WikiDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const kimchi = KIMCHI_DATA.find((k) => k.id === id);
+
+  if (!kimchi) {
+    return { title: "김치를 찾을 수 없습니다" };
+  }
+
+  const title = `${kimchi.name} (${kimchi.nameEn}) | 김추페 김치백과`;
+  const description = kimchi.description.slice(0, 160);
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      ...(kimchi.imageUrl ? { images: [kimchi.imageUrl] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
 }
 
 interface NutritionInfo {
