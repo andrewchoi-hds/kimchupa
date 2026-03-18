@@ -7,13 +7,20 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const post = await postService.getById(id);
+  const post = await postService.getByIdWithViewIncrement(id);
 
   if (!post) {
     return NextResponse.json({ success: false, error: { code: "NOT_FOUND", message: "게시글을 찾을 수 없습니다" } }, { status: 404 });
   }
 
-  return NextResponse.json({ success: true, data: post });
+  // Check if the current user has liked this post
+  const session = await auth();
+  let isLiked = false;
+  if (session?.user?.id) {
+    isLiked = await postService.isLikedByUser(id, session.user.id);
+  }
+
+  return NextResponse.json({ success: true, data: { ...post, isLiked } });
 }
 
 export async function PATCH(
@@ -27,7 +34,8 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const post = await postService.update(id, body);
+  const { title, content, tags } = body;
+  const post = await postService.update(id, { title, content, tags });
 
   return NextResponse.json({ success: true, data: post });
 }

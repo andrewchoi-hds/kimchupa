@@ -318,6 +318,13 @@
   "profile": {
     "title": "프로필",
     "editProfile": "프로필 수정",
+    "editNickname": "닉네임",
+    "editBio": "자기소개",
+    "editSave": "저장",
+    "editSaving": "저장 중...",
+    "editCancel": "취소",
+    "editSuccess": "프로필이 수정되었습니다",
+    "editError": "프로필 수정에 실패했습니다",
     "settings": "설정",
     "stats": {
       "posts": "게시글",

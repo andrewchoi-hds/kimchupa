@@ -27,8 +27,14 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
+  const { type, title, content, tags, images } = body;
+
   const post = await postService.create({
-    ...body,
+    type,
+    title,
+    content,
+    tags,
+    images,
     authorId: session.user.id,
   });
 

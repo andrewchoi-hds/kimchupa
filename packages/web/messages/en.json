@@ -318,6 +318,13 @@
   "profile": {
     "title": "Profile",
     "editProfile": "Edit Profile",
+    "editNickname": "Nickname",
+    "editBio": "Bio",
+    "editSave": "Save",
+    "editSaving": "Saving...",
+    "editCancel": "Cancel",
+    "editSuccess": "Profile updated successfully",
+    "editError": "Failed to update profile",
     "settings": "Settings",
     "stats": {
       "posts": "Posts",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Modal from "@/components/ui/Modal";
 import LevelBadge from "@/components/ui/LevelBadge";
 import XPProgressBar from "@/components/ui/XPProgressBar";
 import Badge from "@/components/ui/Badge";
@@ -13,6 +14,7 @@ import ProfileImageUpload from "@/components/ui/ProfileImageUpload";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
+import { toast } from "@/stores/toastStore";
 import { LEVEL_EMOJIS, USER_LEVELS, XP_REWARDS } from "@/constants/levels";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { useAttendance } from "@/hooks/useAttendance";
@@ -24,6 +26,9 @@ import { FileText, MessageSquare, Bookmark, Pencil, Settings } from "lucide-reac
 export default function ProfilePage() {
   const t = useTranslations("profile");
   const [activeTab, setActiveTab] = useState<"posts" | "comments" | "bookmarks">("posts");
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editNickname, setEditNickname] = useState("");
+  const [editBio, setEditBio] = useState("");
 
   const { data: profileData, isLoading: profileLoading } = useProfile();
   const { data: attendanceData } = useAttendance();
@@ -73,6 +78,25 @@ export default function ProfilePage() {
     if (image) updateProfile.mutateAsync({ image });
   };
 
+  const handleOpenEditModal = () => {
+    setEditNickname(profile.nickname ?? "");
+    setEditBio(profile.bio ?? "");
+    setEditModalOpen(true);
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      await updateProfile.mutateAsync({
+        nickname: editNickname,
+        bio: editBio,
+      });
+      toast.success(t("editSuccess"));
+      setEditModalOpen(false);
+    } catch {
+      toast.error(t("editError"));
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header user={{
@@ -111,7 +135,7 @@ export default function ProfilePage() {
 
               {/* Actions */}
               <div className="md:ml-auto flex gap-2">
-                <Button variant="ghost" icon={<Pencil className="h-4 w-4" />} className="text-white hover:bg-white/20">
+                <Button variant="ghost" icon={<Pencil className="h-4 w-4" />} className="text-white hover:bg-white/20" onClick={handleOpenEditModal}>
                   {t("editProfile")}
                 </Button>
                 <Button variant="ghost" icon={<Settings className="h-4 w-4" />} className="text-white hover:bg-white/20">
@@ -421,6 +445,50 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
+
+      {/* Edit Profile Modal */}
+      <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)} title={t("editProfile")}>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="edit-nickname" className="block text-sm font-medium text-foreground mb-1">
+              {t("editNickname")}
+            </label>
+            <input
+              id="edit-nickname"
+              type="text"
+              value={editNickname}
+              onChange={(e) => setEditNickname(e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-[var(--radius)] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              maxLength={20}
+            />
+          </div>
+          <div>
+            <label htmlFor="edit-bio" className="block text-sm font-medium text-foreground mb-1">
+              {t("editBio")}
+            </label>
+            <textarea
+              id="edit-bio"
+              value={editBio}
+              onChange={(e) => setEditBio(e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-border rounded-[var(--radius)] bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              maxLength={200}
+            />
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="ghost" onClick={() => setEditModalOpen(false)}>
+              {t("editCancel")}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleSaveProfile}
+              disabled={updateProfile.isPending || !editNickname.trim()}
+            >
+              {updateProfile.isPending ? t("editSaving") : t("editSave")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       <Footer />
     </div>
