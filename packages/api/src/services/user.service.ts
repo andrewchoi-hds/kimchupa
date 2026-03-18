@@ -30,11 +30,13 @@ export const userService = {
   },
 
   async createFromSSO(data: { email: string; name?: string; nickname?: string }) {
-    return userRepository.create({
+    await userRepository.create({
       email: data.email.toLowerCase(),
       name: data.name,
       nickname: data.nickname || data.email.split("@")[0],
     });
+    // create 후 findByEmail로 badges 포함된 full user 반환
+    return userRepository.findByEmail(data.email.toLowerCase());
   },
 
   async exists(id: string) {
