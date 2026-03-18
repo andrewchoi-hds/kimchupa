@@ -152,10 +152,8 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
       <Header user={headerUser} />
       <main className="flex-1">
         <PageHero title={t("title")} description={t("heroDescription")} className="bg-gradient-to-r from-primary to-secondary text-white">
-          <Link href="/community/write">
-            <Button variant="outline" size="lg" className="bg-white text-primary border-white hover:bg-white/90">
-              <span>✏️</span> {t("write")}
-            </Button>
+          <Link href="/community/write" className="inline-flex items-center justify-center gap-2 h-12 px-8 bg-white text-[hsl(8,80%,42%)] font-medium rounded-[var(--radius)] shadow-lg hover:bg-white/90 transition-colors">
+            <span>✏️</span> {t("write")}
           </Link>
         </PageHero>
 

@@ -101,15 +101,11 @@ export default function Home() {
                 {hero("subtitle")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
-                <Link href="/recommendation">
-                  <Button variant="outline" size="lg" className="px-8 shadow-lg" style={{ background: "white", color: "var(--primary)", borderColor: "white" }}>
-                    <Sparkles className="w-5 h-5" /> 나에게 맞는 김치 찾기
-                  </Button>
+                <Link href="/recommendation" className="inline-flex items-center justify-center gap-2 h-12 px-8 bg-white text-[hsl(8,80%,42%)] font-medium rounded-[var(--radius)] shadow-lg hover:bg-white/90 transition-colors">
+                  <Sparkles className="w-5 h-5" /> 나에게 맞는 김치 찾기
                 </Link>
-                <Link href="/community">
-                  <Button variant="outline" size="lg" className="px-8" style={{ background: "transparent", color: "white", borderColor: "rgba(255,255,255,0.4)" }}>
-                    <Users className="w-5 h-5" /> 커뮤니티 참여하기
-                  </Button>
+                <Link href="/community" className="inline-flex items-center justify-center gap-2 h-12 px-8 bg-transparent text-white font-medium rounded-[var(--radius)] border-2 border-white/40 hover:bg-white/10 transition-colors">
+                  <Users className="w-5 h-5" /> 커뮤니티 참여하기
                 </Link>
               </div>
             </div>

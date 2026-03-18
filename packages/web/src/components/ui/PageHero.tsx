@@ -13,7 +13,7 @@ export default function PageHero({ title, description, children, className = "" 
           {title}
         </h1>
         {description && (
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+          <p className="text-lg opacity-85 max-w-2xl mx-auto mb-8 animate-slide-up" style={{ animationDelay: "0.1s" }}>
             {description}
           </p>
         )}
