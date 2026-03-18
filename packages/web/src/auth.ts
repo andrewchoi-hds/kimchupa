@@ -27,19 +27,33 @@ function HireVisa(): OAuthConfig<{
     },
     token: {
       url: "https://accounts.hirevisa.com/oauth/token",
-      params: { grant_type: "authorization_code" },
-      conform: async (response: Response) => {
-        // HireVisa 서버 응답이 비표준일 수 있으므로 수동 처리
-        if (response.ok) return response;
-        // 에러여도 JSON 바디가 있으면 NextAuth에 전달
-        return response;
+      async request({ params, provider }: { params: Record<string, unknown>; provider: { callbackUrl: string; clientId?: string; clientSecret?: string } }) {
+        const body = new URLSearchParams({
+          grant_type: "authorization_code",
+          code: params.code as string,
+          redirect_uri: provider.callbackUrl,
+          client_id: provider.clientId as string,
+          client_secret: provider.clientSecret as string,
+        });
+
+        const res = await fetch("https://accounts.hirevisa.com/oauth/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString(),
+        });
+
+        const data = await res.json();
+        console.log("[HireVisa Token]", res.status, JSON.stringify(data));
+
+        if (!res.ok) {
+          throw new Error(`Token exchange failed: ${res.status} ${JSON.stringify(data)}`);
+        }
+
+        return { tokens: data };
       },
     },
     userinfo: "https://accounts.hirevisa.com/oauth/userinfo",
     checks: ["state"],
-    client: {
-      token_endpoint_auth_method: "client_secret_post",
-    },
     profile(profile) {
       return {
         id: profile.sub,
