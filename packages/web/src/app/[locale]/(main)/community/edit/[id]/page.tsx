@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import MarkdownEditor from "@/components/ui/MarkdownEditor";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
@@ -217,23 +218,15 @@ export default function EditPage({ params }: EditPageProps) {
               {/* Content */}
               <Card padding="lg">
                 <label
-                  htmlFor="content"
                   className="block text-sm font-medium text-foreground mb-2"
                 >
                   {t("form.content")}
                 </label>
-                <textarea
-                  id="content"
+                <MarkdownEditor
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder={t("form.contentPlaceholder")}
-                  className="w-full px-4 py-3 bg-muted border border-border rounded-[var(--radius)] focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none text-foreground placeholder:text-muted-foreground"
-                  rows={15}
-                  required
+                  onChange={setContent}
+                  placeholder={t("form.contentPlaceholder") + " (마크다운 지원)"}
                 />
-                <div className="flex items-center justify-end mt-2">
-                  <p className="text-xs text-muted-foreground">{content.length}/5000</p>
-                </div>
               </Card>
 
               {/* Tags */}

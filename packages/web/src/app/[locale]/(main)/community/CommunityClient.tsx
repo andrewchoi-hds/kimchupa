@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -13,12 +13,11 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import FilterBar from "@/components/ui/FilterBar";
-import Pagination from "@/components/ui/Pagination";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHero from "@/components/ui/PageHero";
 import Avatar from "@/components/ui/Avatar";
 import { LEVEL_EMOJIS } from "@/constants/levels";
-import { usePosts } from "@/hooks/usePosts";
+import { useInfinitePosts } from "@/hooks/useInfinitePosts";
 import { useProfile } from "@/hooks/useProfile";
 
 type PostFilter = "all" | "recipe" | "free" | "qna" | "review" | "diary";
@@ -60,7 +59,6 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const currentPage = Number(searchParams.get("page")) || 1;
 
   const boardParam = searchParams.get("board") as PostFilter | null;
   const validFilters: PostFilter[] = ["all", "recipe", "free", "qna", "review", "diary"];
@@ -74,27 +72,32 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
 
   const tagParam = searchParams.get("tag") || undefined;
 
-  // 초기 데이터가 있고 첫 페이지+전체 필터면 서버 데이터 사용
-  const isDefaultView = filter === "all" && currentPage === 1 && !tagParam;
-
-  const { data: postsData, isLoading: isPostsLoading } = usePosts({
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfinitePosts({
     type: filter === "all" ? undefined : filter,
-    page: currentPage,
     limit: POSTS_PER_PAGE,
     tag: tagParam,
   });
 
-  // 서버 prefetch 데이터 또는 클라이언트 fetch 데이터
-  const activeData = isDefaultView && !postsData && initialPosts ? initialPosts : postsData;
-  const posts = activeData?.data ?? [];
-  const meta = activeData?.meta;
-  const totalPosts = meta?.total ?? 0;
-  const totalPages = meta?.totalPages ?? 1;
-  const showLoading = !activeData && isPostsLoading;
+  const posts = data?.pages?.flatMap((p: { data?: Record<string, unknown>[] }) => p.data ?? []) ?? [];
+  const totalPosts = data?.pages?.[0]?.meta?.total ?? initialPosts?.meta?.total ?? 0;
+  const showLoading = !data && isLoading;
 
   const sortedPosts = sortBy === "popular"
     ? [...posts].sort((a: { likeCount?: number }, b: { likeCount?: number }) => (b.likeCount ?? 0) - (a.likeCount ?? 0))
     : posts;
+
+  // Infinite scroll observer
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && !isFetchingNextPage) fetchNextPage(); },
+      { threshold: 0.5 }
+    );
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const filterOptions = [
     { value: "all", label: `📋 ${t("boards.all")}` },
@@ -104,12 +107,6 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
     { value: "review", label: `⭐ ${t("boards.review")}` },
     { value: "diary", label: `📔 ${t("boards.diary")}` },
   ];
-
-  const goToPage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (page === 1) params.delete("page"); else params.set("page", page.toString());
-    router.push(`${pathname}?${params.toString()}`);
-  };
 
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter as PostFilter);
@@ -242,14 +239,15 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
                 </div>
               )}
 
-              {totalPages > 1 && (
-                <div className="flex flex-col items-center mt-8 gap-4">
-                  <p className="text-sm text-muted-foreground">
-                    {t("pagination.showing", { total: totalPosts, start: (currentPage - 1) * POSTS_PER_PAGE + 1, end: Math.min(currentPage * POSTS_PER_PAGE, totalPosts) })}
-                  </p>
-                  <Pagination page={currentPage} totalPages={totalPages} onPageChange={goToPage} />
-                </div>
-              )}
+              {/* Infinite scroll trigger */}
+              <div ref={loadMoreRef} className="py-8 text-center">
+                {isFetchingNextPage && (
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+                )}
+                {!hasNextPage && posts.length > 0 && (
+                  <p className="text-sm text-muted-foreground">모든 게시글을 불러왔습니다</p>
+                )}
+              </div>
 
               {!showLoading && sortedPosts.length === 0 && (
                 <Card><EmptyState icon={Inbox} title={t("noResults")} description={t("noResultsHint")} /></Card>

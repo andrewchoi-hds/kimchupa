@@ -14,6 +14,7 @@ import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import Avatar from "@/components/ui/Avatar";
 import { LEVEL_EMOJIS } from "@/constants/levels";
+import { renderMarkdown } from "@/lib/renderMarkdown";
 import { usePost, useCreateComment, useLikePost, useDeletePost } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfile";
 import { useBookmarks, useToggleBookmark } from "@/hooks/useBookmarks";
@@ -269,13 +270,10 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
 
               {/* Content */}
               <div className="p-6">
-                <div className="prose max-w-none">
-                  {(post.content as string).split("\n").map((paragraph: string, idx: number) => (
-                    <p key={idx} className="mb-4 text-foreground/80">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                <div
+                  className="prose max-w-none text-foreground/80"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(post.content as string) }}
+                />
 
                 {/* Image Gallery */}
                 {(post.images as string[]) && (post.images as string[]).length > 0 && (
