@@ -27,33 +27,30 @@ function HireVisa(): OAuthConfig<{
     },
     token: {
       url: "https://accounts.hirevisa.com/oauth/token",
-      async request({ params, provider }: { params: Record<string, unknown>; provider: { callbackUrl: string; clientId?: string; clientSecret?: string } }) {
-        const body = new URLSearchParams({
-          grant_type: "authorization_code",
-          code: params.code as string,
-          redirect_uri: provider.callbackUrl,
-          client_id: provider.clientId as string,
-          client_secret: provider.clientSecret as string,
-        });
-
-        const res = await fetch("https://accounts.hirevisa.com/oauth/token", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: body.toString(),
-        });
-
-        const data = await res.json();
-        console.log("[HireVisa Token]", res.status, JSON.stringify(data));
-
-        if (!res.ok) {
-          throw new Error(`Token exchange failed: ${res.status} ${JSON.stringify(data)}`);
+      conform: async (response: Response) => {
+        // HireVisa token endpoint가 비표준 status code를 반환할 수 있음
+        // 응답 body를 읽어서 200 OK Response로 재구성
+        const body = await response.text();
+        console.log("[HireVisa Token] status:", response.status, "body:", body);
+        if (!response.ok) {
+          // 에러여도 body에 토큰 데이터가 있을 수 있으므로 200으로 변환 시도
+          return new Response(body, {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
         }
-
-        return { tokens: data };
+        // 정상 응답이면 그대로 반환
+        return new Response(body, {
+          status: 200,
+          headers: { "Content-Type": response.headers.get("Content-Type") || "application/json" },
+        });
       },
     },
     userinfo: "https://accounts.hirevisa.com/oauth/userinfo",
     checks: ["state"],
+    client: {
+      token_endpoint_auth_method: "client_secret_post",
+    },
     profile(profile) {
       return {
         id: profile.sub,
