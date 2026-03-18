@@ -29,6 +29,14 @@ export const userService = {
     });
   },
 
+  async createFromSSO(data: { email: string; name?: string; nickname?: string }) {
+    return userRepository.create({
+      email: data.email.toLowerCase(),
+      name: data.name,
+      nickname: data.nickname || data.email.split("@")[0],
+    });
+  },
+
   async exists(id: string) {
     return userRepository.exists(id);
   },

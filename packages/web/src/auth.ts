@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import type { Provider, OIDCConfig } from "next-auth/providers";
-import { authService } from "@kimchupa/api";
+import { authService, userService } from "@kimchupa/api";
 
 // HireVisa OAuth Provider (OIDC-compatible, manual config)
 function HireVisa(): OIDCConfig<{
@@ -114,13 +114,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, account, profile }) {
       if (user) {
-        token.id = user.id;
         token.email = user.email;
+      }
+      // OAuth 로그인 (HireVisa, Google 등): DB에 사용자 자동 생성/조회
+      if (account && account.provider !== "credentials" && user?.email) {
+        try {
+          let dbUser = await userService.getByEmail(user.email);
+          if (!dbUser) {
+            dbUser = await userService.createFromSSO({
+              email: user.email,
+              name: user.name || undefined,
+              nickname: user.name || user.email.split("@")[0],
+            });
+          }
+          if (dbUser) {
+            token.id = dbUser.id;
+          }
+        } catch (e) {
+          console.error("[Auth] SSO user sync error:", e);
+          token.id = user.id;
+        }
+      } else if (user) {
+        token.id = user.id;
       }
       // HireVisa SSO: account 정보 저장
       if (account?.provider === "hirevisa") {
         token.provider = "hirevisa";
-        // university scope가 있으면 저장
         if (profile && typeof profile === "object" && "university" in profile) {
           token.university = (profile as { university?: { name: string; student_id: string } }).university;
         }
