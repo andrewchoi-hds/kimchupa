@@ -21,6 +21,7 @@ import { useAttendance } from "@/hooks/useAttendance";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { usePosts } from "@/hooks/usePosts";
 import { useUserBadges } from "@/hooks/useBadges";
+import { useFollowStatus } from "@/hooks/useFollow";
 import { FileText, MessageSquare, Bookmark, Pencil, Settings } from "lucide-react";
 
 export default function ProfilePage() {
@@ -36,6 +37,7 @@ export default function ProfilePage() {
   const { data: postsData } = usePosts({ limit: 3 });
   const { data: userBadgesData } = useUserBadges();
   const updateProfile = useUpdateProfile();
+  const { data: followData } = useFollowStatus(profileData?.data?.id);
 
   const profile = profileData?.data;
   const currentStreak = attendanceData?.data?.currentStreak ?? 0;
@@ -66,8 +68,8 @@ export default function ProfilePage() {
     posts: posts.length,
     comments: 0,
     likes: 0,
-    followers: 0,
-    following: 0,
+    followers: followData?.data?.followerCount ?? 0,
+    following: followData?.data?.followingCount ?? 0,
     streak: currentStreak,
   };
 

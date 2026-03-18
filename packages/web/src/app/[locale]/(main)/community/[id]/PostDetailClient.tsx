@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Heart, Bookmark, Copy, Share2, MessageCircle } from "lucide-react";
+import { Heart, Bookmark, Copy, Share2, MessageCircle, Flag } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import LevelBadge from "@/components/ui/LevelBadge";
@@ -13,6 +13,7 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import Avatar from "@/components/ui/Avatar";
+import ReportModal from "@/components/ui/ReportModal";
 import { LEVEL_EMOJIS } from "@/constants/levels";
 import { renderMarkdown } from "@/lib/renderMarkdown";
 import { usePost, useCreateComment, useLikePost, useDeletePost } from "@/hooks/usePosts";
@@ -48,6 +49,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
   const [replyText, setReplyText] = useState("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
 
   // 로딩 상태
   if (isPostLoading) {
@@ -383,6 +385,20 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                   >
                     공유
                   </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon={<Flag className="h-4 w-4" />}
+                    onClick={() => {
+                      if (!session?.user) {
+                        toast.error("로그인 필요", "신고를 하려면 로그인이 필요합니다.");
+                        return;
+                      }
+                      setReportModalOpen(true);
+                    }}
+                  >
+                    신고
+                  </Button>
                 </div>
               </div>
             </article>
@@ -628,6 +644,14 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
           onClose={() => setLightboxOpen(false)}
         />
       )}
+
+      {/* Report Modal */}
+      <ReportModal
+        open={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+        targetType="post"
+        targetId={id}
+      />
     </div>
   );
 }
