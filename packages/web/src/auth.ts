@@ -1,24 +1,21 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import type { Provider, OIDCConfig } from "next-auth/providers";
+import type { Provider, OAuthConfig } from "next-auth/providers";
 import { authService } from "@kimchupa/api";
 
-// HireVisa OIDC Provider
-function HireVisa(): OIDCConfig<{
+// HireVisa OAuth Provider (OIDC-compatible, manual config)
+function HireVisa(): OAuthConfig<{
   sub: string;
   email?: string;
   name?: string;
   given_name?: string;
   family_name?: string;
-  phone_number?: string;
-  university?: { name: string; student_id: string };
 }> {
   return {
     id: "hirevisa",
     name: "HireVisa",
-    type: "oidc",
-    issuer: "https://accounts.hirevisa.com",
+    type: "oauth",
     clientId: process.env.HIREVISA_CLIENT_ID,
     clientSecret: process.env.HIREVISA_CLIENT_SECRET,
     authorization: {
@@ -28,17 +25,9 @@ function HireVisa(): OIDCConfig<{
         response_type: "code",
       },
     },
-    token: {
-      url: "https://accounts.hirevisa.com/oauth/token",
-    },
-    userinfo: {
-      url: "https://accounts.hirevisa.com/oauth/userinfo",
-    },
-    jwks_endpoint: "https://accounts.hirevisa.com/.well-known/jwks.json",
+    token: "https://accounts.hirevisa.com/oauth/token",
+    userinfo: "https://accounts.hirevisa.com/oauth/userinfo",
     checks: ["state"],
-    client: {
-      token_endpoint_auth_method: "client_secret_basic",
-    },
     profile(profile) {
       return {
         id: profile.sub,
