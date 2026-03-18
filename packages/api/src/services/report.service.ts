@@ -24,4 +24,8 @@ export const reportService = {
   async getAllReports(status?: string, page?: number, limit?: number) {
     return reportRepository.findAll({ status, page, limit });
   },
+
+  async updateReportStatus(id: string, status: string) {
+    return reportRepository.updateStatus(id, status);
+  },
 };
