@@ -193,7 +193,7 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
                 <div className="space-y-4">
                   {sortedPosts.map((post: Record<string, unknown>) => {
                     const typeInfo = getTypeLabel(post.type as string);
-                    const author = post.author as { nickname?: string; level?: number } | undefined;
+                    const author = post.author as { id?: string; nickname?: string; level?: number } | undefined;
                     const rawTags = (post.tags ?? []) as Array<string | { tag: string }>;
                     const tagStrings = rawTags.map((t: string | { tag: string }) => typeof t === "string" ? t : t.tag);
                     return (
@@ -201,7 +201,13 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
                         <Card hover padding="lg">
                           <div className="flex items-start gap-4">
                             <div className="hidden sm:block">
-                              <Avatar name={author?.nickname ?? "?"} size="lg" />
+                              {author?.id ? (
+                                <Link href={`/profile/${author.id}`} onClick={(e) => e.stopPropagation()}>
+                                  <Avatar name={author?.nickname ?? "?"} size="lg" />
+                                </Link>
+                              ) : (
+                                <Avatar name={author?.nickname ?? "?"} size="lg" />
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -218,10 +224,17 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
                               )}
                               <div className="flex items-center justify-between text-sm text-muted-foreground">
                                 <div className="flex items-center gap-3">
-                                  <span className="flex items-center gap-1">
-                                    <span>{LEVEL_EMOJIS[author?.level ?? 1]}</span>
-                                    <span>{author?.nickname ?? "?"}</span>
-                                  </span>
+                                  {author?.id ? (
+                                    <Link href={`/profile/${author.id}`} onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 hover:text-primary transition-colors">
+                                      <span>{LEVEL_EMOJIS[author?.level ?? 1]}</span>
+                                      <span>{author?.nickname ?? "?"}</span>
+                                    </Link>
+                                  ) : (
+                                    <span className="flex items-center gap-1">
+                                      <span>{LEVEL_EMOJIS[author?.level ?? 1]}</span>
+                                      <span>{author?.nickname ?? "?"}</span>
+                                    </span>
+                                  )}
                                   <span>{formatDate(post.createdAt as string)}</span>
                                 </div>
                                 <div className="flex items-center gap-4">

@@ -16,7 +16,7 @@ import Avatar from "@/components/ui/Avatar";
 import ReportModal from "@/components/ui/ReportModal";
 import { LEVEL_EMOJIS } from "@/constants/levels";
 import { renderMarkdown } from "@/lib/renderMarkdown";
-import { usePost, useCreateComment, useLikePost, useDeletePost } from "@/hooks/usePosts";
+import { usePost, useCreateComment, useLikePost, useLikeComment, useDeletePost } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfile";
 import { useBookmarks, useToggleBookmark } from "@/hooks/useBookmarks";
 import { toast } from "@/stores/toastStore";
@@ -42,6 +42,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
   const { mutateAsync: likePostAsync } = useLikePost();
   const { mutateAsync: createCommentAsync, isPending: isCommentPending } = useCreateComment();
   const { mutateAsync: deletePostAsync } = useDeletePost();
+  const { mutateAsync: likeCommentAsync } = useLikeComment();
 
   const [commentText, setCommentText] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -150,6 +151,19 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
 
     try {
       await likePostAsync(id);
+    } catch {
+      toast.error("오류", "좋아요 처리에 실패했습니다.");
+    }
+  };
+
+  const handleCommentLike = async (commentId: string) => {
+    if (!session?.user) {
+      toast.error("로그인 필요", "좋아요를 하려면 로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      await likeCommentAsync({ postId: id, commentId });
     } catch {
       toast.error("오류", "좋아요 처리에 실패했습니다.");
     }
@@ -481,7 +495,10 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                                 {comment.content as string}
                               </p>
                               <div className="flex items-center gap-4 text-sm">
-                                <button className="text-muted-foreground hover:text-error flex items-center gap-1 transition-colors">
+                                <button
+                                  onClick={() => handleCommentLike(comment.id as string)}
+                                  className="text-muted-foreground hover:text-error flex items-center gap-1 transition-colors"
+                                >
                                   <Heart className="h-3.5 w-3.5" />
                                   <span>{(comment.likeCount as number) ?? 0}</span>
                                 </button>
@@ -564,7 +581,10 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                                         {reply.content as string}
                                       </p>
                                       <div className="flex items-center gap-4 text-xs mt-2">
-                                        <button className="text-muted-foreground hover:text-error flex items-center gap-1 transition-colors">
+                                        <button
+                                          onClick={() => handleCommentLike(reply.id as string)}
+                                          className="text-muted-foreground hover:text-error flex items-center gap-1 transition-colors"
+                                        >
                                           <Heart className="h-3 w-3" />
                                           <span>{(reply.likeCount as number) ?? 0}</span>
                                         </button>

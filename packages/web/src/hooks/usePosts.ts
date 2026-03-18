@@ -151,3 +151,20 @@ export function useLikePost() {
     },
   });
 }
+
+export function useLikeComment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ postId, commentId }: { postId: string; commentId: string }) => {
+      const res = await fetch(`/api/posts/${postId}/comments/${commentId}/like`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("Failed to like comment");
+      return res.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["post", variables.postId] });
+    },
+  });
+}
