@@ -105,13 +105,13 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
+      <div className="bg-card rounded-xl p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-1/3" />
-          <div className="h-12 bg-zinc-200 dark:bg-zinc-700 rounded" />
+          <div className="h-6 bg-muted rounded w-1/3" />
+          <div className="h-12 bg-muted rounded" />
           <div className="grid grid-cols-7 gap-1">
             {Array.from({ length: 35 }).map((_, i) => (
-              <div key={i} className="aspect-square bg-zinc-200 dark:bg-zinc-700 rounded-lg" />
+              <div key={i} className="aspect-square bg-muted rounded-lg" />
             ))}
           </div>
         </div>
@@ -120,9 +120,9 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-800 rounded-xl p-6">
+    <div className="bg-card rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
+        <h2 className="text-lg font-bold text-foreground">
           {currentMonth}월 출석
         </h2>
         {currentStreak > 0 && (
@@ -159,8 +159,8 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
             )}
           </button>
         ) : (
-          <div className="w-full py-4 rounded-xl bg-zinc-100 dark:bg-zinc-700 text-center">
-            <span className="text-zinc-500 dark:text-zinc-400 flex items-center justify-center gap-2">
+          <div className="w-full py-4 rounded-xl bg-muted text-center">
+            <span className="text-muted-foreground flex items-center justify-center gap-2">
               <span>✅</span>
               오늘 출석 완료!
             </span>
@@ -169,8 +169,8 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
 
         {/* XP Earned Notification */}
         {checkInResult && (
-          <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-center animate-fade-in">
-            <p className="text-green-600 dark:text-green-400 font-medium">
+          <div className="mt-3 p-3 bg-green-50 rounded-lg text-center animate-fade-in">
+            <p className="text-green-600 font-medium">
               +{checkInResult.xpEarned} XP 획득!
             </p>
             {checkInResult.bonusInfo && (
@@ -188,7 +188,7 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
           <div
             key={day}
             className={`text-center text-xs font-medium py-1 ${
-              idx === 0 ? "text-red-500" : idx === 6 ? "text-blue-500" : "text-zinc-500"
+              idx === 0 ? "text-red-500" : idx === 6 ? "text-blue-500" : "text-muted-foreground"
             }`}
           >
             {day}
@@ -217,12 +217,12 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
                     ? "bg-green-500 text-white font-bold ring-2 ring-green-300"
                     : "bg-purple-600 text-white font-bold ring-2 ring-purple-300"
                   : isAttended
-                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                  ? "bg-green-100 text-green-700"
                   : isPast
-                  ? "bg-zinc-100 dark:bg-zinc-700 text-zinc-400"
+                  ? "bg-muted text-muted-foreground"
                   : isFuture
-                  ? "bg-zinc-50 dark:bg-zinc-800 text-zinc-300 dark:text-zinc-600"
-                  : "bg-zinc-100 dark:bg-zinc-700 text-zinc-500"
+                  ? "bg-muted text-muted-foreground"
+                  : "bg-muted text-muted-foreground"
               }`}
             >
               {isAttended && !isToday ? (
@@ -236,36 +236,36 @@ export default function AttendanceCalendar({ onXpEarned }: AttendanceCalendarPro
       </div>
 
       {/* Stats */}
-      <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+      <div className="mt-4 pt-4 border-t border-border">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-zinc-500">이번 달 출석</span>
+          <span className="text-muted-foreground">이번 달 출석</span>
           <span className="font-medium text-purple-600">{monthAttendanceCount}일</span>
         </div>
         <div className="flex items-center justify-between text-sm mt-1">
-          <span className="text-zinc-500">현재 연속 출석</span>
+          <span className="text-muted-foreground">현재 연속 출석</span>
           <span className="font-medium text-orange-500">{currentStreak}일 🔥</span>
         </div>
         <div className="flex items-center justify-between text-sm mt-1">
-          <span className="text-zinc-500">최장 연속 기록</span>
-          <span className="font-medium text-zinc-700 dark:text-zinc-300">{longestStreak}일</span>
+          <span className="text-muted-foreground">최장 연속 기록</span>
+          <span className="font-medium text-muted-foreground">{longestStreak}일</span>
         </div>
       </div>
 
       {/* Streak Bonus Info */}
-      <div className="mt-4 p-3 bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-lg">
-        <p className="text-xs font-medium text-orange-700 dark:text-orange-400 mb-2">
+      <div className="mt-4 p-3 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg">
+        <p className="text-xs font-medium text-orange-700 mb-2">
           🎁 연속 출석 보너스
         </p>
         <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          <div className={currentStreak >= 7 ? "text-orange-600 font-medium" : "text-zinc-500"}>
+          <div className={currentStreak >= 7 ? "text-orange-600 font-medium" : "text-muted-foreground"}>
             <span className="block text-lg mb-1">7일</span>
             +10 XP
           </div>
-          <div className={currentStreak >= 14 ? "text-orange-600 font-medium" : "text-zinc-500"}>
+          <div className={currentStreak >= 14 ? "text-orange-600 font-medium" : "text-muted-foreground"}>
             <span className="block text-lg mb-1">14일</span>
             +20 XP
           </div>
-          <div className={currentStreak >= 30 ? "text-orange-600 font-medium" : "text-zinc-500"}>
+          <div className={currentStreak >= 30 ? "text-orange-600 font-medium" : "text-muted-foreground"}>
             <span className="block text-lg mb-1">30일</span>
             +50 XP
           </div>

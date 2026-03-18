@@ -80,7 +80,7 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: () => void
         </div>
       ) : (
         // Standard toast
-        <div className="bg-white dark:bg-zinc-800 rounded-xl p-4 shadow-xl min-w-[280px] border border-zinc-200 dark:border-zinc-700">
+        <div className="bg-card rounded-xl p-4 shadow-xl min-w-[280px] border border-border">
           <div className="flex items-start gap-3">
             <div
               className={`w-8 h-8 ${toastColors[toast.type]} rounded-full flex items-center justify-center text-white flex-shrink-0`}
@@ -88,11 +88,11 @@ function ToastItem({ toast, onRemove }: { toast: ToastType; onRemove: () => void
               {toastIcons[toast.type]}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-zinc-900 dark:text-white">
+              <p className="font-medium text-foreground">
                 {toast.message}
               </p>
               {toast.description && (
-                <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {toast.description}
                 </p>
               )}

@@ -199,7 +199,7 @@ export default function LoginPage() {
                 className="inline-flex items-center justify-center h-12 rounded-[var(--radius)] bg-yellow-400 hover:bg-yellow-500 transition-colors"
                 title="카카오로 로그인"
               >
-                <span className="text-lg font-bold text-zinc-900">K</span>
+                <span className="text-lg font-bold text-foreground">K</span>
               </button>
               <button
                 onClick={() => handleSocialLogin("naver")}

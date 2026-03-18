@@ -16,19 +16,19 @@ const STATUS_CONFIG: Record<
   tried: {
     label: "먹어봤어요",
     emoji: "😋",
-    color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    color: "bg-green-100 text-green-700",
     borderColor: "border-green-500",
   },
   favorite: {
     label: "담가봤어요",
     emoji: "👨‍🍳",
-    color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    color: "bg-blue-100 text-blue-700",
     borderColor: "border-blue-500",
   },
   want_to_try: {
     label: "도전할래요",
     emoji: "🎯",
-    color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    color: "bg-amber-100 text-amber-700",
     borderColor: "border-amber-500",
   },
 };
@@ -121,26 +121,26 @@ export default function KimchiDexButton({
 
   if (isLoading) {
     return (
-      <section className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 border-2 border-amber-200 dark:border-amber-800">
+      <section className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-1/3" />
-          <div className="h-2 bg-zinc-200 dark:bg-zinc-700 rounded" />
-          <div className="h-12 bg-zinc-200 dark:bg-zinc-700 rounded" />
+          <div className="h-6 bg-muted rounded w-1/3" />
+          <div className="h-2 bg-muted rounded" />
+          <div className="h-12 bg-muted rounded" />
         </div>
       </section>
     );
   }
 
   return (
-    <section className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 border-2 border-amber-200 dark:border-amber-800">
+    <section className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+        <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
           <span className="text-2xl">📖</span>
           {t("title")}
         </h2>
         <Link
           href="/profile/kimchi-dex"
-          className="text-sm text-amber-600 dark:text-amber-400 hover:underline"
+          className="text-sm text-amber-600 hover:underline"
         >
           {t("viewDetails")} →
         </Link>
@@ -148,13 +148,13 @@ export default function KimchiDexButton({
 
       {/* Progress */}
       <div className="mb-4">
-        <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 mb-1">
+        <div className="flex justify-between text-sm text-muted-foreground mb-1">
           <span>{t("collectionProgress")}</span>
           <span>
             {collected}/{total} ({progress}%)
           </span>
         </div>
-        <div className="h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
             style={{ width: `${progress}%` }}
@@ -185,7 +185,7 @@ export default function KimchiDexButton({
           {/* Rating */}
           {(currentStatus === "tried" || currentStatus === "favorite") && (
             <div>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+              <p className="text-sm text-muted-foreground mb-2">
                 {t("myRating")}
               </p>
               <div className="flex gap-1">
@@ -214,7 +214,7 @@ export default function KimchiDexButton({
                   value={memoText}
                   onChange={(e) => setMemoText(e.target.value)}
                   placeholder="이 김치에 대한 메모를 남겨보세요..."
-                  className="w-full p-3 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white resize-none"
+                  className="w-full p-3 border border-border rounded-lg bg-card text-foreground resize-none"
                   rows={3}
                 />
                 <div className="flex gap-2">
@@ -226,7 +226,7 @@ export default function KimchiDexButton({
                   </button>
                   <button
                     onClick={() => setShowMemo(false)}
-                    className="px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                    className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
                   >
                     {t("cancelMemo")}
                   </button>
@@ -238,10 +238,10 @@ export default function KimchiDexButton({
                   setMemoText(currentEntry?.memo || "");
                   setShowMemo(true);
                 }}
-                className="w-full p-3 border border-dashed border-zinc-300 dark:border-zinc-600 rounded-lg text-sm text-zinc-500 hover:border-amber-500 hover:text-amber-500 transition-colors text-left"
+                className="w-full p-3 border border-dashed border-border rounded-lg text-sm text-muted-foreground hover:border-amber-500 hover:text-amber-500 transition-colors text-left"
               >
                 {currentEntry?.memo ? (
-                  <span className="text-zinc-700 dark:text-zinc-300">
+                  <span className="text-muted-foreground">
                     &quot;{currentEntry.memo}&quot;
                   </span>
                 ) : (
@@ -254,7 +254,7 @@ export default function KimchiDexButton({
           {/* Remove from dex */}
           <button
             onClick={() => handleStatusChange(null)}
-            className="w-full py-2 text-sm text-zinc-500 hover:text-red-500 transition-colors"
+            className="w-full py-2 text-sm text-muted-foreground hover:text-red-500 transition-colors"
           >
             {t("removeFromDex")}
           </button>
@@ -278,7 +278,7 @@ export default function KimchiDexButton({
               )}
               <button
                 onClick={() => setShowOptions(false)}
-                className="w-full py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                className="w-full py-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 {t("cancelMemo")}
               </button>

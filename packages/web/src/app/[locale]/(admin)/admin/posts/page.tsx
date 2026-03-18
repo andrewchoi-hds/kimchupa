@@ -75,7 +75,7 @@ export default async function AdminPostsPage() {
                     {post.title}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
                       {postTypeLabels[post.type] || post.type}
                     </span>
                   </td>

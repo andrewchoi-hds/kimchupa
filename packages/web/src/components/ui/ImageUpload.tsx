@@ -162,10 +162,10 @@ export default function ImageUpload({
         onDrop={handleDrop}
         className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
           isDragging
-            ? "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+            ? "border-purple-500 bg-purple-50"
             : disabled
-            ? "border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 cursor-not-allowed"
-            : "border-zinc-300 dark:border-zinc-600 hover:border-purple-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+            ? "border-border bg-muted cursor-not-allowed"
+            : "border-border hover:border-purple-400 hover:bg-muted"
         }`}
       >
         <input
@@ -181,15 +181,15 @@ export default function ImageUpload({
         {isUploading ? (
           <div className="py-4">
             <div className="animate-spin w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto mb-2" />
-            <p className="text-sm text-zinc-500">업로드 중...</p>
+            <p className="text-sm text-muted-foreground">업로드 중...</p>
           </div>
         ) : (
           <>
             <span className="text-4xl block mb-2">📷</span>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-1">
+            <p className="text-sm text-muted-foreground mb-1">
               클릭하거나 이미지를 드래그하여 업로드
             </p>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-muted-foreground">
               JPG, PNG, GIF, WebP (최대 5MB, {maxImages}개까지)
             </p>
           </>
@@ -209,7 +209,7 @@ export default function ImageUpload({
           {images.map((image, index) => (
             <div
               key={image.filename}
-              className="relative group aspect-square rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-700"
+              className="relative group aspect-square rounded-lg overflow-hidden bg-muted"
             >
               <Image
                 src={image.url}
@@ -244,7 +244,7 @@ export default function ImageUpload({
 
       {/* Image count */}
       {images.length > 0 && (
-        <p className="text-xs text-zinc-500 text-right">
+        <p className="text-xs text-muted-foreground text-right">
           {images.length} / {maxImages} 이미지
         </p>
       )}

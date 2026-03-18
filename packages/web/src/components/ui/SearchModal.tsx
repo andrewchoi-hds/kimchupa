@@ -144,9 +144,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl mx-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-2xl mx-4 bg-card rounded-2xl shadow-2xl overflow-hidden">
         {/* Search Input */}
-        <div className="p-4 border-b border-zinc-200 dark:border-zinc-700">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3">
             <span className="text-xl">🔍</span>
             <input
@@ -155,14 +155,14 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="검색어를 입력하세요 (최소 2글자)"
-              className="flex-1 bg-transparent text-lg text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none"
+              className="flex-1 bg-transparent text-lg text-foreground placeholder-muted-foreground focus:outline-none"
             />
             {isSearching && (
-              <span className="text-sm text-zinc-400 animate-pulse">검색중...</span>
+              <span className="text-sm text-muted-foreground animate-pulse">검색중...</span>
             )}
             <button
               onClick={onClose}
-              className="p-2 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+              className="p-2 text-muted-foreground hover:text-foreground"
             >
               ✕
             </button>
@@ -170,7 +170,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-zinc-200 dark:border-zinc-700">
+        <div className="flex border-b border-border">
           {[
             { id: "all", label: "전체" },
             { id: "posts", label: `게시글 (${filteredPostResults.length})` },
@@ -182,7 +182,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               className={`flex-1 py-3 text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? "text-purple-600 border-b-2 border-purple-600"
-                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {tab.label}
@@ -193,41 +193,41 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {/* Results */}
         <div className="max-h-96 overflow-y-auto">
           {query.trim().length < 2 ? (
-            <div className="p-8 text-center text-zinc-500">
+            <div className="p-8 text-center text-muted-foreground">
               <span className="text-4xl block mb-2">🔍</span>
               <p>검색어를 입력하세요</p>
               <p className="text-sm mt-1">게시글과 위키에서 검색합니다</p>
             </div>
           ) : results.length === 0 && !isSearching ? (
-            <div className="p-8 text-center text-zinc-500">
+            <div className="p-8 text-center text-muted-foreground">
               <span className="text-4xl block mb-2">😕</span>
               <p>검색 결과가 없습니다</p>
               <p className="text-sm mt-1">다른 검색어로 시도해보세요</p>
             </div>
           ) : (
-            <div className="divide-y divide-zinc-100 dark:divide-zinc-700">
+            <div className="divide-y divide-border">
               {results.map((result) => (
                 <Link
                   key={`${result.type}-${result.id}`}
                   href={result.url}
                   onClick={onClose}
-                  className="block p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors"
+                  className="block p-4 hover:bg-muted transition-colors"
                 >
                   <div className="flex items-start gap-3">
                     <span
                       className={`px-2 py-0.5 text-xs rounded-full ${
                         result.type === "post"
-                          ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
-                          : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                          ? "bg-purple-100 text-purple-700"
+                          : "bg-green-100 text-green-700"
                       }`}
                     >
                       {result.type === "post" ? "게시글" : "위키"}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-zinc-900 dark:text-white truncate">
+                      <h4 className="font-medium text-foreground truncate">
                         {result.title}
                       </h4>
-                      <p className="text-sm text-zinc-500 line-clamp-2 mt-1">
+                      <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
                         {result.excerpt}
                       </p>
                     </div>
@@ -239,14 +239,14 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50">
-          <div className="flex items-center justify-between text-xs text-zinc-500">
+        <div className="p-3 border-t border-border bg-muted">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>
-              <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-700 rounded">ESC</kbd>
+              <kbd className="px-1.5 py-0.5 bg-background rounded">ESC</kbd>
               {" "}닫기
             </span>
             <span>
-              <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-700 rounded">↵</kbd>
+              <kbd className="px-1.5 py-0.5 bg-background rounded">↵</kbd>
               {" "}이동
             </span>
           </div>

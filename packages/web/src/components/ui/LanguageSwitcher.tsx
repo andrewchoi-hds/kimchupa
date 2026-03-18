@@ -29,7 +29,7 @@ export default function LanguageSwitcher() {
           className={`px-2 py-1 text-sm rounded transition-colors ${
             locale === loc
               ? "bg-red-600 text-white"
-              : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              : "text-muted-foreground hover:bg-muted"
           }`}
         >
           {loc.toUpperCase()}

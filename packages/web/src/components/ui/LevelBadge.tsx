@@ -20,13 +20,13 @@ export default function LevelBadge({
   };
 
   const levelColors: Record<number, string> = {
-    1: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    2: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-    3: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    4: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-    5: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
-    6: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-    7: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    1: "bg-green-100 text-green-700",
+    2: "bg-emerald-100 text-emerald-700",
+    3: "bg-blue-100 text-blue-700",
+    4: "bg-purple-100 text-purple-700",
+    5: "bg-orange-100 text-orange-700",
+    6: "bg-red-100 text-red-700",
+    7: "bg-yellow-100 text-yellow-700",
   };
 
   return (

@@ -16,17 +16,17 @@ export default function Badge({
   size = "md",
 }: BadgeProps) {
   const rarityColors = {
-    common: "from-zinc-400 to-zinc-500",
+    common: "from-gray-400 to-gray-500",
     rare: "from-blue-400 to-blue-600",
     epic: "from-purple-400 to-purple-600",
     legendary: "from-yellow-400 to-orange-500",
   };
 
   const rarityBorders = {
-    common: "border-zinc-300 dark:border-zinc-600",
-    rare: "border-blue-400 dark:border-blue-500",
-    epic: "border-purple-400 dark:border-purple-500",
-    legendary: "border-yellow-400 dark:border-yellow-500",
+    common: "border-border",
+    rare: "border-blue-400",
+    epic: "border-purple-400",
+    legendary: "border-yellow-400",
   };
 
   const sizeClasses = {
@@ -48,11 +48,11 @@ export default function Badge({
       >
         <span className={iconSizes[size]}>{icon}</span>
       </div>
-      <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 text-center">
+      <span className="text-xs font-medium text-muted-foreground text-center">
         {name}
       </span>
       {description && (
-        <span className="text-xs text-zinc-500 text-center max-w-20">
+        <span className="text-xs text-muted-foreground text-center max-w-20">
           {description}
         </span>
       )}

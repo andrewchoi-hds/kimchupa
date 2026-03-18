@@ -14,12 +14,12 @@ export default function XPProgressBar({ xp, showDetails = true }: XPProgressBarP
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-lg">{LEVEL_EMOJIS[currentLevel.level]}</span>
-            <span className="font-medium text-zinc-900 dark:text-white">
+            <span className="font-medium text-foreground">
               Lv.{currentLevel.level} {currentLevel.name}
             </span>
           </div>
           {nextLevel && (
-            <div className="flex items-center gap-1 text-sm text-zinc-500">
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <span>다음: {LEVEL_EMOJIS[nextLevel.level]} Lv.{nextLevel.level}</span>
             </div>
           )}
@@ -27,14 +27,14 @@ export default function XPProgressBar({ xp, showDetails = true }: XPProgressBarP
       )}
 
       <div className="relative">
-        <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+        <div className="h-3 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
         {showDetails && (
-          <div className="flex justify-between mt-1 text-xs text-zinc-500">
+          <div className="flex justify-between mt-1 text-xs text-muted-foreground">
             <span>{xp.toLocaleString()} XP</span>
             {nextLevel ? (
               <span>{xpToNext.toLocaleString()} XP to Lv.{nextLevel.level}</span>

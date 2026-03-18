@@ -10,14 +10,10 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  pending:
-    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  reviewed:
-    "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  resolved:
-    "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  dismissed:
-    "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
+  pending: "bg-yellow-100 text-yellow-700",
+  reviewed: "bg-blue-100 text-blue-700",
+  resolved: "bg-green-100 text-green-700",
+  dismissed: "bg-muted text-muted-foreground",
 };
 
 const reasonLabels: Record<string, string> = {
@@ -117,7 +113,7 @@ export default async function AdminReportsPage({
                   className="border-b border-border/50 hover:bg-muted/30 transition-colors"
                 >
                   <td className="px-4 py-3 text-foreground">
-                    <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
+                    <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
                       {report.targetType}
                     </span>
                     <span className="ml-1 text-xs text-muted-foreground">

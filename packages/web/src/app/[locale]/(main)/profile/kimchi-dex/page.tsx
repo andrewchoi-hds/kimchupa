@@ -21,19 +21,19 @@ const STATUS_CONFIG = {
   tried: {
     label: "먹어봤어요",
     emoji: "😋",
-    color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    color: "bg-green-100 text-green-700",
     borderColor: "border-green-500",
   },
   made: {
     label: "담가봤어요",
     emoji: "👨‍🍳",
-    color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    color: "bg-blue-100 text-blue-700",
     borderColor: "border-blue-500",
   },
   want: {
     label: "도전할래요",
     emoji: "🎯",
-    color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    color: "bg-amber-100 text-amber-700",
     borderColor: "border-amber-500",
   },
 } as const;
