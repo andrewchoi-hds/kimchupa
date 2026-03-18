@@ -25,11 +25,26 @@ export default function ForgotPasswordPage() {
 
     setIsLoading(true);
 
-    // Mock API call - simulate delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    setIsLoading(false);
-    setIsSubmitted(true);
+      const data = await res.json();
+
+      if (!res.ok && data.error) {
+        setError(data.error.message || "오류가 발생했습니다.");
+        return;
+      }
+
+      setIsSubmitted(true);
+    } catch {
+      setError("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSubmitted) {
@@ -46,7 +61,7 @@ export default function ForgotPasswordPage() {
             <p className="text-muted-foreground mb-6">
               <strong className="text-foreground">{email}</strong>
               <br />
-              위 이메일 주소로 비밀번호 재설정 링크를 발송했습니다.
+              이메일이 발송되었습니다. 받은편지함을 확인해주세요.
             </p>
             <p className="text-sm text-muted-foreground mb-8">
               이메일이 도착하지 않았다면 스팸 폴더를 확인해주세요.
@@ -150,9 +165,7 @@ export default function ForgotPasswordPage() {
         </Card>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          이 기능은 현재 데모 버전입니다.
-          <br />
-          실제 이메일은 발송되지 않습니다.
+          비밀번호 재설정 링크는 1시간 동안 유효합니다.
         </p>
       </div>
     </div>

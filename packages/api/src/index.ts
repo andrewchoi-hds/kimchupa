@@ -12,6 +12,8 @@ export { kimchiDexService } from "./services/kimchi-dex.service";
 export { kimchiService } from "./services/kimchi.service";
 export { searchService } from "./services/search.service";
 export { uploadService } from "./services/upload.service";
+export { notificationService } from "./services/notification.service";
+export { passwordResetService } from "./services/password-reset.service";
 
 // Repositories (for advanced use cases)
 export { postRepository } from "./repositories/post.repository";
@@ -22,6 +24,8 @@ export { badgeRepository } from "./repositories/badge.repository";
 export { bookmarkRepository } from "./repositories/bookmark.repository";
 export { kimchiDexRepository } from "./repositories/kimchi-dex.repository";
 export { kimchiRepository } from "./repositories/kimchi.repository";
+export { notificationRepository } from "./repositories/notification.repository";
+export { passwordResetRepository } from "./repositories/password-reset.repository";
 
 // Utilities
 export { getLevelByXp, getXpProgress } from "./utils/level-calculator";

@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { Search, Menu, X } from "lucide-react";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import SearchModal from "@/components/ui/SearchModal";
+import NotificationBell from "@/components/ui/NotificationBell";
 import { useProfile } from "@/hooks/useProfile";
 import { DesktopNav } from "./NavLinks";
 import UserMenu from "./UserMenu";
@@ -76,6 +77,7 @@ export default function Header({ user: userProp }: HeaderProps) {
             >
               <Search className="w-5 h-5" />
             </button>
+            {session?.user && <NotificationBell />}
             <ThemeToggle />
             <LanguageSwitcher />
             {user ? (

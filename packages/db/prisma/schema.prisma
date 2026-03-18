@@ -36,6 +36,12 @@ model User {
   badges        UserBadge[]
   xpHistory     XpHistory[]
   attendance    Attendance[]
+  notifications Notification[]
+  passwordResetTokens PasswordResetToken[]
+  followers     Follow[]       @relation("Following")
+  following     Follow[]       @relation("Followers")
+  reports       Report[]       @relation("Reporter")
+  role          String         @default("user") // user, admin
 }
 
 model Account {
@@ -332,4 +338,76 @@ model Attendance {
   @@unique([userId, date])
   @@index([userId])
   @@index([date])
+}
+
+// ============ Notifications ============
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // comment, like, badge, follow, system
+  title     String
+  message   String
+  link      String?  // 클릭 시 이동할 URL
+  read      Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+// ============ Password Reset ============
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+// ============ Follow System ============
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower    User     @relation("Followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+// ============ Report System ============
+
+model Report {
+  id          String   @id @default(cuid())
+  reporterId  String
+  targetType  String   // post, comment, user
+  targetId    String
+  reason      String
+  description String?  @db.Text
+  status      String   @default("pending") // pending, reviewed, resolved, dismissed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([targetType, targetId])
+  @@index([status])
 }
