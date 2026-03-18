@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authService } from "@kimchupa/api";
+import { checkRateLimit } from "@/lib/withRateLimit";
 
 export async function POST(request: NextRequest) {
+  const rateLimited = checkRateLimit(request, { interval: 60_000, limit: 5 });
+  if (rateLimited) return rateLimited;
+
   const { email, password, nickname } = await request.json();
 
   if (!email || !password || !nickname) {
