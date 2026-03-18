@@ -6,6 +6,7 @@ interface PostsQueryOptions {
   type?: string;
   tag?: string;
   limit?: number;
+  sort?: "latest" | "popular";
 }
 
 export function useInfinitePosts(options: PostsQueryOptions = {}) {
@@ -19,6 +20,7 @@ export function useInfinitePosts(options: PostsQueryOptions = {}) {
       params.set("limit", String(limit));
       if (options.type) params.set("type", options.type);
       if (options.tag) params.set("tag", options.tag);
+      if (options.sort) params.set("sort", options.sort);
 
       const res = await fetch(`/api/posts?${params}`);
       if (!res.ok) throw new Error("Failed to fetch posts");

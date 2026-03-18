@@ -10,6 +10,20 @@ export async function GET(request: NextRequest) {
   const limit = Number(searchParams.get("limit")) || 20;
   const type = searchParams.get("type") as PostType | null;
   const tag = searchParams.get("tag") || undefined;
+  const sort = searchParams.get("sort"); // "popular" or default "latest"
+
+  if (sort === "popular") {
+    const result = await postService.listPopular({
+      page,
+      limit,
+      type: type || undefined,
+    });
+    return NextResponse.json({
+      success: true,
+      data: result.posts,
+      meta: { page: result.page, limit: result.limit, total: result.total, totalPages: result.totalPages },
+    });
+  }
 
   const result = await postService.list({
     page,

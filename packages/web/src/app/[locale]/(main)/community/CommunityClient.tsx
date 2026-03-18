@@ -76,15 +76,15 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
     type: filter === "all" ? undefined : filter,
     limit: POSTS_PER_PAGE,
     tag: tagParam,
+    sort: sortBy === "popular" ? "popular" : undefined,
   });
 
   const posts = data?.pages?.flatMap((p: { data?: Record<string, unknown>[] }) => p.data ?? []) ?? [];
   const totalPosts = data?.pages?.[0]?.meta?.total ?? initialPosts?.meta?.total ?? 0;
   const showLoading = !data && isLoading;
 
-  const sortedPosts = sortBy === "popular"
-    ? [...posts].sort((a: { likeCount?: number }, b: { likeCount?: number }) => (b.likeCount ?? 0) - (a.likeCount ?? 0))
-    : posts;
+  // When sort=popular, the API already returns posts sorted by popularity score
+  const sortedPosts = posts;
 
   // Infinite scroll observer
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -215,6 +215,21 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
                                 <h2 className="text-lg font-bold text-foreground hover:text-primary transition-colors line-clamp-1">{post.title as string}</h2>
                               </div>
                               <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{post.excerpt as string}</p>
+                              {/* Image Preview */}
+                              {(post.images as string[] ?? []).length > 0 && (
+                                <div className="flex gap-2 mb-3">
+                                  {(post.images as string[]).slice(0, 3).map((img: string, idx: number) => (
+                                    <div key={idx} className="relative w-16 h-16 rounded-[var(--radius-sm)] overflow-hidden bg-muted flex-shrink-0">
+                                      <img src={img} alt="" className="w-full h-full object-cover" />
+                                    </div>
+                                  ))}
+                                  {(post.images as string[]).length > 3 && (
+                                    <div className="w-16 h-16 rounded-[var(--radius-sm)] bg-muted flex items-center justify-center text-xs text-muted-foreground flex-shrink-0">
+                                      +{(post.images as string[]).length - 3}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                               {tagStrings.length > 0 && (
                                 <div className="flex flex-wrap gap-1 mb-3">
                                   {tagStrings.slice(0, 3).map((tag: string) => (

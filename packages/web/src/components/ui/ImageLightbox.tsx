@@ -16,6 +16,7 @@ export default function ImageLightbox({
   onClose,
 }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   // 초기 인덱스 동기화
   useEffect(() => {
@@ -69,6 +70,20 @@ export default function ImageLightbox({
     setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const diff = e.changedTouches[0].clientX - touchStart;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToPrev();
+      else goToNext();
+    }
+    setTouchStart(null);
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
       {/* Close Button */}
@@ -88,7 +103,11 @@ export default function ImageLightbox({
       </div>
 
       {/* Main Image */}
-      <div className="relative w-full h-full flex items-center justify-center p-4 md:p-16">
+      <div
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-16"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <img
           src={images[currentIndex]}
           alt={`이미지 ${currentIndex + 1}`}

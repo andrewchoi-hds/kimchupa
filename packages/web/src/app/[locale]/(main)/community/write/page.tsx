@@ -41,8 +41,11 @@ export default function WritePage() {
   const [tagInput, setTagInput] = useState("");
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [showDraftModal, setShowDraftModal] = useState(false);
-  const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [lastSavedLabel, setLastSavedLabel] = useState<string | null>(null);
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const prevContentRef = useRef<string>("");
+  const prevTitleRef = useRef<string>("");
 
   // 로그인 필요 - 비로그인 시 로그인 페이지로 리다이렉트
   useEffect(() => {
@@ -59,9 +62,35 @@ export default function WritePage() {
     }
   }, []);
 
-  // 자동 저장 함수
+  // 상대 시간 포맷
+  const formatRelativeTime = useCallback((date: Date) => {
+    const diff = Date.now() - date.getTime();
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    if (seconds < 30) return "방금 전";
+    if (minutes < 1) return `${seconds}초 전`;
+    if (minutes < 60) return `${minutes}분 전`;
+    return `${hours}시간 전`;
+  }, []);
+
+  // 상대 시간 라벨 갱신 (10초마다)
+  useEffect(() => {
+    if (!lastSavedAt) return;
+    setLastSavedLabel(formatRelativeTime(lastSavedAt));
+    const timer = setInterval(() => {
+      setLastSavedLabel(formatRelativeTime(lastSavedAt));
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [lastSavedAt, formatRelativeTime]);
+
+  // 자동 저장 함수 (변경 감지 포함)
   const performAutoSave = useCallback(() => {
     if (title.trim() || content.trim()) {
+      // 변경이 없으면 저장 스킵
+      if (title === prevTitleRef.current && content === prevContentRef.current) return;
+      prevTitleRef.current = title;
+      prevContentRef.current = content;
       saveDraft({
         type: postType,
         title,
@@ -69,7 +98,7 @@ export default function WritePage() {
         tags,
         images: images.map((img) => img.url),
       });
-      setLastSaved(new Date().toLocaleTimeString("ko-KR"));
+      setLastSavedAt(new Date());
     }
   }, [postType, title, content, tags, images, saveDraft]);
 
@@ -81,7 +110,7 @@ export default function WritePage() {
 
     autoSaveTimerRef.current = setInterval(() => {
       performAutoSave();
-    }, 30000); // 30초마다 자동 저장
+    }, 30000);
 
     return () => {
       if (autoSaveTimerRef.current) {
@@ -112,8 +141,19 @@ export default function WritePage() {
 
   // 수동 임시저장
   const handleManualSave = () => {
-    performAutoSave();
-    toast.success(t("toast.draftSaved"), t("toast.draftSavedDesc"));
+    if (title.trim() || content.trim()) {
+      prevTitleRef.current = title;
+      prevContentRef.current = content;
+      saveDraft({
+        type: postType,
+        title,
+        content,
+        tags,
+        images: images.map((img) => img.url),
+      });
+      setLastSavedAt(new Date());
+      toast.success(t("toast.draftSaved"), t("toast.draftSavedDesc"));
+    }
   };
 
   const postTypes: { id: PostType; label: string; emoji: string; description: string; minLevel: number }[] = [
@@ -218,6 +258,30 @@ export default function WritePage() {
             <h1 className="text-2xl font-bold text-foreground mb-6">
               {t("writePost")}
             </h1>
+
+            {/* Auto-save indicator */}
+            {lastSavedLabel && (
+              <div className="flex items-center justify-between bg-success/10 border border-success/20 rounded-[var(--radius)] px-4 py-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-success">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>자동 저장됨 - {lastSavedLabel}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearDraft();
+                    setLastSavedAt(null);
+                    setLastSavedLabel(null);
+                    toast.success("임시저장 삭제", "임시저장된 글이 삭제되었습니다.");
+                  }}
+                  className="text-xs text-muted-foreground hover:text-error transition-colors"
+                >
+                  임시저장 삭제
+                </button>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Post Type Selection */}
@@ -367,9 +431,9 @@ export default function WritePage() {
                       {tCommon("cancel")}
                     </Button>
                   </Link>
-                  {lastSaved && (
+                  {lastSavedLabel && (
                     <span className="text-xs text-muted-foreground">
-                      {t("form.lastSaved", { time: lastSaved })}
+                      {t("form.lastSaved", { time: lastSavedLabel })}
                     </span>
                   )}
                 </div>

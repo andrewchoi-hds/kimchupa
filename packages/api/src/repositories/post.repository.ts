@@ -33,6 +33,22 @@ export const postRepository = {
     return { posts, total, page, limit, totalPages: Math.ceil(total / limit) };
   },
 
+  async findManyPopular(options: {
+    type?: PostType;
+  }) {
+    const where: any = {};
+    if (options.type) where.type = options.type;
+
+    return prisma.post.findMany({
+      where,
+      include: {
+        author: true,
+        tags: true,
+        _count: { select: { comments: true, likes: true } },
+      },
+    });
+  },
+
   async findById(id: string) {
     return prisma.post.findUnique({
       where: { id },

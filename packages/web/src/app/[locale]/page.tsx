@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
-import { Sparkles, BookOpen, Users, ArrowRight, TrendingUp, Award, BookMarked, ChefHat } from "lucide-react";
+import { Sparkles, BookOpen, Users, ArrowRight, TrendingUp, Award, BookMarked, ChefHat, Eye, Heart, MessageCircle, Flame } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
@@ -47,6 +47,17 @@ function CountUp({ target, suffix = "" }: { target: number; suffix?: string }) {
   return <span ref={ref}>0{suffix}</span>;
 }
 
+interface PopularPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  popularityScore: number;
+  author?: { nickname?: string };
+}
+
 export default function Home() {
   const { data: session } = useSession();
   const common = useTranslations("common");
@@ -54,6 +65,16 @@ export default function Home() {
   const features = useTranslations("features");
   const levels = useTranslations("levels");
   const revealRef = useScrollReveal();
+  const [popularPosts, setPopularPosts] = useState<PopularPost[]>([]);
+
+  useEffect(() => {
+    fetch("/api/posts?sort=popular&limit=3")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) setPopularPosts(json.data);
+      })
+      .catch(() => {});
+  }, []);
 
   const user = session?.user
     ? { nickname: session.user.name || "사용자", level: 1, levelName: levels("1"), xp: 0, profileImage: session.user.image || undefined }
@@ -188,6 +209,53 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Popular Posts */}
+        {popularPosts.length > 0 && (
+          <section className="py-16 reveal">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-10">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-sm font-medium text-primary mb-4">
+                  <Flame className="w-4 h-4" />
+                  인기 게시글
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-2">커뮤니티에서 화제인 글</h2>
+                <p className="text-muted-foreground">김추페 회원들이 가장 많이 읽고 공감한 게시글</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {popularPosts.map((post) => (
+                  <Link key={post.id} href={`/community/${post.id}`} className="block group">
+                    <div className="bg-card border border-border rounded-[var(--radius-lg)] p-6 hover:shadow-lg hover:border-primary/30 transition-all h-full flex flex-col">
+                      <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-3 mb-4 flex-1">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between text-sm text-muted-foreground pt-3 border-t border-border">
+                        <span className="font-medium">{post.author?.nickname ?? "익명"}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="flex items-center gap-1"><Eye className="h-3.5 w-3.5" />{post.viewCount ?? 0}</span>
+                          <span className="flex items-center gap-1"><Heart className="h-3.5 w-3.5" />{post.likeCount ?? 0}</span>
+                          <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" />{post.commentCount ?? 0}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              <div className="text-center mt-8">
+                <Link href="/community">
+                  <Button variant="outline" size="lg">
+                    더 많은 게시글 보기 <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* CTA */}
         {!session && (

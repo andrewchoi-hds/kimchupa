@@ -12,6 +12,34 @@ export const postService = {
     return postRepository.findMany(options);
   },
 
+  async listPopular(options: { page?: number; limit?: number; type?: PostType }) {
+    const { page = 1, limit = 10, type } = options;
+
+    const posts = await postRepository.findManyPopular({ type });
+
+    // Calculate popularity score: likes*3 + comments*2 + views*0.1
+    const scored = posts.map((post) => ({
+      ...post,
+      popularityScore:
+        (post.likeCount ?? 0) * 3 +
+        (post.commentCount ?? 0) * 2 +
+        (post.viewCount ?? 0) * 0.1,
+    }));
+
+    scored.sort((a, b) => b.popularityScore - a.popularityScore);
+
+    const total = scored.length;
+    const paginated = scored.slice((page - 1) * limit, page * limit);
+
+    return {
+      posts: paginated,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  },
+
   async getById(id: string) {
     return postRepository.findById(id);
   },
