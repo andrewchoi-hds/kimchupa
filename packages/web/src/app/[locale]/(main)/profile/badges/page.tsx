@@ -16,6 +16,24 @@ import { ArrowLeft, Target } from "lucide-react";
 
 type Rarity = "common" | "rare" | "epic" | "legendary";
 
+function formatRequirement(req?: string): string {
+  if (!req) return "";
+  try {
+    const parsed = JSON.parse(req);
+    const labels: Record<string, string> = {
+      post_count: "게시글 작성",
+      recipe_post_count: "레시피 게시글 작성",
+      qna_answer_count: "Q&A 답변",
+      attendance_streak: "연속 출석",
+      dex_count: "김치 도감 등록",
+    };
+    const label = labels[parsed.type] || parsed.type;
+    return `${label} ${parsed.value}회`;
+  } catch {
+    return req;
+  }
+}
+
 interface BadgeItem {
   id: string;
   name: string;
@@ -257,7 +275,7 @@ export default function BadgesPage() {
                       <p className="text-xs text-muted-foreground text-center">
                         <span className="font-medium">획득 조건:</span>
                         <br />
-                        {badge.requirement ?? badge.category ?? ""}
+                        {formatRequirement(badge.requirement)}
                       </p>
                     </div>
                     <Tag

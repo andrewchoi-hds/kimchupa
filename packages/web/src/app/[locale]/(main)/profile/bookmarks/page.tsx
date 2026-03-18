@@ -34,7 +34,9 @@ export default function BookmarksPage() {
   const toggleBookmark = useToggleBookmark();
 
   const profile = profileData?.data;
-  const bookmarks: BookmarkPost[] = bookmarksData?.data ?? [];
+  // API returns { success, data: { bookmarks: [...], total, ... } }
+  const rawData = bookmarksData?.data;
+  const bookmarks: BookmarkPost[] = Array.isArray(rawData) ? rawData : (rawData?.bookmarks ?? []);
 
   const isLoading = profileLoading || bookmarksLoading;
 

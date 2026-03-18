@@ -210,6 +210,16 @@ export default function KimchiDexPage() {
           </div>
         </div>
 
+        {/* Hero 설명 */}
+        <section className="bg-gradient-to-r from-secondary to-secondary-dark text-white py-10">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl font-bold mb-3">🥬 나의 김치 도감</h1>
+            <p className="text-white/85 max-w-xl mx-auto">
+              한국의 다양한 김치를 탐험하고 기록하세요! 먹어본 김치, 직접 담근 김치, 도전하고 싶은 김치를 체크하고 나만의 김치 컬렉션을 완성해보세요.
+            </p>
+          </div>
+        </section>
+
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
             {/* Header */}
