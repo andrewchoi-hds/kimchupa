@@ -14,13 +14,16 @@ import { useProfile } from "@/hooks/useProfile";
 import { useBadges, useUserBadges } from "@/hooks/useBadges";
 import { ArrowLeft, Target } from "lucide-react";
 
+type Rarity = "common" | "rare" | "epic" | "legendary";
+
 interface BadgeItem {
   id: string;
   name: string;
   icon: string;
   description: string;
-  condition: string;
-  rarity: "common" | "rare" | "epic" | "legendary";
+  category?: string;
+  requirement?: string;
+  rarity?: Rarity;
   earnedAt?: string | null;
 }
 
@@ -71,10 +74,16 @@ export default function BadgesPage() {
   const lockedBadges = badgesWithStatus.filter((b) => !b.earned);
   const earnedCount = earnedBadges.length;
 
-  const rarityOrder = ["legendary", "epic", "rare", "common"] as const;
+  const rarityOrder: Rarity[] = ["legendary", "epic", "rare", "common"];
+  const getRarity = (badge: BadgeItem): Rarity => {
+    if (badge.rarity && rarityOrder.includes(badge.rarity)) return badge.rarity;
+    // Map category to rarity as fallback
+    const categoryMap: Record<string, Rarity> = { activity: "common", community: "rare", kimchi: "epic" };
+    return categoryMap[badge.category ?? ""] ?? "common";
+  };
   const sortByRarity = (badges: typeof badgesWithStatus) =>
     [...badges].sort(
-      (a, b) => rarityOrder.indexOf(a.rarity) - rarityOrder.indexOf(b.rarity)
+      (a, b) => rarityOrder.indexOf(getRarity(a)) - rarityOrder.indexOf(getRarity(b))
     );
 
   const rarityLabels = {
@@ -149,8 +158,8 @@ export default function BadgesPage() {
               />
               <div className="flex justify-between mt-4 text-sm">
                 {Object.entries(rarityLabels).map(([rarity, info]) => {
-                  const count = allBadges.filter((b) => b.rarity === rarity).length;
-                  const earned = earnedBadges.filter((b) => b.rarity === rarity).length;
+                  const count = allBadges.filter((b) => getRarity(b) === rarity).length;
+                  const earned = earnedBadges.filter((b) => getRarity(b) === rarity).length;
                   return (
                     <div key={rarity} className="text-center">
                       <span className={`font-medium ${info.color}`}>
@@ -182,7 +191,7 @@ export default function BadgesPage() {
                       <Badge
                         name={badge.name}
                         icon={badge.icon}
-                        rarity={badge.rarity}
+                        rarity={getRarity(badge)}
                         earned={true}
                         size="lg"
                       />
@@ -196,17 +205,17 @@ export default function BadgesPage() {
                       )}
                       <Tag
                         variant={
-                          badge.rarity === "legendary"
+                          getRarity(badge) === "legendary"
                             ? "accent"
-                            : badge.rarity === "epic"
+                            : getRarity(badge) === "epic"
                             ? "primary"
-                            : badge.rarity === "rare"
+                            : getRarity(badge) === "rare"
                             ? "secondary"
                             : "default"
                         }
                         className="mt-2"
                       >
-                        {rarityLabels[badge.rarity].name}
+                        {rarityLabels[getRarity(badge)].name}
                       </Tag>
                     </Card>
                   ))}
@@ -237,7 +246,7 @@ export default function BadgesPage() {
                     <Badge
                       name={badge.name}
                       icon={badge.icon}
-                      rarity={badge.rarity}
+                      rarity={getRarity(badge)}
                       earned={false}
                       size="lg"
                     />
@@ -248,22 +257,22 @@ export default function BadgesPage() {
                       <p className="text-xs text-muted-foreground text-center">
                         <span className="font-medium">획득 조건:</span>
                         <br />
-                        {badge.condition}
+                        {badge.requirement ?? badge.category ?? ""}
                       </p>
                     </div>
                     <Tag
                       variant={
-                        badge.rarity === "legendary"
+                        getRarity(badge) === "legendary"
                           ? "accent"
-                          : badge.rarity === "epic"
+                          : getRarity(badge) === "epic"
                           ? "primary"
-                          : badge.rarity === "rare"
+                          : getRarity(badge) === "rare"
                           ? "secondary"
                           : "default"
                       }
                       className="mt-2"
                     >
-                      {rarityLabels[badge.rarity].name}
+                      {rarityLabels[getRarity(badge)].name}
                     </Tag>
                   </Card>
                 ))}
