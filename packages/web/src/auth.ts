@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import type { Provider, OAuthConfig } from "next-auth/providers";
+import type { Provider, OIDCConfig } from "next-auth/providers";
 import { authService } from "@kimchupa/api";
 
 // HireVisa OAuth Provider (OIDC-compatible, manual config)
-function HireVisa(): OAuthConfig<{
+function HireVisa(): OIDCConfig<{
   sub: string;
   email?: string;
   name?: string;
@@ -15,7 +15,8 @@ function HireVisa(): OAuthConfig<{
   return {
     id: "hirevisa",
     name: "HireVisa",
-    type: "oauth",
+    type: "oidc",
+    issuer: "https://accounts.hirevisa.com",
     clientId: process.env.HIREVISA_CLIENT_ID,
     clientSecret: process.env.HIREVISA_CLIENT_SECRET,
     authorization: {
