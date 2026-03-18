@@ -60,7 +60,11 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-error/10 border border-error/30 rounded-[var(--radius)] text-error text-sm">
+            <div
+              role="alert"
+              id="login-error"
+              className="mb-4 p-3 bg-error/10 border border-error/30 rounded-[var(--radius)] text-error text-sm"
+            >
               {error}
             </div>
           )}
@@ -82,6 +86,7 @@ export default function LoginPage() {
                 placeholder="email@example.com"
                 required
                 disabled={isLoading}
+                aria-describedby={error ? "login-error" : undefined}
               />
             </div>
 
@@ -101,6 +106,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
                 disabled={isLoading}
+                aria-describedby={error ? "login-error" : undefined}
               />
             </div>
 

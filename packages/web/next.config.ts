@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname, "../.."),
   },
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: 'https',

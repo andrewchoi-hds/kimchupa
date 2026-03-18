@@ -55,7 +55,7 @@ export default function Header({ user: userProp }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 glass border-b border-border">
       <div className="container mx-auto px-4">
-        <nav className="flex items-center h-16">
+        <nav role="navigation" aria-label="Main navigation" className="flex items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
             <div className="w-9 h-9 bg-primary rounded-[var(--radius)] flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
@@ -107,6 +107,7 @@ export default function Header({ user: userProp }: HeaderProps) {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 rounded-[var(--radius-sm)] hover:bg-muted transition-colors"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

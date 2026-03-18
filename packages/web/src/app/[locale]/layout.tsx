@@ -59,6 +59,12 @@ export default async function LocaleLayout({ children, params }: Props) {
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
         style={{ fontFamily: "'Pretendard Variable', var(--font-inter), system-ui, sans-serif" }}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:bg-primary focus:text-white focus:p-4 focus:top-0 focus:left-0"
+        >
+          Skip to content
+        </a>
         <SessionProvider>
           <QueryProvider>
             <NextIntlClientProvider messages={messages}>
