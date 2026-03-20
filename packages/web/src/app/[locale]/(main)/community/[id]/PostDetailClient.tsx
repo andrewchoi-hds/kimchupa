@@ -14,7 +14,6 @@ import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import Avatar from "@/components/ui/Avatar";
 import ReportModal from "@/components/ui/ReportModal";
-import { LEVEL_EMOJIS } from "@/constants/levels";
 import { renderMarkdown } from "@/lib/renderMarkdown";
 import { usePost, useCreateComment, useLikePost, useLikeComment, useDeletePost } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfile";
@@ -308,6 +307,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                           }}
                           className="relative aspect-square overflow-hidden rounded-[var(--radius)] group cursor-pointer"
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={image}
                             alt={`게시글 이미지 ${idx + 1}`}

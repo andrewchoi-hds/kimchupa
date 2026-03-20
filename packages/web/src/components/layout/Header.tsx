@@ -32,7 +32,7 @@ export default function Header({ user: userProp }: HeaderProps) {
   const t = useTranslations("nav");
 
   const { data: session } = useSession();
-  const { data: profileData, isLoading: isProfileLoading } = useProfile();
+  const { data: profileData } = useProfile();
   const profile = profileData?.success ? profileData.data : null;
 
   const user = userProp ?? (session?.user ? {

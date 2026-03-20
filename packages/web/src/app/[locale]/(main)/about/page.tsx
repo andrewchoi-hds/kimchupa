@@ -1,12 +1,11 @@
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
+import { useLocale } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export default function AboutPage() {
   const locale = useLocale();
-  const common = useTranslations("common");
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, MessageCircle, Eye, Bookmark } from "lucide-react";
+import { Heart, MessageCircle, Eye } from "lucide-react";
 import Avatar from "./Avatar";
 import Tag from "./Tag";
 

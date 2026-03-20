@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
-import { Sparkles, BookOpen, Users, ArrowRight, TrendingUp, Award, BookMarked, ChefHat, Eye, Heart, MessageCircle, Flame } from "lucide-react";
+import { Sparkles, BookOpen, Users, ArrowRight, TrendingUp, Award, ChefHat, Eye, Heart, MessageCircle, Flame } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";

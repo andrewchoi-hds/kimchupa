@@ -21,14 +21,6 @@ interface DraftState {
   hasDraft: () => boolean;
 }
 
-const DEFAULT_DRAFT: PostDraft = {
-  type: "free",
-  title: "",
-  content: "",
-  tags: [],
-  images: [],
-  savedAt: "",
-};
 
 export const useDraftStore = create<DraftState>()(
   persist(

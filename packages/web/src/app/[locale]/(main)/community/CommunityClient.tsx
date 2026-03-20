@@ -49,7 +49,7 @@ function CommunityLoading() {
   );
 }
 
-function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | null }) {
+function CommunityContent({ initialPosts: _initialPosts }: { initialPosts: InitialPostsData | null }) {
   const t = useTranslations("community");
   const { data: session } = useSession();
   const { data: profileData, isLoading: isProfileLoading } = useProfile();
@@ -80,7 +80,7 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
   });
 
   const posts = data?.pages?.flatMap((p: { data?: Record<string, unknown>[] }) => p.data ?? []) ?? [];
-  const totalPosts = data?.pages?.[0]?.meta?.total ?? initialPosts?.meta?.total ?? 0;
+  
   const showLoading = !data && isLoading;
 
   // When sort=popular, the API already returns posts sorted by popularity score
@@ -218,6 +218,7 @@ function CommunityContent({ initialPosts }: { initialPosts: InitialPostsData | n
                                 <div className="flex gap-2 mb-3">
                                   {(post.images as string[]).slice(0, 3).map((img: string, idx: number) => (
                                     <div key={idx} className="relative w-16 h-16 rounded-[var(--radius-sm)] overflow-hidden bg-muted flex-shrink-0">
+                                      {/* eslint-disable-next-line @next/next/no-img-element */}
                                       <img src={img} alt="" className="w-full h-full object-cover" />
                                     </div>
                                   ))}
