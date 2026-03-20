@@ -42,7 +42,7 @@
   },
   "hero": {
     "title": "Find the Perfect Kimchi for You",
-    "subtitle": "50 types of kimchi, personalized recommendations, and community",
+    "subtitle": "55 types of kimchi, personalized recommendations, and community",
     "cta": "Get Recommendations",
     "exploreCta": "Explore KimchiPedia"
   },
@@ -56,7 +56,7 @@
     },
     "wiki": {
       "title": "KimchiPedia",
-      "description": "History, recipes, and nutrition info for 50 types of kimchi"
+      "description": "History, recipes, and nutrition info for 55 types of kimchi"
     },
     "community": {
       "title": "Community",
@@ -82,7 +82,7 @@
   },
   "wiki": {
     "title": "KimchiPedia",
-    "subtitle": "Over 200 types of kimchi at a glance. History, recipes, and nutrition info!",
+    "subtitle": "55 types of kimchi at a glance. History, recipes, and nutrition info!",
     "totalTypes": "{count} types of kimchi",
     "searchPlaceholder": "Search by kimchi name or ingredient...",
     "noResults": "No results found",

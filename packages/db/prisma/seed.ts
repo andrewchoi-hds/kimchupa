@@ -304,6 +304,215 @@ const KIMCHI_DETAILS: Record<string, {
       calcium: 15
     },
     descriptionEn: "A refreshing winter water kimchi made by fermenting whole radishes in salted water. The tangy, effervescent broth is traditionally used as a base for cold noodle soup (naengmyeon)."
+  },
+  chonggak: {
+    history: `총각김치는 총각무(알타리무)로 담그는 김치로, 이름의 유래는 총각무의 긴 무청이 조선시대 미혼 남성(총각)의 댕기머리를 닮았다 하여 붙여졌습니다. 조선 후기부터 널리 담가 먹기 시작했으며, 배추김치와 함께 한국의 대표적인 김치로 자리잡았습니다. 특히 가을 김장철에 배추김치와 함께 담그는 것이 전통입니다.`,
+    makingProcess: `1. 총각무를 깨끗이 씻어 무청을 다듬습니다
+2. 굵은소금으로 1-2시간 절입니다
+3. 절인 총각무를 씻어 물기를 빼줍니다
+4. 고춧가루, 멸치액젓, 새우젓, 마늘, 생강, 파를 섞어 양념을 만듭니다
+5. 총각무에 양념을 골고루 버무립니다
+6. 밀폐용기에 담아 실온에서 하루 숙성 후 냉장 보관합니다`,
+    storageMethod: `김치냉장고: -1~0°C에서 최대 2개월
+일반냉장고: 4°C에서 2-3주
+무가 물러지기 전에 소비 권장, 밀폐용기 필수`,
+    nutritionInfo: {
+      calories: 19,
+      carbohydrates: 3.5,
+      protein: 0.9,
+      fat: 0.2,
+      fiber: 1.8,
+      vitaminC: 16
+    },
+    descriptionEn: "A popular Korean kimchi made with ponytail radishes (chonggak-mu). Named after the topknot hairstyle of unmarried men in the Joseon dynasty, it features a crunchy texture and spicy, pungent flavor."
+  },
+  pa: {
+    history: `파김치는 쪽파(또는 실파)를 통째로 양념에 버무려 담그는 전통 김치입니다. 삼국시대부터 파를 이용한 절임 음식이 있었던 것으로 추정되며, 조선시대 궁중 음식에도 등장합니다. 파의 매운맛과 달콤한 맛이 조화를 이루며, 특히 봄철 쪽파가 연하고 맛있을 때 담그면 최고의 맛을 냅니다.`,
+    makingProcess: `1. 쪽파를 깨끗이 다듬어 씻습니다
+2. 소금물에 30분 정도 살짝 절입니다
+3. 고춧가루, 멸치액젓, 새우젓, 마늘, 생강을 섞어 양념을 만듭니다
+4. 찹쌀풀을 쒀서 양념에 섞어줍니다
+5. 절인 쪽파에 양념을 골고루 묻혀 가지런히 정리합니다
+6. 용기에 담아 실온에서 반나절 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주
+파가 쉽게 물러지므로 빨리 소비 권장
+국물이 생기지 않도록 눌러서 보관`,
+    nutritionInfo: {
+      calories: 22,
+      carbohydrates: 3.8,
+      protein: 1.2,
+      fat: 0.4,
+      fiber: 1.5,
+      vitaminC: 12
+    },
+    descriptionEn: "A traditional Korean kimchi made with whole green onions (scallions) seasoned with red pepper, fish sauce, and garlic. Its distinctive pungent flavor pairs excellently with grilled meats like samgyeopsal."
+  },
+  oisobagi: {
+    history: `오이소박이는 여름철 대표 김치로, '소박이'란 속을 채워 넣는다는 뜻입니다. 조선시대 여름철 별미로 기록에 등장하며, 오이의 시원한 수분감과 부추 양념소의 매콤한 맛이 조화를 이루는 계절 김치입니다. 더운 여름 입맛이 없을 때 식욕을 돋우는 역할을 했습니다.`,
+    makingProcess: `1. 오이를 소금으로 문질러 씻은 뒤 5-6cm 길이로 자릅니다
+2. 양끝을 남기고 십자로 칼집을 넣습니다
+3. 소금물에 30분간 절입니다
+4. 부추, 당근, 고춧가루, 멸치액젓, 마늘, 생강으로 양념소를 만듭니다
+5. 칼집 사이에 양념소를 꽉 채워 넣습니다
+6. 용기에 담고 남은 양념국물을 부어 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 3-5일 (빨리 소비 권장)
+오이가 물러지기 쉬우므로 소량씩 담그는 것이 좋음
+양념이 빠지지 않도록 조심히 보관`,
+    nutritionInfo: {
+      calories: 12,
+      carbohydrates: 2.1,
+      protein: 0.8,
+      fat: 0.1,
+      fiber: 0.9,
+      vitaminC: 8
+    },
+    descriptionEn: "A refreshing summer kimchi made by stuffing scored cucumbers with a spicy filling of chives, red pepper, and seasonings. Its cool, crunchy texture makes it a perfect side dish for hot weather."
+  },
+  nabak: {
+    history: `나박김치는 무와 배추를 납작하게 썰어 맑은 국물에 담근 물김치의 한 종류입니다. '나박'이란 얇게 썬다는 뜻으로, 조선시대부터 봄·여름철 시원한 반찬으로 즐겨 먹었습니다. 고춧가루를 소량만 사용해 분홍빛을 띠며, 국물이 시원하고 개운한 것이 특징입니다.`,
+    makingProcess: `1. 무와 배추를 나박하게(얇고 납작하게) 썹니다
+2. 무에 소금을 뿌려 살짝 절입니다
+3. 미나리, 쪽파, 홍고추를 준비합니다
+4. 고춧가루를 거즈에 싸서 물에 우려 색을 냅니다
+5. 용기에 채소를 담고 소금과 마늘, 생강을 넣은 국물을 부어줍니다
+6. 실온에서 하루 발효시킨 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주
+국물이 탁해지기 전에 소비 권장
+서늘한 곳에서 천천히 발효시키면 국물이 더 시원해짐`,
+    nutritionInfo: {
+      calories: 10,
+      carbohydrates: 1.8,
+      protein: 0.5,
+      fat: 0.1,
+      fiber: 0.7,
+      vitaminC: 9
+    },
+    descriptionEn: "A mild water kimchi made with thinly sliced radish and napa cabbage in a light, refreshing broth with a hint of red pepper. Often served as a palate cleanser alongside rich Korean meals."
+  },
+  yeolmu: {
+    history: `열무김치는 어린 무(열무)의 줄기와 잎을 이용해 담그는 여름철 대표 김치입니다. '열무'는 '어린 무'라는 뜻으로, 부드러운 식감과 산뜻한 맛이 특징입니다. 조선시대부터 여름 별미로 사랑받았으며, 특히 열무비빔국수와 열무냉면의 재료로 유명합니다.`,
+    makingProcess: `1. 열무를 5-6cm 길이로 잘라 깨끗이 씻습니다
+2. 소금에 30분간 살짝 절여 숨을 죽입니다
+3. 고춧가루, 멸치액젓, 마늘, 생강을 섞어 양념을 만듭니다
+4. 찹쌀풀을 쒀서 양념에 섞어줍니다
+5. 절인 열무에 양념을 살살 버무립니다 (줄기가 부러지지 않게)
+6. 실온에서 반나절 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주
+여름철에는 빨리 시어지므로 소량씩 담가 빨리 소비
+국물이 많으면 비빔국수에 활용 가능`,
+    nutritionInfo: {
+      calories: 14,
+      carbohydrates: 2.3,
+      protein: 0.7,
+      fat: 0.2,
+      fiber: 1.3,
+      vitaminC: 15
+    },
+    descriptionEn: "A light and refreshing summer kimchi made from young radish greens. Popular as a base for bibim-guksu (spicy mixed noodles) and a staple of Korean summer cuisine with its tangy, slightly sour flavor."
+  },
+  gat: {
+    history: `갓김치는 전라남도 여수·순천 지역의 대표적인 향토 김치로, 갓 특유의 알싸하고 톡 쏘는 매운맛이 특징입니다. 고려시대부터 갓을 재배한 기록이 있으며, 특히 여수 돌산갓김치가 전국적으로 유명합니다. 2006년 돌산갓김치는 지리적 표시 단체표장으로 등록되었습니다.`,
+    makingProcess: `1. 갓을 깨끗이 다듬어 씻습니다
+2. 소금에 2-3시간 절입니다 (줄기가 굵으면 더 오래)
+3. 찹쌀풀에 고춧가루, 멸치액젓, 새우젓, 마늘, 생강을 섞어 양념을 만듭니다
+4. 절인 갓에 양념을 골고루 묻혀줍니다
+5. 가지런히 정리하여 용기에 담습니다
+6. 실온에서 1-2일 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-3주
+발효가 진행될수록 톡 쏘는 맛이 강해짐
+밀폐 보관 필수 (냄새가 강함)`,
+    nutritionInfo: {
+      calories: 20,
+      carbohydrates: 3.2,
+      protein: 1.5,
+      fat: 0.3,
+      fiber: 2.0,
+      vitaminC: 22
+    },
+    descriptionEn: "A pungent and spicy kimchi made from mustard leaves, a specialty of Jeollanam-do province. Known for its distinctive sharp, wasabi-like kick and deep flavor that intensifies with fermentation."
+  },
+  bossam: {
+    history: `보쌈김치는 조선시대 궁중에서 유래한 고급 김치로, 개성 지방의 대표적인 김치이기도 합니다. 배추잎에 해산물, 밤, 대추, 배 등 다양한 귀한 재료를 싸서 담그기 때문에 '보쌈(싸다)'이라는 이름이 붙었습니다. 왕실과 양반가에서 명절이나 특별한 날에 담가 먹던 최고급 김치입니다.`,
+    makingProcess: `1. 배추를 절여서 잎을 한 장씩 떼어놓습니다
+2. 굴, 낙지, 전복 등 해산물을 손질합니다
+3. 밤, 대추, 배, 잣, 석이버섯 등 고명을 준비합니다
+4. 양념(고춧가루, 젓갈, 마늘, 생강)을 만듭니다
+5. 배추잎 위에 해산물, 과일, 견과류, 양념을 올려 보자기처럼 싸줍니다
+6. 용기에 차곡차곡 담아 1-2일 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주
+해산물이 들어가므로 장기 보관 불가
+밀폐용기에 보관하고 빨리 소비 권장`,
+    nutritionInfo: {
+      calories: 32,
+      carbohydrates: 4.1,
+      protein: 2.8,
+      fat: 0.5,
+      fiber: 1.4,
+      vitaminC: 14
+    },
+    descriptionEn: "An elaborate royal court kimchi where napa cabbage leaves are wrapped around premium fillings including seafood (oysters, octopus), chestnuts, jujubes, and pine nuts. Considered the most luxurious type of kimchi."
+  },
+  baek: {
+    history: `백김치는 고춧가루를 사용하지 않고 담그는 하얀 김치로, 고추가 한반도에 전래되기 이전의 김치 원형에 가깝습니다. 조선시대에는 매운 것을 먹지 못하는 어린이, 노인, 환자를 위해 담갔으며, 궁중에서도 즐겨 담갔습니다. 담백하고 시원한 국물 맛이 특징입니다.`,
+    makingProcess: `1. 배추를 소금에 절여 씻은 후 물기를 뺍니다
+2. 무채, 배채, 밤, 대추, 잣을 준비합니다
+3. 마늘, 생강, 실고추를 준비합니다 (고춧가루 사용 안 함)
+4. 배추 잎 사이에 준비한 속재료를 넣습니다
+5. 소금물을 만들어 부어줍니다
+6. 실온에서 1-2일 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-4주
+국물이 맑게 유지되도록 깨끗한 도구 사용
+배추가 국물에 잠기도록 보관`,
+    nutritionInfo: {
+      calories: 11,
+      carbohydrates: 1.9,
+      protein: 0.6,
+      fat: 0.1,
+      fiber: 1.0,
+      vitaminC: 15
+    },
+    descriptionEn: "A non-spicy white kimchi made without red pepper powder. Features a clean, mild flavor with subtle sweetness from pear and jujube. Perfect for children, elderly, or anyone who prefers gentle flavors."
+  },
+  buchu: {
+    history: `부추김치는 부추를 양념에 버무려 담그는 김치로, 삼국시대부터 부추가 약용 및 식용으로 사용된 기록이 있습니다. 부추는 예로부터 '양기를 돋우는 채소'로 알려져 건강식으로 즐겨 먹었습니다. 경상도 지역에서는 '정구지김치'라고도 부르며, 만들기 쉬워 가정에서 널리 담가 먹는 김치입니다.`,
+    makingProcess: `1. 부추를 깨끗이 씻어 4-5cm 길이로 자릅니다
+2. 소금에 살짝 절여 10-15분간 숨을 죽입니다
+3. 고춧가루, 멸치액젓, 마늘, 생강, 설탕을 섞어 양념을 만듭니다
+4. 절인 부추에 양념을 골고루 가볍게 버무립니다 (부추가 부러지지 않게)
+5. 통깨를 뿌려 마무리합니다
+6. 바로 먹거나 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 3-5일
+부추가 쉽게 물러지므로 소량씩 담가 빨리 소비
+밀폐용기에 보관, 숙성시키지 않고 신선하게 먹는 것이 좋음`,
+    nutritionInfo: {
+      calories: 17,
+      carbohydrates: 2.6,
+      protein: 1.3,
+      fat: 0.3,
+      fiber: 1.5,
+      vitaminC: 13
+    },
+    descriptionEn: "A quick and easy kimchi made with garlic chives, seasoned with red pepper and fish sauce. Known for its distinctive aroma and health benefits, it's a beloved everyday side dish in Korean homes."
+  },
+  kkaennip: {
+    history: `깻잎김치는 들깻잎을 양념장에 켜켜이 재워 담그는 장아찌 형태의 김치입니다. 들깨는 한반도에서 오래전부터 재배되었으며, 깻잎의 독특한 향은 한국인이 특히 좋아하는 향미입니다. 밥도둑이라 불릴 만큼 밥과의 궁합이 뛰어나며, 고기를 쌀 때 함께 먹으면 느끼함을 잡아줍니다.`,
+    makingProcess: `1. 깻잎을 한 장씩 깨끗이 씻어 물기를 뺍니다
+2. 간장, 고춧가루, 마늘, 파, 멸치액젓, 통깨를 섞어 양념장을 만듭니다
+3. 깻잎 한 장마다 양념장을 골고루 발라 켜켜이 쌓습니다
+4. 5-10장씩 묶어 밀폐용기에 차곡차곡 담습니다
+5. 실온에서 반나절 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-3주
+양념장에 잠기도록 보관
+시간이 지날수록 양념이 잘 배어 맛이 깊어짐`,
+    nutritionInfo: {
+      calories: 25,
+      carbohydrates: 3.0,
+      protein: 1.8,
+      fat: 0.6,
+      fiber: 2.2,
+      vitaminC: 10
+    },
+    descriptionEn: "Perilla leaves layered with a savory soy sauce-based seasoning. Known as a 'rice thief' for its irresistible flavor, the aromatic perilla leaves also pair perfectly with grilled meats."
   }
 };
 

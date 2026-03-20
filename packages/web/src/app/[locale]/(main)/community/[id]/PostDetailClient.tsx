@@ -19,6 +19,12 @@ import { usePost, useCreateComment, useLikePost, useLikeComment, useDeletePost }
 import { useProfile } from "@/hooks/useProfile";
 import { useBookmarks, useToggleBookmark } from "@/hooks/useBookmarks";
 import { toast } from "@/stores/toastStore";
+import { USER_LEVELS } from "@/constants/levels";
+
+const getLevelName = (level: number) => {
+  const found = USER_LEVELS.find(l => l.level === level);
+  return found?.name ?? `레벨 ${level}`;
+};
 
 interface PostDetailClientProps {
   postId: string;
@@ -101,7 +107,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
   const typeInfo = getTypeLabel((post.type as string));
   const isBookmarked = bookmarkedIds.includes(id);
   const isLiked = (post.isLiked as boolean) ?? false;
-  const author = post.author as { id: string; nickname: string; level: number; levelName: string } | undefined;
+  const author = post.author as { id: string; nickname: string; level: number } | undefined;
 
   // 작성자 본인 확인
   const isAuthor = session?.user && profile && author?.id === profile.id;
@@ -267,7 +273,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                       <div className="flex items-center gap-2">
                         <LevelBadge
                           level={author?.level ?? 1}
-                          levelName={author?.levelName ?? ""}
+                          levelName={getLevelName(author?.level ?? 1)}
                           size="sm"
                           showName={false}
                         />
@@ -469,21 +475,21 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                 {topLevelComments.length > 0 ? (
                   topLevelComments.map((comment: Record<string, unknown>) => {
                     const replies = getReplies(comment.id as string);
-                    const commentAuthor = comment.author as { nickname: string; level: number; levelName: string };
+                    const commentAuthor = comment.author as { nickname: string; level: number } | undefined;
                     return (
                       <div key={comment.id as string} className="space-y-2">
                         {/* Parent Comment */}
                         <Card padding="md">
                           <div className="flex gap-3">
-                            <Avatar name={commentAuthor.nickname} size="md" />
+                            <Avatar name={commentAuthor?.nickname ?? "?"} size="md" />
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium text-foreground">
-                                  {commentAuthor.nickname}
+                                  {commentAuthor?.nickname}
                                 </span>
                                 <LevelBadge
-                                  level={commentAuthor.level}
-                                  levelName={commentAuthor.levelName}
+                                  level={commentAuthor?.level ?? 1}
+                                  levelName={getLevelName(commentAuthor?.level ?? 1)}
                                   size="sm"
                                   showName={false}
                                 />
@@ -526,7 +532,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                                       <textarea
                                         value={replyText}
                                         onChange={(e) => setReplyText(e.target.value)}
-                                        placeholder={`@${commentAuthor.nickname} 에게 답글 작성...`}
+                                        placeholder={`@${commentAuthor?.nickname ?? "?"} 에게 답글 작성...`}
                                         className="w-full p-2 bg-muted rounded-[var(--radius)] border border-border resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm text-foreground placeholder:text-muted-foreground"
                                         rows={2}
                                       />
@@ -553,7 +559,7 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                         {replies.length > 0 && (
                           <div className="ml-8 space-y-2">
                             {replies.map((reply: Record<string, unknown>) => {
-                              const replyAuthor = reply.author as { nickname: string; level: number; levelName: string };
+                              const replyAuthor = reply.author as { nickname: string; level: number } | undefined;
                               return (
                                 <Card
                                   key={reply.id as string}
@@ -561,15 +567,15 @@ export default function PostDetailClient({ postId, initialPost }: PostDetailClie
                                   className="bg-muted/50 border-l-4 border-primary/30"
                                 >
                                   <div className="flex gap-3">
-                                    <Avatar name={replyAuthor.nickname} size="sm" />
+                                    <Avatar name={replyAuthor?.nickname ?? "?"} size="sm" />
                                     <div className="flex-1">
                                       <div className="flex items-center gap-2 mb-2">
                                         <span className="font-medium text-foreground text-sm">
-                                          {replyAuthor.nickname}
+                                          {replyAuthor?.nickname}
                                         </span>
                                         <LevelBadge
-                                          level={replyAuthor.level}
-                                          levelName={replyAuthor.levelName}
+                                          level={replyAuthor?.level ?? 1}
+                                          levelName={getLevelName(replyAuthor?.level ?? 1)}
                                           size="sm"
                                           showName={false}
                                         />
