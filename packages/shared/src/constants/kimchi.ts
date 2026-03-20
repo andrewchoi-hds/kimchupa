@@ -965,43 +965,159 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { id: "winter", label: "겨울 - 든든한 김치", scores: { fermented: 5, spicy: 4 } },
     ],
   },
+  {
+    id: "experience",
+    question: "김치 경험은 어느 정도인가요?",
+    options: [
+      { id: "beginner", label: "김치 초보 - 처음 먹어봐요", scores: { mild: 4, crunchy: 3 } },
+      { id: "casual", label: "가끔 먹어요", scores: { spicy: 2, fermented: 2 } },
+      { id: "regular", label: "매일 먹어요", scores: { spicy: 3, fermented: 3 } },
+      { id: "expert", label: "김치 없이 못 살아요!", scores: { spicy: 4, fermented: 4 } },
+    ],
+  },
+  {
+    id: "health",
+    question: "건강 관심사가 있나요?",
+    options: [
+      { id: "probiotic", label: "장 건강/유산균이 중요해요", scores: { fermented: 5 } },
+      { id: "lowsalt", label: "나트륨이 적었으면 좋겠어요", scores: { mild: 3, refreshing: 3 } },
+      { id: "vitamin", label: "비타민/영양소가 풍부한 게 좋아요", scores: { crunchy: 3, refreshing: 2 } },
+      { id: "none", label: "맛이 최고!", scores: { spicy: 3, fermented: 3 } },
+    ],
+  },
+  {
+    id: "cooking",
+    question: "김치를 요리에 활용할 계획이 있나요?",
+    options: [
+      { id: "raw", label: "그냥 반찬으로 먹을 거예요", scores: { crunchy: 4, spicy: 3 } },
+      { id: "stew", label: "김치찌개/전골에 넣을 거예요", scores: { fermented: 5, spicy: 4 } },
+      { id: "fried", label: "김치볶음밥/전에 쓸 거예요", scores: { fermented: 4, spicy: 3 } },
+      { id: "various", label: "다양하게 활용할 거예요", scores: { fermented: 3, spicy: 3, crunchy: 3 } },
+    ],
+  },
 ];
+
+// 김치 유형 성격 분석
+export interface PersonalityType {
+  type: string;
+  emoji: string;
+  desc: string;
+}
+
+export function getPersonalityType(scores: Record<string, number>): PersonalityType {
+  if ((scores.spicy || 0) >= 4 && (scores.fermented || 0) >= 4)
+    return { type: "김치 마니아", emoji: "🔥", desc: "매운맛과 깊은 발효의 조화를 사랑하는 진정한 김치 애호가!" };
+  if ((scores.spicy || 0) >= 4)
+    return { type: "매운맛 전사", emoji: "🌶️", desc: "강렬한 매운맛이 없으면 김치가 아니죠!" };
+  if ((scores.fermented || 0) >= 4)
+    return { type: "발효 탐험가", emoji: "🫙", desc: "깊고 풍부한 발효의 세계를 즐기는 미식가!" };
+  if ((scores.refreshing || 0) >= 4)
+    return { type: "시원함 추구형", emoji: "💧", desc: "시원하고 산뜻한 김치로 입맛을 돋우는 타입!" };
+  if ((scores.crunchy || 0) >= 4)
+    return { type: "아삭이 러버", emoji: "✨", desc: "아삭아삭한 식감이 생명! 신선함을 사랑하는 타입!" };
+  if ((scores.mild || 0) >= 4)
+    return { type: "순한맛 감성", emoji: "🥗", desc: "부드럽고 순한 맛으로 김치의 매력을 느끼는 타입!" };
+  return { type: "김치 올라운더", emoji: "🥬", desc: "다양한 김치를 골고루 즐기는 균형잡힌 미식가!" };
+}
+
+// 추천 결과 타입
+export interface KimchiRecommendation {
+  kimchi: KimchiType;
+  matchScore: number; // 0-100
+  matchReason: string;
+}
 
 // 점수에 따른 김치 추천 로직
 export function recommendKimchi(
   scores: { spicy: number; fermented: number; crunchy: number; mild: number; refreshing: number }
-): KimchiType[] {
+): KimchiRecommendation[] {
   const kimchiScores = KIMCHI_DATA.map((kimchi) => {
     let score = 0;
+    const reasons: string[] = [];
 
     // 매운맛 점수
     if (scores.mild > 3) {
-      score += kimchi.spicyLevel === 0 || kimchi.spicyLevel === 1 ? 20 : -10;
+      if (kimchi.spicyLevel === 0 || kimchi.spicyLevel === 1) {
+        score += 20;
+        reasons.push("순한 맛이 잘 맞아요");
+      } else {
+        score -= 10;
+      }
     } else {
-      score += Math.abs(kimchi.spicyLevel - (scores.spicy || 3)) <= 1 ? 15 : 0;
+      const spicyDiff = Math.abs(kimchi.spicyLevel - (scores.spicy || 3));
+      if (spicyDiff <= 1) {
+        score += 15;
+        if (kimchi.spicyLevel >= 4) reasons.push("좋아하시는 매운맛");
+        else if (kimchi.spicyLevel >= 2) reasons.push("적당한 매운맛");
+      }
     }
 
     // 발효 점수
     const fermentedDiff = Math.abs(kimchi.fermentationLevel - (scores.fermented || 3));
-    score += (5 - fermentedDiff) * 4;
+    const fermentedScore = (5 - fermentedDiff) * 4;
+    score += fermentedScore;
+    if (fermentedDiff <= 1 && kimchi.fermentationLevel >= 3) {
+      reasons.push("깊은 발효 풍미");
+    }
 
     // 아삭함 점수
     const crunchyDiff = Math.abs(kimchi.crunchiness - (scores.crunchy || 3));
-    score += (5 - crunchyDiff) * 3;
+    const crunchyScore = (5 - crunchyDiff) * 3;
+    score += crunchyScore;
+    if (crunchyDiff <= 1 && kimchi.crunchiness >= 4) {
+      reasons.push("아삭한 식감");
+    }
 
     // 시원함 점수 (물김치 보너스)
     if (scores.refreshing > 3) {
       if (kimchi.tags.includes("물김치") || kimchi.tags.includes("시원함")) {
         score += 15;
+        reasons.push("시원한 국물");
+      }
+      if (kimchi.tags.includes("여름") || kimchi.tags.includes("상큼함")) {
+        score += 8;
+        reasons.push("산뜻한 맛");
       }
     }
 
-    return { kimchi, score };
+    // 순한맛 보너스
+    if (scores.mild > 3) {
+      if (kimchi.tags.includes("순한맛") || kimchi.tags.includes("담백") || kimchi.tags.includes("부드러움")) {
+        score += 10;
+        reasons.push("부드럽고 담백한 맛");
+      }
+    }
+
+    // 건강 태그 보너스
+    if (kimchi.healthBenefits.length >= 3) {
+      score += 3;
+    }
+
+    // 대표 김치 약간의 보너스 (배추김치, 깍두기 등)
+    if (["baechu", "kkakdugi", "chonggak", "dongchimi", "oisobagi"].includes(kimchi.id)) {
+      score += 2;
+    }
+
+    const matchReason = reasons.length > 0
+      ? reasons.slice(0, 3).join(", ")
+      : "다양한 맛의 균형이 좋아요";
+
+    return { kimchi, score, matchReason };
   });
 
-  // 점수 순으로 정렬하여 상위 3개 반환
+  // 점수 순으로 정렬
+  kimchiScores.sort((a, b) => b.score - a.score);
+
+  // 최고 점수를 기준으로 0-100 matchScore 계산
+  const maxScore = kimchiScores[0]?.score || 1;
+  const minScore = kimchiScores[kimchiScores.length - 1]?.score || 0;
+  const range = maxScore - minScore || 1;
+
   return kimchiScores
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-    .map((item) => item.kimchi);
+    .slice(0, 5)
+    .map((item) => ({
+      kimchi: item.kimchi,
+      matchScore: Math.round(((item.score - minScore) / range) * 40 + 60), // 60-100 range
+      matchReason: item.matchReason,
+    }));
 }
