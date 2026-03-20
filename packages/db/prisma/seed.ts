@@ -1,6 +1,7 @@
 import { PrismaClient, PostType, KimchiDexStatus } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { KIMCHI_DATA } from "@kimchupa/shared/src/constants/kimchi";
+import { KIMCHI_DETAILS_BATCH2 } from "./seed-details-batch2";
 import "dotenv/config";
 
 // Create Prisma client with Neon adapter for seed
@@ -513,6 +514,405 @@ const KIMCHI_DETAILS: Record<string, {
       vitaminC: 10
     },
     descriptionEn: "Perilla leaves layered with a savory soy sauce-based seasoning. Known as a 'rice thief' for its irresistible flavor, the aromatic perilla leaves also pair perfectly with grilled meats."
+  },
+  altari: {
+    history: `알타리김치는 총각무(알타리무)로 담그는 김치의 별칭으로, '알타리'는 작고 둥근 무의 모양에서 유래했습니다. 총각김치와 같은 재료를 쓰지만, 지역에 따라 양념 비율이나 숙성 방법에 차이가 있어 별도로 구분하기도 합니다. 특히 충청도와 전라도 지역에서 '알타리'라는 이름으로 더 많이 불립니다.`,
+    makingProcess: `1. 알타리무를 깨끗이 씻어 무청을 다듬습니다
+2. 굵은소금으로 1-2시간 절여 숨을 죽입니다
+3. 절인 무를 씻어 물기를 빼줍니다
+4. 고춧가루, 멸치액젓, 새우젓, 마늘, 생강, 쪽파를 섞어 양념을 만듭니다
+5. 알타리무에 양념을 골고루 버무립니다
+6. 밀폐용기에 담아 실온에서 하루 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-3주. 아삭한 식감을 즐기려면 일찍 소비하는 것이 좋으며, 김치냉장고에서는 최대 2개월까지 보관 가능합니다.`,
+    nutritionInfo: {
+      calories: 20,
+      carbohydrates: 3.6,
+      protein: 0.8,
+      fat: 0.2,
+      fiber: 1.7,
+      vitaminC: 15
+    },
+    descriptionEn: "A variant name for ponytail radish kimchi, featuring small, round radishes with a crispy bite and spicy seasoning. Popular in Chungcheong and Jeolla provinces."
+  },
+  andong: {
+    history: `안동김치는 경상북도 안동 지방에서 전해 내려오는 전통 김치로, 안동은 유교 문화의 중심지로서 반가(양반가) 음식 문화가 발달했습니다. 안동김치는 간이 세지 않고 담백하면서도 깊은 맛이 특징이며, 고춧가루보다 고춧잎이나 고추씨를 활용하는 독특한 방식이 전해집니다. 안동 간고등어와 함께 먹으면 궁합이 뛰어납니다.`,
+    makingProcess: `1. 배추를 소금에 절여 8-10시간 둡니다
+2. 절인 배추를 깨끗이 헹궈 물기를 뺍니다
+3. 무채, 미나리, 대파, 마늘, 생강을 준비합니다
+4. 고춧가루와 멸치젓을 중심으로 양념을 만듭니다
+5. 배추 잎 사이사이에 양념소를 꼼꼼히 넣습니다
+6. 항아리나 밀폐용기에 담아 서늘한 곳에서 숙성시킵니다`,
+    storageMethod: `서늘한 곳에서 천천히 발효시키는 것이 핵심이며, 냉장 보관 시 2-3주 정도 최상의 맛을 유지합니다.`,
+    nutritionInfo: {
+      calories: 16,
+      carbohydrates: 2.5,
+      protein: 1.0,
+      fat: 0.3,
+      fiber: 1.5,
+      vitaminC: 17
+    },
+    descriptionEn: "A traditional kimchi from Andong, Gyeongsangbuk-do, known for its mild yet deeply savory flavor rooted in the region's Confucian noble cuisine traditions."
+  },
+  changnan: {
+    history: `창난젓김치는 명태의 창자(창난)를 소금에 절여 만든 창난젓을 양념과 함께 무쳐 만드는 독특한 김치입니다. 함경도와 강원도 해안 지역에서 유래했으며, 명태가 풍부했던 시절 부산물을 활용한 지혜로운 음식입니다. 쫄깃한 식감과 강렬한 감칠맛이 특징입니다.`,
+    makingProcess: `1. 창난젓을 적당한 크기로 잘라 준비합니다
+2. 무를 채 썰어 준비합니다
+3. 고춧가루, 마늘, 생강, 파, 참기름을 섞어 양념을 만듭니다
+4. 창난젓과 무채를 양념에 골고루 버무립니다
+5. 통깨를 뿌려 마무리합니다
+6. 밀폐용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-4주. 젓갈 특성상 오래 보관할 수 있으나, 시간이 지나면 짠맛이 강해질 수 있으므로 적당한 시기에 소비합니다.`,
+    nutritionInfo: {
+      calories: 28,
+      carbohydrates: 2.0,
+      protein: 3.5,
+      fat: 0.8,
+      fiber: 0.5,
+      vitaminC: 5
+    },
+    descriptionEn: "A unique kimchi made with salted pollock intestines (changnan-jeot), offering a chewy texture and intense umami flavor. Originated from coastal regions where pollock was abundant."
+  },
+  dalrae: {
+    history: `달래김치는 봄철 산과 들에서 자생하는 달래를 활용한 계절 김치입니다. 달래는 한국에서 오래전부터 봄나물로 사랑받았으며, 특유의 알싸한 향과 매콤한 맛이 특징입니다. 봄기운을 느낄 수 있는 제철 김치로, 주로 3-4월에 담가 먹으며 입맛을 돋우는 역할을 합니다.`,
+    makingProcess: `1. 달래를 뿌리째 캐어 깨끗이 씻습니다
+2. 뿌리 부분을 다듬어 정리합니다
+3. 고춧가루, 멸치액젓, 마늘, 식초, 설탕을 섞어 양념을 만듭니다
+4. 달래에 양념을 살살 버무립니다 (줄기가 상하지 않게)
+5. 통깨를 뿌려 마무리합니다
+6. 바로 먹거나 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-3일. 달래는 금방 시들기 때문에 소량씩 담가 바로 먹는 것이 가장 좋습니다.`,
+    nutritionInfo: {
+      calories: 18,
+      carbohydrates: 2.8,
+      protein: 1.1,
+      fat: 0.3,
+      fiber: 1.4,
+      vitaminC: 20
+    },
+    descriptionEn: "A seasonal spring kimchi made with wild chives (dalrae), featuring a distinctive sharp aroma and peppery kick. Best enjoyed fresh in March and April."
+  },
+  doraji: {
+    history: `도라지김치는 도라지(길경)를 주재료로 한 김치로, 도라지는 예로부터 약용 식물로 귀히 여겨졌습니다. 조선시대 의서에도 도라지가 기관지와 폐에 좋다고 기록되어 있으며, 이를 김치로 담가 건강식으로 즐겼습니다. 특유의 쌉싸름한 맛과 아삭한 식감이 매력적입니다.`,
+    makingProcess: `1. 도라지를 껍질을 벗기고 소금물에 담가 쓴맛을 제거합니다 (2-3시간)
+2. 손으로 주물러 씻어 쓴물을 빼줍니다
+3. 적당한 크기로 찢거나 잘라 준비합니다
+4. 고춧가루, 멸치액젓, 마늘, 생강, 파를 섞어 양념을 만듭니다
+5. 도라지에 양념을 골고루 버무립니다
+6. 밀폐용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주. 시간이 지나면 도라지가 물러질 수 있으므로 적정 기간 내 소비를 권장합니다.`,
+    nutritionInfo: {
+      calories: 22,
+      carbohydrates: 4.2,
+      protein: 1.0,
+      fat: 0.2,
+      fiber: 2.0,
+      vitaminC: 12
+    },
+    descriptionEn: "A kimchi made with bellflower root (doraji), prized for its slightly bitter flavor and crunchy texture. Traditionally valued for its respiratory health benefits."
+  },
+  gaji: {
+    history: `가지김치는 여름철 제철 채소인 가지를 활용한 계절 김치입니다. 가지는 삼국시대에 중국에서 전래되어 한반도에서 널리 재배되었으며, 여름 더위에 몸의 열을 내려주는 효능이 있다고 알려져 있습니다. 통가지를 쪼개어 양념을 넣는 소박이 형태가 일반적입니다.`,
+    makingProcess: `1. 가지를 깨끗이 씻어 5-6cm 길이로 자릅니다
+2. 가운데를 갈라 칼집을 넣되 끝은 붙여둡니다
+3. 소금물에 10-15분 절여 숨을 죽입니다
+4. 부추, 고춧가루, 멸치액젓, 마늘, 생강으로 양념소를 만듭니다
+5. 가지 칼집 사이에 양념소를 채워 넣습니다
+6. 용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 3-5일. 가지는 쉽게 물러지므로 소량씩 담가 빨리 소비하는 것이 좋습니다.`,
+    nutritionInfo: {
+      calories: 14,
+      carbohydrates: 2.5,
+      protein: 0.7,
+      fat: 0.1,
+      fiber: 1.8,
+      vitaminC: 6
+    },
+    descriptionEn: "A summer kimchi made with eggplant, stuffed with a spicy chive filling. The soft, silky texture of eggplant combined with pungent seasoning makes it a refreshing warm-weather dish."
+  },
+  geoje: {
+    history: `거제김치는 경상남도 거제도에서 전해 내려오는 향토 김치로, 섬 지역 특성상 해산물이 풍부하게 사용됩니다. 거제도는 한려해상국립공원에 위치한 섬으로, 신선한 멸치와 해산물 젓갈이 풍부하여 이를 김치에 적극 활용했습니다. 바다의 감칠맛이 깃든 독특한 풍미가 특징입니다.`,
+    makingProcess: `1. 배추를 소금에 절여 8-10시간 둡니다
+2. 절인 배추를 씻어 물기를 뺍니다
+3. 신선한 멸치액젓과 해산물(멸치, 꽃게 등)을 준비합니다
+4. 고춧가루, 마늘, 생강, 파와 함께 양념을 만듭니다
+5. 배추에 양념을 넣어 버무립니다
+6. 항아리나 밀폐용기에 담아 서늘한 곳에서 숙성시킵니다`,
+    storageMethod: `냉장 보관: 2-3주. 해산물이 포함되어 있어 일반 배추김치보다 숙성이 빠를 수 있으므로 상태를 확인하며 소비합니다.`,
+    nutritionInfo: {
+      calories: 19,
+      carbohydrates: 2.3,
+      protein: 1.5,
+      fat: 0.4,
+      fiber: 1.4,
+      vitaminC: 16
+    },
+    descriptionEn: "A regional kimchi from Geoje Island featuring abundant local seafood and anchovy sauce. The maritime influence gives it a distinctive deep umami character."
+  },
+  ggwarigochu: {
+    history: `꽈리고추김치는 꽈리고추를 통째로 양념에 버무려 담그는 김치입니다. 꽈리고추는 표면이 쭈글쭈글한 것이 특징으로, 일반 풋고추보다 매운맛이 덜하고 달콤합니다. 여름철 밑반찬으로 인기가 높으며, 간장 베이스와 고춧가루 베이스 두 가지 방식으로 담글 수 있습니다.`,
+    makingProcess: `1. 꽈리고추를 깨끗이 씻어 꼭지를 따줍니다
+2. 이쑤시개로 구멍을 몇 개 뚫어 양념이 배도록 합니다
+3. 고춧가루, 멸치액젓, 마늘, 통깨를 섞어 양념을 만듭니다
+4. 꽈리고추에 양념을 골고루 버무립니다
+5. 밀폐용기에 담아 실온에서 반나절 숙성합니다
+6. 냉장 보관하며 먹습니다`,
+    storageMethod: `냉장 보관: 1-2주. 아삭한 식감을 유지하려면 빨리 소비하는 것이 좋으며, 오래두면 고추가 물러집니다.`,
+    nutritionInfo: {
+      calories: 16,
+      carbohydrates: 2.9,
+      protein: 0.9,
+      fat: 0.2,
+      fiber: 1.6,
+      vitaminC: 45
+    },
+    descriptionEn: "A kimchi made with shishito-like wrinkled peppers, milder and slightly sweeter than regular chili peppers. A popular summer side dish with a satisfying crunch."
+  },
+  gochu: {
+    history: `고추김치(고추소박이)는 풋고추에 양념소를 채워 담그는 김치입니다. 고추가 한반도에 전래된 이후 다양한 고추 요리가 발전했으며, 고추소박이도 그중 하나입니다. 매콤한 고추와 짭조름한 양념소의 조화가 일품이며, 여름철 밥도둑으로 사랑받는 김치입니다.`,
+    makingProcess: `1. 풋고추를 깨끗이 씻어 꼭지 쪽에 칼집을 넣습니다
+2. 소금물에 살짝 절여 숨을 죽입니다
+3. 무채, 부추, 고춧가루, 멸치액젓, 마늘로 양념소를 만듭니다
+4. 칼집 사이로 양념소를 꼼꼼히 채워 넣습니다
+5. 용기에 차곡차곡 담습니다
+6. 실온에서 하루 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주. 고추가 물러지기 전에 소비하는 것이 좋으며, 매운맛은 숙성될수록 약간 줄어듭니다.`,
+    nutritionInfo: {
+      calories: 18,
+      carbohydrates: 3.0,
+      protein: 0.8,
+      fat: 0.2,
+      fiber: 1.5,
+      vitaminC: 80
+    },
+    descriptionEn: "A stuffed green chili pepper kimchi filled with radish and chive seasoning. Delivers a satisfying spicy punch and is considered a quintessential summer rice companion."
+  },
+  godeulppaegi: {
+    history: `고들빼기김치는 고들빼기라는 야생 나물로 담그는 김치입니다. 고들빼기는 씀바귀과의 식물로, 봄과 가을에 채취하며 특유의 쌉싸름한 맛이 특징입니다. 전라도 지역에서 특히 사랑받으며, 입맛 없을 때 밥 반찬으로 최고라는 평가를 받습니다. 예로부터 소화를 돕고 위장에 좋다고 알려져 있습니다.`,
+    makingProcess: `1. 고들빼기를 소금물에 2-3일 담가 쓴맛을 제거합니다
+2. 매일 물을 갈아주며 쓴물을 빼줍니다
+3. 고춧가루, 멸치액젓, 마늘, 생강, 파를 섞어 양념을 만듭니다
+4. 찹쌀풀을 쒀서 양념에 섞어줍니다
+5. 물기를 뺀 고들빼기에 양념을 골고루 버무립니다
+6. 밀폐용기에 담아 실온에서 1-2일 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-4주. 쓴맛 제거 과정이 충분히 되었다면 오래 두고 먹을 수 있으며, 숙성될수록 맛이 깊어집니다.`,
+    nutritionInfo: {
+      calories: 21,
+      carbohydrates: 3.3,
+      protein: 1.2,
+      fat: 0.3,
+      fiber: 2.1,
+      vitaminC: 14
+    },
+    descriptionEn: "A distinctive kimchi made from hawkweed (godeulppaegi), a wild herb with a pleasantly bitter taste. Highly prized in Jeolla-do as a gourmet side dish that stimulates appetite."
+  },
+  goguma: {
+    history: `고구마줄기김치는 고구마의 줄기(고구마순)를 활용한 여름·가을철 김치입니다. 고구마가 조선시대 후기에 전래된 이후, 알뿐 아니라 줄기까지 활용하는 알뜰한 식문화가 발전했습니다. 고구마줄기의 아삭한 식감과 고유의 단맛이 양념과 어우러져 독특한 맛을 냅니다.`,
+    makingProcess: `1. 고구마줄기의 껍질을 벗겨 5-6cm 길이로 자릅니다
+2. 소금물에 30분간 절여 숨을 죽입니다
+3. 절인 줄기를 씻어 물기를 뺍니다
+4. 고춧가루, 멸치액젓, 마늘, 생강, 통깨를 섞어 양념을 만듭니다
+5. 고구마줄기에 양념을 골고루 버무립니다
+6. 밀폐용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주. 줄기가 물러지기 전에 소비하는 것이 좋으며, 담근 직후 바로 먹어도 맛있습니다.`,
+    nutritionInfo: {
+      calories: 15,
+      carbohydrates: 2.7,
+      protein: 0.6,
+      fat: 0.1,
+      fiber: 1.9,
+      vitaminC: 8
+    },
+    descriptionEn: "A kimchi made from sweet potato stems, offering a unique crunchy texture and subtle natural sweetness. A resourceful dish that makes full use of the sweet potato plant."
+  },
+  gulkimchi: {
+    history: `굴김치는 신선한 생굴을 넣어 담그는 김치로, 서해안과 남해안 지역에서 겨울철 굴이 제철일 때 담가 먹던 별미 김치입니다. 특히 충남 서산, 전남 여수, 경남 통영 등 굴 산지에서 즐겨 만들었습니다. 굴의 바다 향과 감칠맛이 김치에 풍미를 더해주어 최고의 겨울 김치로 손꼽힙니다.`,
+    makingProcess: `1. 배추를 소금에 절여 8-10시간 둡니다
+2. 절인 배추를 씻어 물기를 빼줍니다
+3. 신선한 굴을 소금물에 씻어 불순물을 제거합니다
+4. 고춧가루, 젓갈, 마늘, 생강, 파로 양념을 만듭니다
+5. 양념에 굴을 넣고, 배추 잎 사이에 함께 넣습니다
+6. 밀폐용기에 담아 실온에서 하루 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주. 굴이 상하기 쉬우므로 반드시 신선한 상태에서 빨리 소비해야 합니다. 장기 보관 시 굴은 건져내는 것이 좋습니다.`,
+    nutritionInfo: {
+      calories: 25,
+      carbohydrates: 2.2,
+      protein: 2.5,
+      fat: 0.6,
+      fiber: 1.3,
+      vitaminC: 16
+    },
+    descriptionEn: "A premium winter kimchi enriched with fresh raw oysters, adding briny ocean flavor and rich umami. A seasonal delicacy from Korea's coastal oyster-producing regions."
+  },
+  hobak: {
+    history: `호박김치는 애호박(또는 늙은 호박)을 주재료로 한 여름철 김치입니다. 호박은 임진왜란 이후 한반도에 전래된 것으로 추정되며, 이후 다양한 요리에 활용되었습니다. 호박김치는 호박 특유의 달콤한 맛과 부드러운 식감이 매력적이며, 여름철 입맛을 돋우는 반찬으로 사랑받습니다.`,
+    makingProcess: `1. 애호박을 반으로 갈라 반달 모양으로 썹니다
+2. 소금에 살짝 절여 10-15분 둡니다
+3. 물기를 가볍게 빼줍니다
+4. 고춧가루, 멸치액젓, 마늘, 파, 새우젓을 섞어 양념을 만듭니다
+5. 호박에 양념을 골고루 버무립니다
+6. 밀폐용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 3-5일. 호박은 수분이 많아 빨리 물러지므로 소량씩 담가 신선하게 먹는 것이 좋습니다.`,
+    nutritionInfo: {
+      calories: 13,
+      carbohydrates: 2.4,
+      protein: 0.6,
+      fat: 0.1,
+      fiber: 0.8,
+      vitaminC: 10
+    },
+    descriptionEn: "A light summer kimchi made with Korean zucchini (aehobak), featuring a gentle sweetness and tender texture that makes it an easy-to-enjoy seasonal side dish."
+  },
+  jangkimchi: {
+    history: `장김치는 간장을 베이스로 담그는 김치로, 고춧가루를 사용하지 않거나 소량만 쓰는 것이 특징입니다. 조선시대 궁중과 양반가에서 즐겨 담갔으며, 간장의 감칠맛과 깊은 풍미가 돋보입니다. 백김치와 유사하지만 간장 특유의 갈색빛과 깊은 맛이 차별점이며, 고급스러운 맛으로 잔칫상에 올랐습니다.`,
+    makingProcess: `1. 배추나 무를 적당한 크기로 썹니다
+2. 소금에 살짝 절여 숨을 죽입니다
+3. 간장, 마늘, 생강, 대추, 배를 섞어 양념 국물을 만듭니다
+4. 절인 채소를 용기에 담습니다
+5. 양념 국물을 부어줍니다
+6. 서늘한 곳에서 2-3일 숙성 후 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 2-4주. 간장 베이스라 일반 김치보다 보존성이 좋으며, 국물이 채소를 덮도록 유지합니다.`,
+    nutritionInfo: {
+      calories: 14,
+      carbohydrates: 2.0,
+      protein: 0.8,
+      fat: 0.1,
+      fiber: 0.9,
+      vitaminC: 11
+    },
+    descriptionEn: "A soy sauce-based kimchi with a refined, non-spicy flavor profile. Historically served in royal courts and noble households, it offers a deep umami richness from aged soy sauce."
+  },
+  jeju: {
+    history: `제주김치는 제주도 특유의 식재료와 기후를 반영한 향토 김치입니다. 제주도는 해산물이 풍부하여 전복, 톳, 성게 등을 김치에 활용하는 독특한 전통이 있습니다. 또한 육지보다 따뜻한 기후 때문에 발효가 빨라, 간을 세게 하거나 빨리 소비하는 방식으로 발전했습니다.`,
+    makingProcess: `1. 배추를 소금에 절여 6-8시간 둡니다
+2. 절인 배추를 씻어 물기를 빼줍니다
+3. 전복, 톳 등 해산물을 손질하여 준비합니다
+4. 고춧가루, 마늘, 생강, 멸치젓, 해산물을 섞어 양념을 만듭니다
+5. 배추에 양념을 넣어 버무립니다
+6. 밀폐용기에 담아 서늘한 곳에서 숙성시킵니다`,
+    storageMethod: `냉장 보관: 1-2주. 해산물이 포함되어 있어 숙성이 빠르므로, 상태를 자주 확인하며 빨리 소비합니다.`,
+    nutritionInfo: {
+      calories: 22,
+      carbohydrates: 2.1,
+      protein: 2.0,
+      fat: 0.4,
+      fiber: 1.2,
+      vitaminC: 15
+    },
+    descriptionEn: "A distinctive kimchi from Jeju Island incorporating local seafood such as abalone and sea mustard. Reflects the island's warm climate and abundant marine resources."
+  },
+  jeotgal: {
+    history: `젓갈김치는 다양한 젓갈(새우젓, 멸치젓, 조기젓 등)을 풍부하게 넣어 담그는 김치입니다. 전라도 지역에서 특히 발달했으며, 젓갈의 깊은 감칠맛이 김치의 풍미를 한층 끌어올립니다. 젓갈은 김치 발효의 핵심 촉매 역할을 하며, 사용하는 젓갈의 종류에 따라 맛이 크게 달라집니다.`,
+    makingProcess: `1. 배추를 소금에 절여 8-10시간 둡니다
+2. 절인 배추를 씻어 물기를 빼줍니다
+3. 새우젓, 멸치젓, 조기젓 등 여러 종류의 젓갈을 준비합니다
+4. 고춧가루, 마늘, 생강, 파, 젓갈을 넉넉히 넣어 양념을 만듭니다
+5. 배추에 양념을 꼼꼼히 넣어 버무립니다
+6. 밀폐용기에 담아 서늘한 곳에서 천천히 숙성시킵니다`,
+    storageMethod: `냉장 보관: 2-4주. 젓갈이 풍부하여 감칠맛이 깊으며, 숙성 기간이 길수록 맛이 깊어집니다.`,
+    nutritionInfo: {
+      calories: 20,
+      carbohydrates: 2.3,
+      protein: 1.8,
+      fat: 0.4,
+      fiber: 1.5,
+      vitaminC: 16
+    },
+    descriptionEn: "A kimchi generously seasoned with various fermented seafood pastes (jeotgal), delivering an exceptionally deep and complex umami flavor. A specialty of Jeolla-do province."
+  },
+  jinju: {
+    history: `진주김치는 경상남도 진주 지방의 전통 김치로, 진주는 예로부터 남강 유역의 풍요로운 식재료와 교방 음식 문화가 발달한 지역입니다. 진주김치는 담백하면서도 깔끔한 맛이 특징이며, 진주비빔밥과 함께 유명한 향토 음식입니다. 멸치젓을 주로 사용하며, 경상도식 특유의 간결한 맛이 돋보입니다.`,
+    makingProcess: `1. 배추를 소금에 절여 8시간 둡니다
+2. 절인 배추를 깨끗이 씻어 물기를 빼줍니다
+3. 무채, 미나리, 대파를 준비합니다
+4. 고춧가루, 멸치젓, 마늘, 생강을 섞어 양념을 만듭니다
+5. 배추에 양념소를 넣어 버무립니다
+6. 항아리에 담아 서늘한 곳에서 숙성시킵니다`,
+    storageMethod: `냉장 보관: 2-3주. 경상도식답게 국물이 적고 담백하므로, 밀폐용기에 꼭꼭 눌러 보관합니다.`,
+    nutritionInfo: {
+      calories: 16,
+      carbohydrates: 2.4,
+      protein: 1.0,
+      fat: 0.3,
+      fiber: 1.4,
+      vitaminC: 17
+    },
+    descriptionEn: "A traditional kimchi from Jinju, Gyeongsangnam-do, known for its clean and understated flavor. Often paired with Jinju bibimbap as a representative regional cuisine."
+  },
+  jogaejeotgal: {
+    history: `조개젓갈김치는 조개를 소금에 절여 만든 젓갈로 담그는 김치입니다. 서해안 지역에서 조개가 풍부하게 잡히던 시절, 조개젓을 김치 양념으로 활용하면서 발전했습니다. 조개젓 특유의 시원한 감칠맛이 김치에 깊은 풍미를 더해주며, 일반 젓갈김치와는 다른 독특한 맛을 선사합니다.`,
+    makingProcess: `1. 배추를 소금에 절여 8-10시간 둡니다
+2. 절인 배추를 씻어 물기를 빼줍니다
+3. 조개젓을 곱게 다져 준비합니다
+4. 고춧가루, 조개젓, 마늘, 생강, 파를 섞어 양념을 만듭니다
+5. 배추에 양념을 골고루 넣어 버무립니다
+6. 밀폐용기에 담아 서늘한 곳에서 숙성시킵니다`,
+    storageMethod: `냉장 보관: 2-3주. 조개젓의 풍미가 잘 배어들도록 충분히 숙성시키되, 해산물 특성상 너무 오래 보관하지 않습니다.`,
+    nutritionInfo: {
+      calories: 19,
+      carbohydrates: 2.2,
+      protein: 1.6,
+      fat: 0.3,
+      fiber: 1.3,
+      vitaminC: 15
+    },
+    descriptionEn: "A kimchi made with fermented clam paste (jogae-jeotgal), imparting a clean oceanic umami that distinguishes it from other jeotgal-based kimchi varieties."
+  },
+  jokbal: {
+    history: `족발김치는 족발(돼지 족발 요리)과 곁들여 먹기 위해 특화된 무김치의 변형입니다. 족발은 조선시대부터 서민들이 즐기던 보양식이었으며, 느끼한 족발의 기름기를 잡아주는 시원하고 새콤한 무김치가 자연스럽게 발전했습니다. 무를 얇게 썰어 새콤달콤하게 담가, 족발의 쫄깃한 식감과 완벽한 조화를 이룹니다.`,
+    makingProcess: `1. 무를 얇게 나박 썰기 합니다
+2. 소금과 설탕에 30분간 절입니다
+3. 식초, 고춧가루(소량), 마늘, 생강을 섞어 양념을 만듭니다
+4. 절인 무에 양념을 버무립니다
+5. 새콤달콤한 맛이 나도록 식초와 설탕 비율을 조절합니다
+6. 냉장고에서 반나절 이상 차갑게 숙성합니다`,
+    storageMethod: `냉장 보관: 1-2주. 시원하게 먹어야 족발과 궁합이 좋으므로, 항상 냉장 상태를 유지합니다.`,
+    nutritionInfo: {
+      calories: 12,
+      carbohydrates: 2.6,
+      protein: 0.4,
+      fat: 0.1,
+      fiber: 0.8,
+      vitaminC: 10
+    },
+    descriptionEn: "A tangy, sweet-and-sour radish kimchi specially designed to accompany jokbal (braised pig's feet). Its refreshing acidity cuts through the richness of the pork."
+  },
+  jukkumi: {
+    history: `주꾸미김치는 봄철 제철 해산물인 주꾸미를 넣어 담그는 특색 있는 김치입니다. 주꾸미는 3-5월이 제철로, 이 시기에 알이 꽉 차 가장 맛있습니다. 서해안 어촌 지역에서 풍성한 주꾸미를 김치에 활용하면서 시작된 향토 음식으로, 주꾸미의 쫄깃한 식감과 김치의 매콤한 맛이 어우러집니다.`,
+    makingProcess: `1. 주꾸미를 밀가루로 주물러 깨끗이 씻습니다
+2. 끓는 물에 살짝 데쳐 적당한 크기로 자릅니다
+3. 배추를 소금에 절여 준비합니다
+4. 고춧가루, 멸치액젓, 마늘, 생강, 파를 섞어 양념을 만듭니다
+5. 양념에 데친 주꾸미를 넣고 배추와 함께 버무립니다
+6. 밀폐용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 3-5일. 해산물이 포함되어 있어 빨리 상할 수 있으므로 반드시 소량씩 담가 빨리 소비합니다.`,
+    nutritionInfo: {
+      calories: 26,
+      carbohydrates: 2.0,
+      protein: 3.2,
+      fat: 0.5,
+      fiber: 1.0,
+      vitaminC: 12
+    },
+    descriptionEn: "A specialty kimchi featuring baby octopus (jukkumi), a prized spring delicacy. The chewy octopus pairs wonderfully with the spicy, tangy kimchi flavors."
+  },
+  kodari: {
+    history: `코다리김치는 반건조 명태(코다리)를 넣어 담그는 별미 김치입니다. 코다리는 명태를 반쯤 말린 것으로, 강원도와 함경도 지역에서 발달한 명태 가공 문화의 산물입니다. 코다리의 쫄깃하고 담백한 맛이 김치 양념과 어우러져 독특한 풍미를 만들어내며, 겨울철 별미로 즐겨 먹습니다.`,
+    makingProcess: `1. 코다리를 물에 30분간 불려 적당한 크기로 자릅니다
+2. 무를 나박하게 썰어 준비합니다
+3. 고춧가루, 멸치액젓, 마늘, 생강, 파, 설탕을 섞어 양념을 만듭니다
+4. 코다리와 무에 양념을 골고루 버무립니다
+5. 양념이 잘 배도록 조물조물 무쳐줍니다
+6. 밀폐용기에 담아 냉장 보관합니다`,
+    storageMethod: `냉장 보관: 1-2주. 반건조 생선이 들어 있어 너무 오래 두면 비린내가 날 수 있으므로, 적정 기간 내 소비를 권장합니다.`,
+    nutritionInfo: {
+      calories: 30,
+      carbohydrates: 2.5,
+      protein: 4.0,
+      fat: 0.6,
+      fiber: 0.7,
+      vitaminC: 8
+    },
+    descriptionEn: "A hearty kimchi made with semi-dried pollock (kodari), combining the chewy, savory fish with spicy kimchi seasoning. A winter specialty from Korea's northeastern coastal regions."
   }
 };
 
@@ -638,7 +1038,7 @@ async function main() {
   console.log("🥬 Creating kimchi entries...");
   const kimchiEntries = await Promise.all(
     KIMCHI_DATA.map(async (kimchi) => {
-      const details = KIMCHI_DETAILS[kimchi.id] || {};
+      const details = KIMCHI_DETAILS[kimchi.id] || KIMCHI_DETAILS_BATCH2[kimchi.id] || {};
 
       return prisma.kimchi.upsert({
         where: { slug: kimchi.id },
