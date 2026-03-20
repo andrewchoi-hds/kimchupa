@@ -22,7 +22,7 @@ import { useBookmarks } from "@/hooks/useBookmarks";
 import { usePosts } from "@/hooks/usePosts";
 import { useUserBadges } from "@/hooks/useBadges";
 import { useFollowStatus } from "@/hooks/useFollow";
-import { FileText, MessageSquare, Bookmark, Pencil, Settings } from "lucide-react";
+import { FileText, MessageSquare, Bookmark, Pencil, Settings, FlaskConical } from "lucide-react";
 
 export default function ProfilePage() {
   const t = useTranslations("profile");
@@ -440,6 +440,26 @@ export default function ProfilePage() {
                   )}
                 </div>
               </Card>
+
+              {/* Fermentation Journal Link */}
+              <Link href="/profile/fermentation">
+                <Card padding="lg" hover className="group">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full group-hover:bg-green-200 transition-colors">
+                      <FlaskConical className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
+                        {t("fermentationLink.title")}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {t("fermentationLink.description")}
+                      </p>
+                    </div>
+                    <span className="text-2xl">{"\ud83e\udead"}</span>
+                  </div>
+                </Card>
+              </Link>
 
               {/* Attendance */}
               <AttendanceCalendar />

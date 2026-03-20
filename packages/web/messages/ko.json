@@ -391,6 +391,10 @@
       "browseCommunity": "커뮤니티 둘러보기",
       "viewAll": "전체 {count}개 보기"
     },
+    "fermentationLink": {
+      "title": "\ud83e\udead 발효 일지",
+      "description": "김치 발효 진행 상황을 추적하세요"
+    },
     "attendance": {
       "title": "이번 달 출석",
       "monthly": "이번 달 출석",
@@ -450,6 +454,71 @@
     "5": "김치 전문가",
     "6": "김치 달인",
     "7": "김치 명인"
+  },
+  "fermentation": {
+    "title": "\ud83e\udead 나의 발효 일지",
+    "description": "김치 담근 날짜를 기록하고 발효 진행 상황을 추적하세요",
+    "breadcrumb": {
+      "profile": "프로필",
+      "fermentation": "발효 일지"
+    },
+    "form": {
+      "add": "새 발효 기록 추가",
+      "close": "닫기",
+      "title": "새 발효 기록",
+      "kimchiType": "김치 종류",
+      "selectKimchi": "김치를 선택하세요",
+      "customKimchi": "직접 입력",
+      "customName": "김치 이름",
+      "customNamePlaceholder": "김치 이름을 입력하세요",
+      "startDate": "시작일",
+      "estimatedDays": "예상 발효 기간",
+      "days": "{count}일",
+      "storageMethod": "보관 방법",
+      "memo": "메모",
+      "memoPlaceholder": "양념 비율, 특이사항 등을 기록하세요",
+      "submit": "등록"
+    },
+    "temperature": {
+      "실온": "실온",
+      "냉장": "냉장",
+      "김치냉장고": "김치냉장고"
+    },
+    "active": {
+      "title": "발효 중",
+      "empty": "아직 발효 중인 김치가 없습니다",
+      "emptyHint": "위의 '새 발효 기록 추가' 버튼을 눌러 시작하세요",
+      "started": "시작",
+      "daysUnit": "일",
+      "estimated": "예상 {days}일",
+      "complete": "완료",
+      "delete": "삭제",
+      "addMemo": "메모 추가",
+      "saveMemo": "저장",
+      "cancelMemo": "취소"
+    },
+    "completed": {
+      "title": "완료된 발효"
+    },
+    "tips": {
+      "title": "발효 꿀팁",
+      "tempTitle": "실온 vs 냉장 발효",
+      "temp1": "실온(20-25\u00b0C): 1-3일 빠른 발효",
+      "temp2": "냉장(2-5\u00b0C): 7-14일 천천히 숙성",
+      "temp3": "김치냉장고(-1\u00b0C): 장기 보관에 최적",
+      "speedTitle": "온도에 따른 발효 속도",
+      "speed1": "온도가 높을수록 발효가 빨라요",
+      "speed2": "여름철에는 실온 발효 시간 단축",
+      "speed3": "겨울철에는 실온에서도 느리게 발효",
+      "checkTitle": "완성 확인법",
+      "check1": "톡 쏘는 맛이 나면 발효 진행 중",
+      "check2": "적당한 신맛이 나면 냉장 보관",
+      "check3": "거품이 보이면 발효가 활발한 상태"
+    },
+    "profileLink": {
+      "title": "발효 일지",
+      "description": "김치 발효 진행 상황을 추적하세요"
+    }
   },
   "footer": {
     "about": "소개",

@@ -391,6 +391,10 @@
       "browseCommunity": "Browse Community",
       "viewAll": "View all {count}"
     },
+    "fermentationLink": {
+      "title": "\ud83e\udead Fermentation Journal",
+      "description": "Track your kimchi fermentation progress"
+    },
     "attendance": {
       "title": "This Month's Attendance",
       "monthly": "This month",
@@ -450,6 +454,71 @@
     "5": "Kimchi Expert",
     "6": "Kimchi Master",
     "7": "Kimchi Grandmaster"
+  },
+  "fermentation": {
+    "title": "\ud83e\udead My Fermentation Journal",
+    "description": "Track your kimchi fermentation progress from start to finish",
+    "breadcrumb": {
+      "profile": "Profile",
+      "fermentation": "Fermentation Journal"
+    },
+    "form": {
+      "add": "Add New Entry",
+      "close": "Close",
+      "title": "New Fermentation Entry",
+      "kimchiType": "Kimchi Type",
+      "selectKimchi": "Select a kimchi",
+      "customKimchi": "Custom entry",
+      "customName": "Kimchi Name",
+      "customNamePlaceholder": "Enter kimchi name",
+      "startDate": "Start Date",
+      "estimatedDays": "Estimated Fermentation Period",
+      "days": "{count} days",
+      "storageMethod": "Storage Method",
+      "memo": "Memo",
+      "memoPlaceholder": "Note seasoning ratios, special details, etc.",
+      "submit": "Add Entry"
+    },
+    "temperature": {
+      "\uc2e4\uc628": "Room Temp",
+      "\ub0c9\uc7a5": "Refrigerator",
+      "\uae40\uce58\ub0c9\uc7a5\uace0": "Kimchi Fridge"
+    },
+    "active": {
+      "title": "Fermenting",
+      "empty": "No kimchi fermenting yet",
+      "emptyHint": "Press 'Add New Entry' above to get started",
+      "started": "started",
+      "daysUnit": " days",
+      "estimated": "Est. {days} days",
+      "complete": "Complete",
+      "delete": "Delete",
+      "addMemo": "Add memo",
+      "saveMemo": "Save",
+      "cancelMemo": "Cancel"
+    },
+    "completed": {
+      "title": "Completed"
+    },
+    "tips": {
+      "title": "Fermentation Tips",
+      "tempTitle": "Room Temp vs Fridge",
+      "temp1": "Room temp (20-25\u00b0C): Fast, 1-3 days",
+      "temp2": "Fridge (2-5\u00b0C): Slow, 7-14 days",
+      "temp3": "Kimchi fridge (-1\u00b0C): Best for long storage",
+      "speedTitle": "Temperature & Speed",
+      "speed1": "Higher temp = faster fermentation",
+      "speed2": "Summer: reduce room temp time",
+      "speed3": "Winter: slower even at room temp",
+      "checkTitle": "How to Check Readiness",
+      "check1": "Tangy fizz means fermentation is active",
+      "check2": "Nice sour taste = ready for fridge",
+      "check3": "Bubbles indicate active fermentation"
+    },
+    "profileLink": {
+      "title": "Fermentation Journal",
+      "description": "Track your kimchi fermentation progress"
+    }
   },
   "footer": {
     "about": "About",
