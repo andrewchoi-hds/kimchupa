@@ -31,6 +31,7 @@
     "wiki": "김치백과",
     "community": "커뮤니티",
     "shop": "구매처",
+    "ranking": "랭킹",
     "recommendation": "김치 추천",
     "profile": "프로필",
     "login": "로그인",
@@ -264,6 +265,23 @@
       "edit": "수정"
     },
     "editPost": "글 수정"
+  },
+  "ranking": {
+    "title": "랭킹",
+    "description": "김추페 최고의 김치인을 확인하세요!",
+    "rank": "순위",
+    "allXp": "전체 XP",
+    "weekly": "이번 주",
+    "topContributors": "게시글 왕",
+    "attendanceKings": "출석 왕",
+    "xpLabel": "총 XP",
+    "weeklyXpLabel": "주간 XP",
+    "postCountLabel": "게시글 수",
+    "streakLabel": "연속 출석",
+    "postCountUnit": "{count}개",
+    "streakUnit": "{count}일",
+    "me": "나",
+    "empty": "아직 랭킹 데이터가 없습니다"
   },
   "shop": {
     "title": "구매처",

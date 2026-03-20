@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Sparkles, BookOpen, Users, ShoppingBag } from "lucide-react";
+import { Sparkles, BookOpen, Users, Trophy, ShoppingBag } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface NavItem {
@@ -16,6 +16,7 @@ const navItems: NavItem[] = [
   { href: "/recommendation", icon: Sparkles, key: "recommendation" },
   { href: "/wiki", icon: BookOpen, key: "wiki" },
   { href: "/community", icon: Users, key: "community" },
+  { href: "/ranking", icon: Trophy, key: "ranking" },
   { href: "/shop", icon: ShoppingBag, key: "shop" },
 ];
 

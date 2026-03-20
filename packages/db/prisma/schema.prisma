@@ -411,3 +411,38 @@ model Report {
   @@index([targetType, targetId])
   @@index([status])
 }
+
+// ============ Weekly Challenge ============
+
+model Challenge {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  emoji       String   @default("🎯")
+  type        String   // recipe, photo, quiz, explore
+  xpReward    Int      @default(50)
+  startDate   DateTime @db.Date
+  endDate     DateTime @db.Date
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  participants ChallengeParticipant[]
+
+  @@index([active])
+  @@index([startDate, endDate])
+}
+
+model ChallengeParticipant {
+  id          String   @id @default(cuid())
+  challengeId String
+  userId      String
+  postId      String?  // 챌린지 참여 게시글 (선택)
+  status      String   @default("joined") // joined, completed
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@unique([challengeId, userId])
+  @@index([userId])
+}

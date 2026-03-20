@@ -608,6 +608,74 @@ async function main() {
   }
   console.log(`✅ Awarded badges to demo user\n`);
 
+  // 9. Create sample challenges
+  console.log("🎯 Creating sample challenges...");
+  const now = new Date();
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - now.getDay()); // Start of week
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+
+  await prisma.challenge.upsert({
+    where: { id: "weekly-1" },
+    update: {},
+    create: {
+      id: "weekly-1",
+      title: "나만의 김치볶음밥 레시피 공유",
+      description: "이번 주 챌린지! 여러분만의 특별한 김치볶음밥 레시피를 커뮤니티에 공유해주세요. 사진과 함께 올리면 보너스 XP!",
+      emoji: "🍳",
+      type: "recipe",
+      xpReward: 100,
+      startDate: weekStart,
+      endDate: weekEnd,
+      active: true,
+    },
+  });
+
+  const lastWeekStart = new Date(weekStart);
+  lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+  const lastWeekEnd = new Date(lastWeekStart);
+  lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
+
+  await prisma.challenge.upsert({
+    where: { id: "weekly-2" },
+    update: {},
+    create: {
+      id: "weekly-2",
+      title: "김치 발효 과정 사진 찍기",
+      description: "김치가 발효되는 과정을 사진으로 기록해보세요! 3일간의 변화를 담아주세요.",
+      emoji: "📸",
+      type: "photo",
+      xpReward: 75,
+      startDate: lastWeekStart,
+      endDate: lastWeekEnd,
+      active: false,
+    },
+  });
+
+  const twoWeeksAgoStart = new Date(lastWeekStart);
+  twoWeeksAgoStart.setDate(twoWeeksAgoStart.getDate() - 7);
+  const twoWeeksAgoEnd = new Date(twoWeeksAgoStart);
+  twoWeeksAgoEnd.setDate(twoWeeksAgoStart.getDate() + 6);
+
+  await prisma.challenge.upsert({
+    where: { id: "weekly-3" },
+    update: {},
+    create: {
+      id: "weekly-3",
+      title: "새로운 김치 3종 도감에 등록하기",
+      description: "아직 시도해보지 않은 김치 3종류를 찾아서 도감에 등록해보세요!",
+      emoji: "🗺️",
+      type: "explore",
+      xpReward: 50,
+      startDate: twoWeeksAgoStart,
+      endDate: twoWeeksAgoEnd,
+      active: false,
+    },
+  });
+
+  console.log("✅ Created 3 sample challenges\n");
+
   console.log("🎉 Database seed completed successfully!");
   console.log(`
 Summary:
@@ -616,6 +684,7 @@ Summary:
 - Badges: ${badges.length}
 - Posts: ${validPosts.length}
 - Comments: ${commentCount}
+- Challenges: 3
   `);
 }
 

@@ -31,6 +31,7 @@
     "wiki": "KimchiPedia",
     "community": "Community",
     "shop": "Shop",
+    "ranking": "Ranking",
     "recommendation": "Kimchi Quiz",
     "profile": "Profile",
     "login": "Login",
@@ -264,6 +265,23 @@
       "edit": "Edit"
     },
     "editPost": "Edit Post"
+  },
+  "ranking": {
+    "title": "Ranking",
+    "description": "Check out the top kimchi enthusiasts on KimchuPa!",
+    "rank": "Rank",
+    "allXp": "All XP",
+    "weekly": "This Week",
+    "topContributors": "Top Writers",
+    "attendanceKings": "Attendance Kings",
+    "xpLabel": "Total XP",
+    "weeklyXpLabel": "Weekly XP",
+    "postCountLabel": "Posts",
+    "streakLabel": "Streak",
+    "postCountUnit": "{count} posts",
+    "streakUnit": "{count} days",
+    "me": "Me",
+    "empty": "No ranking data yet"
   },
   "shop": {
     "title": "Shop",

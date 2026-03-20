@@ -16,6 +16,8 @@ export { notificationService } from "./services/notification.service";
 export { passwordResetService } from "./services/password-reset.service";
 export { followService } from "./services/follow.service";
 export { reportService } from "./services/report.service";
+export { challengeService } from "./services/challenge.service";
+export { rankingService } from "./services/ranking.service";
 
 // Repositories (for advanced use cases)
 export { postRepository } from "./repositories/post.repository";
@@ -30,6 +32,7 @@ export { notificationRepository } from "./repositories/notification.repository";
 export { passwordResetRepository } from "./repositories/password-reset.repository";
 export { followRepository } from "./repositories/follow.repository";
 export { reportRepository } from "./repositories/report.repository";
+export { challengeRepository } from "./repositories/challenge.repository";
 
 // Utilities
 export { getLevelByXp, getXpProgress } from "./utils/level-calculator";
