@@ -1,30 +1,161 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
+import { useState, useMemo } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import {
-  AFFILIATE_PRODUCTS,
-  AFFILIATE_PARTNERS,
-  formatPrice,
-  getDiscountPercent,
-  type AffiliateProduct,
-} from "@/constants/affiliateProducts";
-import { handleAffiliateClick } from "@/lib/affiliate";
+import PageHero from "@/components/ui/PageHero";
+import FilterBar from "@/components/ui/FilterBar";
+import Card from "@/components/ui/Card";
+import Tag from "@/components/ui/Tag";
+import Button from "@/components/ui/Button";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
-type PartnerFilter = "all" | "coupang" | "naver" | "amazon" | "iherb";
-type CategoryFilter = "all" | "kimchi" | "ingredient" | "equipment";
+/* ─── Types ─── */
+interface StorePrice {
+  store: string;
+  price: number;
+  originalPrice?: number;
+  url: string;
+  logo: string;
+}
 
+interface Product {
+  id: string;
+  name: string;
+  brand: string;
+  prices: StorePrice[];
+  rating: number;
+  reviewCount: number;
+  type: string;
+  weight: string;
+  tags: string[];
+}
+
+/* ─── Data ─── */
+const PRODUCTS: Product[] = [
+  {
+    id: "p1",
+    name: "종가집 포기김치 1.9kg",
+    brand: "종가집",
+    prices: [
+      { store: "쿠팡", price: 18900, originalPrice: 22000, url: "#", logo: "🛒" },
+      { store: "네이버", price: 19500, url: "#", logo: "🟢" },
+      { store: "마켓컬리", price: 20900, url: "#", logo: "🟣" },
+    ],
+    rating: 4.7,
+    reviewCount: 3842,
+    type: "배추김치",
+    weight: "1.9kg",
+    tags: ["베스트셀러", "국내산"],
+  },
+  {
+    id: "p2",
+    name: "비비고 썰은김치 1.5kg",
+    brand: "비비고",
+    prices: [
+      { store: "쿠팡", price: 15900, url: "#", logo: "🛒" },
+      { store: "네이버", price: 16200, url: "#", logo: "🟢" },
+    ],
+    rating: 4.5,
+    reviewCount: 2156,
+    type: "배추김치",
+    weight: "1.5kg",
+    tags: ["간편식"],
+  },
+  {
+    id: "p3",
+    name: "하선정 총각김치 1.2kg",
+    brand: "하선정",
+    prices: [
+      { store: "네이버", price: 16500, originalPrice: 19000, url: "#", logo: "🟢" },
+      { store: "쿠팡", price: 17200, url: "#", logo: "🛒" },
+    ],
+    rating: 4.6,
+    reviewCount: 892,
+    type: "총각김치",
+    weight: "1.2kg",
+    tags: ["할인"],
+  },
+  {
+    id: "p4",
+    name: "풀무원 깍두기 1kg",
+    brand: "풀무원",
+    prices: [
+      { store: "쿠팡", price: 12900, url: "#", logo: "🛒" },
+      { store: "마켓컬리", price: 13500, url: "#", logo: "🟣" },
+    ],
+    rating: 4.4,
+    reviewCount: 1245,
+    type: "깍두기",
+    weight: "1kg",
+    tags: [],
+  },
+  {
+    id: "p5",
+    name: "김치명가 동치미 1L",
+    brand: "김치명가",
+    prices: [{ store: "네이버", price: 8900, url: "#", logo: "🟢" }],
+    rating: 4.3,
+    reviewCount: 567,
+    type: "동치미",
+    weight: "1L",
+    tags: ["시원함"],
+  },
+  {
+    id: "p6",
+    name: "종가집 맛김치 1kg",
+    brand: "종가집",
+    prices: [
+      { store: "쿠팡", price: 14500, url: "#", logo: "🛒" },
+      { store: "네이버", price: 14900, url: "#", logo: "🟢" },
+      { store: "마켓컬리", price: 15500, url: "#", logo: "🟣" },
+    ],
+    rating: 4.6,
+    reviewCount: 2891,
+    type: "배추김치",
+    weight: "1kg",
+    tags: ["인기"],
+  },
+];
+
+const TYPE_FILTERS = [
+  { value: "all", label: "전체" },
+  { value: "배추김치", label: "배추김치" },
+  { value: "깍두기", label: "깍두기" },
+  { value: "총각김치", label: "총각김치" },
+  { value: "동치미", label: "동치미" },
+  { value: "맛김치", label: "맛김치" },
+];
+
+type SortOption = "price-low" | "price-high" | "popular" | "rating";
+
+/* ─── Helpers ─── */
+function formatWon(price: number): string {
+  return price.toLocaleString("ko-KR") + "원";
+}
+
+function getLowestPrice(product: Product): number {
+  return Math.min(...product.prices.map((p) => p.price));
+}
+
+function getDiscountPercent(original: number, sale: number): number {
+  return Math.round(((original - sale) / original) * 100);
+}
+
+function renderStars(rating: number): string {
+  const full = Math.floor(rating);
+  const half = rating - full >= 0.5;
+  return "★".repeat(full) + (half ? "☆" : "") + "☆".repeat(5 - full - (half ? 1 : 0));
+}
+
+/* ─── Component ─── */
 export default function ShopPage() {
   const { data: session } = useSession();
-  const t = useTranslations("shop");
   const levels = useTranslations("levels");
 
-  const [partnerFilter, setPartnerFilter] = useState<PartnerFilter>("all");
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
-  const [sortBy, setSortBy] = useState<"popular" | "price-low" | "price-high">("popular");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<SortOption>("price-low");
 
   const user = session?.user
     ? {
@@ -36,42 +167,29 @@ export default function ShopPage() {
       }
     : null;
 
-  const filterProducts = (product: AffiliateProduct) => {
-    if (partnerFilter !== "all" && product.partner !== partnerFilter) return false;
+  const filtered = useMemo(() => {
+    let list =
+      typeFilter === "all"
+        ? PRODUCTS
+        : PRODUCTS.filter((p) => p.type === typeFilter);
 
-    if (categoryFilter !== "all") {
-      const isKimchi = product.kimchiType !== undefined;
-      const isIngredient = product.tags.some((tag) =>
-        ["재료", "양념", "고춧가루"].includes(tag)
-      );
-      const isEquipment = product.tags.some((tag) =>
-        ["용기", "가전", "김치냉장고", "항아리"].includes(tag)
-      );
-
-      if (categoryFilter === "kimchi" && !isKimchi) return false;
-      if (categoryFilter === "ingredient" && !isIngredient) return false;
-      if (categoryFilter === "equipment" && !isEquipment) return false;
-    }
-
-    return true;
-  };
-
-  const sortProducts = (a: AffiliateProduct, b: AffiliateProduct) => {
     switch (sortBy) {
       case "price-low":
-        return a.price - b.price;
+        list = [...list].sort((a, b) => getLowestPrice(a) - getLowestPrice(b));
+        break;
       case "price-high":
-        return b.price - a.price;
-      default:
-        return b.reviewCount - a.reviewCount;
+        list = [...list].sort((a, b) => getLowestPrice(b) - getLowestPrice(a));
+        break;
+      case "popular":
+        list = [...list].sort((a, b) => b.reviewCount - a.reviewCount);
+        break;
+      case "rating":
+        list = [...list].sort((a, b) => b.rating - a.rating);
+        break;
     }
-  };
 
-  const filteredProducts = AFFILIATE_PRODUCTS.filter(filterProducts).sort(sortProducts);
-
-  const handleProductClick = (product: AffiliateProduct) => {
-    handleAffiliateClick(product);
-  };
+    return list;
+  }, [typeFilter, sortBy]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -79,208 +197,217 @@ export default function ShopPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-gradient-to-r from-orange-500 to-red-500 text-white py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
-              <p className="text-lg text-white/90 mb-4">
-                {t("subtitle")}
-              </p>
-              <p className="text-sm text-white/70">
-                * {t("affiliateNotice")}
-              </p>
-            </div>
-          </div>
-        </section>
+        <div className="bg-gradient-to-br from-primary via-primary-dark to-secondary text-white">
+          <PageHero
+            title="🛒 김치 구매 가이드"
+            description="최고의 김치를 최저가로 만나보세요"
+            className="py-14 sm:py-20"
+          />
+        </div>
 
-        <div className="container mx-auto px-4 py-8">
-          {/* Filters */}
-          <div className="bg-card rounded-[var(--radius)] p-4 mb-6 sticky top-16 z-30">
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Partner Filter */}
-              <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0">
-                <button
-                  onClick={() => setPartnerFilter("all")}
-                  className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
-                    partnerFilter === "all"
-                      ? "bg-orange-500 text-white"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {t("filter.all")}
-                </button>
-                {Object.entries(AFFILIATE_PARTNERS).map(([key, partner]) => (
-                  <button
-                    key={key}
-                    onClick={() => setPartnerFilter(key as PartnerFilter)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${
-                      partnerFilter === key
-                        ? "bg-orange-500 text-white"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    <span>{partner.logo}</span>
-                    <span>{partner.name}</span>
-                  </button>
-                ))}
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          {/* Filter + Sort Bar */}
+          <Card padding="md" className="mb-8 sticky top-16 z-30">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex-1">
+                <FilterBar
+                  options={TYPE_FILTERS}
+                  value={typeFilter}
+                  onChange={setTypeFilter}
+                />
               </div>
-
-              {/* Category Filter */}
-              <div className="flex gap-2 lg:ml-auto">
-                {[
-                  { id: "all", label: t("filter.all") },
-                  { id: "kimchi", label: t("filter.kimchi") },
-                  { id: "ingredient", label: t("filter.ingredient") },
-                  { id: "equipment", label: t("filter.equipment") },
-                ].map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setCategoryFilter(cat.id as CategoryFilter)}
-                    className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                      categoryFilter === cat.id
-                        ? "bg-foreground text-background"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Sort */}
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                className="px-3 py-2 bg-muted rounded-lg text-sm border-none"
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="px-3 py-2 bg-muted text-foreground text-sm rounded-[var(--radius-sm)] border-none outline-none cursor-pointer"
               >
-                <option value="popular">{t("sort.popular")}</option>
-                <option value="price-low">{t("sort.priceLow")}</option>
-                <option value="price-high">{t("sort.priceHigh")}</option>
+                <option value="price-low">낮은가격순</option>
+                <option value="price-high">높은가격순</option>
+                <option value="popular">인기순</option>
+                <option value="rating">평점순</option>
               </select>
             </div>
-          </div>
+          </Card>
 
-          {/* Products Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => {
-              const partner = AFFILIATE_PARTNERS[product.partner];
-              const discount = getDiscountPercent(product.price, product.originalPrice);
+          {/* Product Count */}
+          <p className="text-sm text-muted-foreground mb-4">
+            총 <span className="font-semibold text-foreground">{filtered.length}</span>개 상품
+          </p>
+
+          {/* Product Cards */}
+          <div className="flex flex-col gap-6">
+            {filtered.map((product) => {
+              const lowestPrice = getLowestPrice(product);
 
               return (
-                <div
-                  key={product.id}
-                  className="bg-card rounded-[var(--radius-lg)] overflow-hidden shadow-sm hover:shadow-lg transition-shadow group"
-                >
-                  {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center">
-                    <span className="text-6xl">🥬</span>
-
-                    {/* Partner Badge */}
-                    <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-white text-xs font-medium ${partner.color}`}>
-                      {partner.logo} {partner.name}
-                    </div>
-
-                    {/* Discount Badge */}
-                    {discount && (
-                      <div className="absolute top-3 right-3 px-2 py-1 bg-red-500 text-white rounded-full text-xs font-bold">
-                        -{discount}%
+                <Card key={product.id} hover padding="none" className="overflow-hidden">
+                  <div className="p-5 sm:p-6">
+                    {/* Top: Name, brand, weight, rating, tags */}
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h2 className="text-lg sm:text-xl font-bold text-foreground">
+                            {product.name}
+                          </h2>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {product.brand} · {product.weight}
+                        </p>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Content */}
-                  <div className="p-4">
-                    <h3 className="font-bold text-foreground mb-1 line-clamp-2 group-hover:text-orange-500 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                      {product.description}
-                    </p>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        {/* Tags */}
+                        <div className="flex gap-1.5 flex-wrap">
+                          {product.tags.map((tag) => (
+                            <Tag
+                              key={tag}
+                              variant={
+                                tag === "베스트셀러"
+                                  ? "primary"
+                                  : tag === "할인"
+                                    ? "accent"
+                                    : tag === "인기"
+                                      ? "secondary"
+                                      : "default"
+                              }
+                            >
+                              {tag}
+                            </Tag>
+                          ))}
+                        </div>
 
-                    {/* Rating */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-500">⭐</span>
-                        <span className="text-sm font-medium text-foreground">
-                          {product.rating}
-                        </span>
+                        {/* Rating */}
+                        <div className="flex items-center gap-1.5 text-sm">
+                          <span className="text-amber-500 tracking-tight">
+                            {renderStars(product.rating)}
+                          </span>
+                          <span className="font-semibold text-foreground">{product.rating}</span>
+                          <span className="text-muted-foreground">
+                            ({product.reviewCount.toLocaleString("ko-KR")})
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-sm text-muted-foreground">
-                        ({product.reviewCount.toLocaleString()})
-                      </span>
                     </div>
 
-                    {/* Price */}
-                    <div className="flex items-end gap-2 mb-4">
-                      <span className="text-xl font-bold text-foreground">
-                        {formatPrice(product.price, product.currency)}
-                      </span>
-                      {product.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">
-                          {formatPrice(product.originalPrice, product.currency)}
-                        </span>
-                      )}
-                    </div>
+                    {/* Price Comparison Table */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border text-muted-foreground">
+                            <th className="text-left py-2 pr-4 font-medium">스토어</th>
+                            <th className="text-right py-2 pr-4 font-medium">정가</th>
+                            <th className="text-right py-2 pr-4 font-medium">판매가</th>
+                            <th className="text-right py-2 pr-4 font-medium">할인율</th>
+                            <th className="text-right py-2 font-medium"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {product.prices.map((sp) => {
+                            const isLowest = sp.price === lowestPrice;
+                            const discount = sp.originalPrice
+                              ? getDiscountPercent(sp.originalPrice, sp.price)
+                              : null;
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {product.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-0.5 bg-muted text-muted-foreground rounded text-xs"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
+                            return (
+                              <tr
+                                key={sp.store}
+                                className={`border-b last:border-b-0 border-border/50 ${
+                                  isLowest ? "bg-secondary-50" : ""
+                                }`}
+                              >
+                                {/* Store */}
+                                <td className="py-3 pr-4">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-lg">{sp.logo}</span>
+                                    <span className="font-medium text-foreground">
+                                      {sp.store}
+                                    </span>
+                                    {isLowest && (
+                                      <span className="text-xs font-bold text-secondary px-1.5 py-0.5 bg-secondary-50 rounded-full border border-secondary/20">
+                                        최저가
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
 
-                    {/* Action */}
-                    <button
-                      onClick={() => handleProductClick(product)}
-                      className="w-full py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium flex items-center justify-center gap-2"
-                    >
-                      <span>{t("buyNow")}</span>
-                      <span>→</span>
-                    </button>
+                                {/* Original Price */}
+                                <td className="py-3 pr-4 text-right text-muted-foreground">
+                                  {sp.originalPrice ? (
+                                    <span className="line-through">
+                                      {formatWon(sp.originalPrice)}
+                                    </span>
+                                  ) : (
+                                    <span className="text-muted-foreground/50">-</span>
+                                  )}
+                                </td>
+
+                                {/* Sale Price */}
+                                <td className="py-3 pr-4 text-right">
+                                  <span
+                                    className={`font-bold text-base ${
+                                      isLowest ? "text-secondary-dark" : "text-foreground"
+                                    }`}
+                                  >
+                                    {formatWon(sp.price)}
+                                  </span>
+                                </td>
+
+                                {/* Discount % */}
+                                <td className="py-3 pr-4 text-right">
+                                  {discount ? (
+                                    <span className="font-semibold text-primary">
+                                      -{discount}%
+                                    </span>
+                                  ) : (
+                                    <span className="text-muted-foreground/50">-</span>
+                                  )}
+                                </td>
+
+                                {/* Buy Button */}
+                                <td className="py-3 text-right">
+                                  <a href={sp.url} target="_blank" rel="noopener noreferrer">
+                                    <Button
+                                      size="sm"
+                                      variant={isLowest ? "primary" : "outline"}
+                                    >
+                                      구매하기
+                                    </Button>
+                                  </a>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
+                </Card>
               );
             })}
           </div>
 
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-16">
+          {/* Empty State */}
+          {filtered.length === 0 && (
+            <div className="text-center py-20">
               <span className="text-6xl block mb-4">🔍</span>
               <p className="text-xl text-muted-foreground">
-                {t("noProducts")}
+                해당 종류의 김치 상품이 없습니다
               </p>
             </div>
           )}
 
-          {/* Affiliate Disclosure */}
-          <div className="mt-12 p-6 bg-muted rounded-[var(--radius)]">
-            <h3 className="font-bold text-foreground mb-3">
-              {t("affiliateNotice")}
+          {/* Affiliate Disclaimer */}
+          <Card padding="lg" className="mt-12 bg-muted/50">
+            <h3 className="font-semibold text-foreground mb-2 text-sm">
+              제휴 안내
             </h3>
-            <div className="flex flex-wrap gap-4">
-              {Object.entries(AFFILIATE_PARTNERS).map(([key, partner]) => (
-                <div
-                  key={key}
-                  className="flex items-center gap-2 px-4 py-2 bg-card rounded-lg"
-                >
-                  <span className="text-xl">{partner.logo}</span>
-                  <div>
-                    <p className="font-medium text-foreground text-sm">
-                      {partner.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {partner.commissionRate}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              본 페이지의 상품 링크는 제휴(어필리에이트) 링크를 포함하고 있습니다.
+              링크를 통해 구매하시면 김추페에 소정의 수수료가 지급되며,
+              구매자에게 추가 비용은 발생하지 않습니다.
+              가격 정보는 최종 업데이트 시점 기준이며, 실제 판매 가격과 다를 수 있습니다.
+            </p>
+          </Card>
         </div>
       </main>
 
