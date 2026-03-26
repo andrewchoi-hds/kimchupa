@@ -206,7 +206,7 @@ export default function RecommendationPage() {
                       )
                     )}
                     <span className="px-3 py-1.5 bg-muted text-muted-foreground rounded-full text-sm">
-                      +45 종류
+                      +25 종류
                     </span>
                   </div>
 

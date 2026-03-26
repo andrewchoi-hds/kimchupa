@@ -285,7 +285,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["양배추", "고춧가루", "멸치액젓", "마늘"],
     bestWith: ["돈까스", "양식", "샌드위치"],
     healthBenefits: ["위장 건강", "비타민 U", "항산화"],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3d/%EC%96%91%EB%B0%B0%EC%B6%94%EA%B9%80%EC%B9%98%EC%9D%98_%EC%9E%AC%EB%A3%8C.jpg",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Korean_cuisine-Kimchi-01.jpg",
     tags: ["부드러움", "달콤함", "퓨전"],
   },
   {

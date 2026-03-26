@@ -121,7 +121,7 @@ export default function Home() {
                   { value: 127, suffix: "+", label: "공유된 레시피", color: "text-primary" },
                   { value: 1842, suffix: "", label: "김치 러버", color: "text-accent-dark" },
                   { value: 350, suffix: "+", label: "커뮤니티 글", color: "text-secondary" },
-                  { value: 55, suffix: "", label: "김치백과 항목", color: "text-info" },
+                  { value: 25, suffix: "", label: "김치백과 항목", color: "text-info" },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className={`text-3xl md:text-4xl font-bold ${stat.color} mb-1`}>
