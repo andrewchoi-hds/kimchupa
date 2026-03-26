@@ -153,11 +153,12 @@ export default function WikiPage() {
         <section className="py-12 bg-card border-t border-border">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-8">{t("explore.title")}</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { href: "/wiki/category/history", bg: "bg-accent/10", title: t("explore.history.title"), desc: t("explore.history.description"), icon: "📜" },
                 { href: "/wiki/category/recipe", bg: "bg-secondary-50", title: t("explore.recipe.title"), desc: t("explore.recipe.description"), icon: "👨‍🍳" },
                 { href: "/wiki/category/health", bg: "bg-info/10", title: t("explore.health.title"), desc: t("explore.health.description"), icon: "💪" },
+                { href: "/wiki/recipes", bg: "bg-orange-50", title: t("explore.cooking.title"), desc: t("explore.cooking.description"), icon: "🍳" },
               ].map((item) => (
                 <Link
                   key={item.href}

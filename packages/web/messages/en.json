@@ -115,6 +115,10 @@
       "health": {
         "title": "Kimchi & Health",
         "description": "Scientifically proven health benefits of kimchi"
+      },
+      "cooking": {
+        "title": "Cooking with Kimchi",
+        "description": "Delicious recipes using kimchi as an ingredient"
       }
     },
     "detail": {

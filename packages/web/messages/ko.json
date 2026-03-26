@@ -115,6 +115,10 @@
       "health": {
         "title": "김치와 건강",
         "description": "과학적으로 증명된 김치의 건강 효능"
+      },
+      "cooking": {
+        "title": "김치 요리 활용법",
+        "description": "김치로 만드는 맛있는 요리 레시피 모음"
       }
     },
     "detail": {
