@@ -333,10 +333,8 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="mt-8">
-                  <Link href="/profile">
-                    <Button className="bg-white text-primary hover:bg-white/90">
-                      <Award className="w-4 h-4" /> 내 레벨 확인하기
-                    </Button>
+                  <Link href="/profile" className="inline-flex items-center justify-center gap-2 h-10 px-6 bg-white text-[hsl(8,80%,42%)] font-medium rounded-[var(--radius)] hover:bg-white/90 transition-colors">
+                    <Award className="w-4 h-4" /> 내 레벨 확인하기
                   </Link>
                 </div>
               </div>

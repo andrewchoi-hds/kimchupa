@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import Card from "@/components/ui/Card";
 import Avatar from "@/components/ui/Avatar";
 import LevelBadge from "@/components/ui/LevelBadge";
@@ -112,12 +114,12 @@ export default function RankingClient({ initialData }: RankingClientProps) {
   const currentUserId = session?.user?.id;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <PageHero
-          title={t("title")}
-          description={t("description")}
-        />
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+      <main className="flex-1">
+        <PageHero title={t("title")} description={t("description")} className="bg-gradient-to-r from-accent to-primary text-white" />
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-3xl mx-auto">
 
         {/* Tab Filters */}
         <FilterBar
@@ -231,7 +233,10 @@ export default function RankingClient({ initialData }: RankingClientProps) {
             })}
           </div>
         )}
-      </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }
