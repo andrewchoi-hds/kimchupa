@@ -61,7 +61,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["총각무", "고춧가루", "젓갈", "마늘"],
     bestWith: ["고기구이", "비빔밥", "보쌈"],
     healthBenefits: ["소화 촉진", "항산화 작용"],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/87/Korean_cuisine-Chonggak_kimchi-01.jpg",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Chonggakkimchi_%28chonggak_radish_kimchi%29.jpg",
     tags: ["알싸함", "아삭함", "전통"],
   },
   {
@@ -173,7 +173,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["배추", "굴", "낙지", "밤", "대추", "배"],
     bestWith: ["특별한 식사", "명절", "손님상"],
     healthBenefits: ["단백질", "미네랄", "영양 균형"],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/40/Bossam-kimchi_%28cropped%29.jpg",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/83/Korean_cuisine-Kaesong_bossam_kimchi-01.jpg",
     tags: ["고급", "궁중", "해산물", "특별"],
   },
   {
@@ -285,7 +285,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["양배추", "고춧가루", "멸치액젓", "마늘"],
     bestWith: ["돈까스", "양식", "샌드위치"],
     healthBenefits: ["위장 건강", "비타민 U", "항산화"],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Korean_cuisine-Kimchi-01.jpg",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/79/%EC%86%8C%EA%B8%88%EC%97%90_%EC%A0%88%EC%9D%B8_%EC%96%91%EB%B0%B0%EC%B6%94.jpg",
     tags: ["부드러움", "달콤함", "퓨전"],
   },
   {
@@ -333,7 +333,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무", "고춧가루", "식초", "설탕"],
     bestWith: ["불고기", "갈비", "고기요리"],
     healthBenefits: ["소화 촉진", "비타민 C", "칼륨"],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Korean.food-kkakdugi-01.jpg",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/02/Musaengchae_Namul1.jpg",
     tags: ["즉석", "아삭함", "새콤달콤"],
   },
   {
@@ -365,7 +365,7 @@ export const KIMCHI_DATA: KimchiType[] = [
     mainIngredients: ["무말랭이", "고춧가루", "간장", "참기름"],
     bestWith: ["도시락", "밥", "술안주"],
     healthBenefits: ["식이섬유", "소화 촉진"],
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Korean.food-kkakdugi-01.jpg",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/46/Mumallaengimuchim_%28seasoned_dried_Korean_radish%29.jpg",
     tags: ["쫄깃함", "고소함", "밑반찬"],
   },
   {
