@@ -4,10 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
-import { Sparkles, BookOpen, Users, ArrowRight, TrendingUp, Award, ChefHat, Eye, Heart, MessageCircle, Flame } from "lucide-react";
+import { Sparkles, BookOpen, Users, ArrowRight, TrendingUp, Award, ChefHat, Eye, Heart, MessageCircle, Flame, Lightbulb, Rocket } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
+import KimchiCard from "@/components/ui/KimchiCard";
+import OnboardingModal from "@/components/ui/OnboardingModal";
+import { KIMCHI_DATA } from "@/constants/kimchi";
 
 function useScrollReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -170,6 +173,141 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Weekly Kimchi Picks */}
+        <section className="py-16 reveal">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full text-sm font-medium text-accent-dark mb-4">
+                <Sparkles className="w-4 h-4" />
+                이번 주 추천 김치
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2">이번 주의 김치 PICK</h2>
+              <p className="text-muted-foreground">매주 새로운 김치를 만나보세요</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {(() => {
+                const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+                const shuffled = [...KIMCHI_DATA].sort((a, b) => {
+                  const hashA = a.id.charCodeAt(0) + weekNumber;
+                  const hashB = b.id.charCodeAt(0) + weekNumber;
+                  return (hashA % 7) - (hashB % 7);
+                });
+                const weeklyPicks = shuffled.slice(0, 3);
+                return weeklyPicks.map((kimchi) => (
+                  <Link key={kimchi.id} href={`/wiki/${kimchi.id}`}>
+                    <KimchiCard
+                      name={kimchi.name}
+                      nameEn={kimchi.nameEn}
+                      description={kimchi.description}
+                      imageUrl={kimchi.imageUrl}
+                      region={kimchi.region}
+                      spicyLevel={kimchi.spicyLevel}
+                      fermentationLevel={kimchi.fermentationLevel}
+                      tags={kimchi.tags}
+                    />
+                  </Link>
+                ));
+              })()}
+            </div>
+
+            <div className="text-center mt-8">
+              <Link href="/wiki">
+                <Button variant="outline" size="lg">
+                  김치백과 전체보기 <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Kimchi Tips */}
+        <section className="py-16 bg-muted/30 reveal">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full text-sm font-medium text-secondary-dark mb-4">
+                <Lightbulb className="w-4 h-4" />
+                김치 활용 꿀팁
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2">알아두면 쓸모있는 김치 상식</h2>
+              <p className="text-muted-foreground">김치를 더 맛있게 즐기는 방법</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  emoji: "\uD83C\uDF72",
+                  title: "신김치는 찌개가 최고",
+                  desc: "잘 익은 신김치로 끓인 김치찌개는 깊은 감칠맛의 정수. 돼지고기와 두부를 넣으면 완벽!",
+                  href: "/wiki/recipes",
+                  cta: "레시피 보기",
+                },
+                {
+                  emoji: "\uD83E\uDED9",
+                  title: "김장은 11월이 적기",
+                  desc: "기온이 0도 전후로 유지되는 11월 말~12월 초가 김장의 황금 시기입니다.",
+                  href: "/kimjang",
+                  cta: "김장 가이드",
+                },
+                {
+                  emoji: "\u2753",
+                  title: "하얀 막은 곰팡이가 아니에요",
+                  desc: "김치 표면의 하얀 막은 효모로 인한 자연 현상. 걷어내고 먹으면 됩니다!",
+                  href: "/faq",
+                  cta: "FAQ 확인",
+                },
+              ].map((tip) => (
+                <Link key={tip.href} href={tip.href} className="block group">
+                  <div className="bg-card border border-border rounded-[var(--radius-lg)] p-6 hover:shadow-lg hover:border-primary/30 transition-all h-full flex flex-col">
+                    <div className="text-4xl mb-4">{tip.emoji}</div>
+                    <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{tip.title}</h3>
+                    <p className="text-sm text-muted-foreground flex-1 mb-4">{tip.desc}</p>
+                    <span className="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:gap-2 transition-all">
+                      {tip.cta} <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Start (for non-logged in users) */}
+        {!session && (
+          <section className="py-16 reveal">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-10">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-sm font-medium text-primary mb-4">
+                  <Rocket className="w-4 h-4" />
+                  빠른 시작
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-2">김추페 시작하기</h2>
+                <p className="text-muted-foreground">김치의 세계로 첫 걸음을 내딛어 보세요</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                {[
+                  { href: "/recommendation", icon: Sparkles, title: "김치 추천 받기", desc: "나의 취향에 딱 맞는 김치를 찾아드려요", gradient: "from-primary to-primary-dark" },
+                  { href: "/wiki", icon: BookOpen, title: "김치백과 둘러보기", desc: "다양한 김치의 종류와 역사를 알아보세요", gradient: "from-accent to-accent-dark" },
+                  { href: "/faq", icon: MessageCircle, title: "FAQ 확인하기", desc: "김치에 대한 궁금증을 해결하세요", gradient: "from-secondary to-secondary-dark" },
+                ].map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`group bg-gradient-to-br ${item.gradient} p-6 rounded-[var(--radius-lg)] text-white text-center hover:scale-[1.03] transition-all shadow-md hover:shadow-xl`}
+                  >
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                    <p className="text-sm text-white/80">{item.desc}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Level System */}
         <section className="py-16 reveal">
           <div className="container mx-auto px-4">
@@ -278,6 +416,7 @@ export default function Home() {
       </main>
 
       <Footer />
+      <OnboardingModal />
     </div>
   );
 }
