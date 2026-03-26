@@ -1,0 +1,116 @@
+{
+  "jukkumi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Jukkumi-gui.jpg",
+    "description": "Jukkumi-gui (grilled small octopus), related to jukkumi kimchi",
+    "source": "Wikimedia Commons: File:Jukkumi-gui.jpg",
+    "license": "CC BY-SA"
+  },
+  "kodari": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Kodari-jorim.jpg",
+    "description": "Kodari-jorim (braised dried pollock), related to kodari kimchi",
+    "source": "Wikimedia Commons: File:Kodari-jorim.jpg",
+    "license": "CC BY-SA"
+  },
+  "maneul": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/83/Korean_pickled_garlics-Maneul_jangajji-01.jpg",
+    "description": "Maneul jangajji (Korean pickled garlic)",
+    "source": "Wikimedia Commons: File:Korean pickled garlics-Maneul jangajji-01.jpg",
+    "license": "CC BY-SA"
+  },
+  "meokgalkimchi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Korean.cuisine-Kimchi_jjigae-01.jpg",
+    "description": "Kimchi jjigae made with aged kimchi (mugeunji/mukeunji)",
+    "source": "Wikimedia Commons: File:Korean.cuisine-Kimchi jjigae-01.jpg",
+    "license": "CC BY-SA"
+  },
+  "minari": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Minari-muchim.jpg",
+    "description": "Minari-muchim (seasoned water parsley), related to minari kimchi",
+    "source": "Wikimedia Commons: File:Minari-muchim.jpg",
+    "license": "CC BY-SA"
+  },
+  "myeolchi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Myeolchijeot_%28fermented_anchovies%29.jpg",
+    "description": "Myeolchijeot (fermented anchovies), key ingredient in myeolchi kimchi",
+    "source": "Wikimedia Commons: File:Myeolchijeot (fermented anchovies).jpg",
+    "license": "CC BY-SA"
+  },
+  "naengi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Naengi_%28Capsella_bursa-pastoris%29.jpg",
+    "description": "Naengi (shepherd's purse), main ingredient of naengi kimchi",
+    "source": "Wikimedia Commons: File:Naengi (Capsella bursa-pastoris).jpg",
+    "license": "CC BY-SA"
+  },
+  "ojingeo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Ojingeojeot_%28squid_jeotgal%29.jpg",
+    "description": "Ojingeojeot (fermented squid), related to ojingeo kimchi",
+    "source": "Wikimedia Commons: File:Ojingeojeot (squid jeotgal).jpg",
+    "license": "CC BY-SA"
+  },
+  "putbaechu": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/16/Geotjeori.jpg",
+    "description": "Geotjeori (fresh kimchi), similar to putbaechu kimchi style",
+    "source": "Wikimedia Commons: File:Geotjeori.jpg",
+    "license": "CC BY-SA"
+  },
+  "sangchu": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Korean_banchan_and_ssam.JPG",
+    "description": "Korean banchan and ssam with lettuce (sangchu)",
+    "source": "Wikimedia Commons: File:Korean banchan and ssam.JPG",
+    "license": "CC BY-SA"
+  },
+  "sigeumchi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Korean.cuisine-Sigeumchi_namul-01.jpg",
+    "description": "Sigeumchi-namul (seasoned spinach), related to sigeumchi kimchi",
+    "source": "Wikimedia Commons: File:Korean.cuisine-Sigeumchi namul-01.jpg",
+    "license": "CC BY-SA"
+  },
+  "ssuk": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Ssuk_2.jpg",
+    "description": "Ssuk (Korean mugwort), main ingredient of ssuk kimchi",
+    "source": "Wikimedia Commons: File:Ssuk 2.jpg",
+    "license": "CC BY-SA"
+  },
+  "sukchae": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Blanched_Korean_angelica-tree_shoots.jpg",
+    "description": "Blanched Korean vegetable shoots (sukchae style)",
+    "source": "Wikimedia Commons: File:Blanched Korean angelica-tree shoots.jpg",
+    "license": "CC BY-SA"
+  },
+  "sukjunamul": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Korean_cuisine-Sukjunamul-02.jpg",
+    "description": "Sukjunamul (seasoned mung bean sprouts)",
+    "source": "Wikimedia Commons: File:Korean cuisine-Sukjunamul-02.jpg",
+    "license": "CC BY-SA"
+  },
+  "sulkimchi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Baek-kimchi_3.jpg",
+    "description": "Baek-kimchi (white kimchi), closely related to sul kimchi style",
+    "source": "Wikimedia Commons: File:Baek-kimchi 3.jpg",
+    "license": "CC BY-SA"
+  },
+  "ueong": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Korean_cuisine-Ueong_jorim-01.jpg",
+    "description": "Ueong-jorim (braised burdock root), related to ueong kimchi",
+    "source": "Wikimedia Commons: File:Korean cuisine-Ueong jorim-01.jpg",
+    "license": "CC BY-SA"
+  },
+  "yangbaechu": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/3d/%EC%96%91%EB%B0%B0%EC%B6%94%EA%B9%80%EC%B9%98%EC%9D%98_%EC%9E%AC%EB%A3%8C.jpg",
+    "description": "Yangbaechu kimchi ingredients (cabbage kimchi preparation)",
+    "source": "Wikimedia Commons: File:양배추김치의 재료.jpg",
+    "license": "CC BY-SA"
+  },
+  "yulmukimchi": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Yulmu_%28Coix_lacryma-jobi_var._ma-yuen%29.jpg",
+    "description": "Yulmu (Job's tears grain), main ingredient of yulmu kimchi",
+    "source": "Wikimedia Commons: File:Yulmu (Coix lacryma-jobi var. ma-yuen).jpg",
+    "license": "CC BY-SA"
+  },
+  "baechu": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Baechu-kimchi_%EB%B0%B0%EC%B6%94%EA%B9%80%EC%B9%98H.jpg",
+    "description": "Baechu-kimchi (napa cabbage kimchi), the most iconic Korean kimchi",
+    "source": "Wikimedia Commons: File:Baechu-kimchi 배추김치H.jpg",
+    "license": "CC BY-SA"
+  }
+}
