@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@kimchupa/db";
 import { reportService } from "@kimchupa/api";
+import { z } from "zod";
+
+const updateReportStatusSchema = z.object({
+  status: z.enum(["pending", "reviewed", "resolved", "dismissed"]),
+});
 
 export async function PATCH(
   request: NextRequest,
@@ -36,20 +41,15 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const { status } = body;
-
-  const validStatuses = ["pending", "reviewed", "resolved", "dismissed"];
-  if (!status || !validStatuses.includes(status)) {
+  const parsed = updateReportStatusSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      {
-        success: false,
-        error: { code: "BAD_REQUEST", message: "잘못된 상태값입니다" },
-      },
+      { success: false, error: { code: "VALIDATION_ERROR", message: parsed.error.issues[0]?.message || "입력값이 올바르지 않습니다", details: parsed.error.flatten().fieldErrors } },
       { status: 400 }
     );
   }
 
-  const report = await reportService.updateReportStatus(id, status);
+  const report = await reportService.updateReportStatus(id, parsed.data.status);
 
   return NextResponse.json({ success: true, data: report });
 }

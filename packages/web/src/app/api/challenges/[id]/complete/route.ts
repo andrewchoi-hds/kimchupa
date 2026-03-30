@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { challengeService } from "@kimchupa/api";
 import { auth } from "@/auth";
 import { checkRateLimit } from "@/lib/withRateLimit";
+import { z } from "zod";
+
+const completeChallengeSchema = z.object({
+  postId: z.string().optional(),
+});
 
 export async function POST(
   request: NextRequest,
@@ -20,7 +25,14 @@ export async function POST(
 
   const { id } = await params;
   const body = await request.json().catch(() => ({}));
-  const postId = body.postId as string | undefined;
+  const parsed = completeChallengeSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { success: false, error: { code: "VALIDATION_ERROR", message: parsed.error.issues[0]?.message || "입력값이 올바르지 않습니다", details: parsed.error.flatten().fieldErrors } },
+      { status: 400 }
+    );
+  }
+  const postId = parsed.data.postId;
 
   try {
     const result = await challengeService.complete(id, session.user.id, postId);

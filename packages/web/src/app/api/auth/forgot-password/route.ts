@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { passwordResetService } from "@kimchupa/api";
 import { checkRateLimit } from "@/lib/withRateLimit";
+import { z } from "zod";
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email(),
+});
 
 async function sendResetEmail(email: string, token: string) {
   const resetUrl = `${process.env.NEXTAUTH_URL || "https://kimchupa.vercel.app"}/reset-password?token=${token}`;
@@ -29,21 +34,16 @@ export async function POST(request: NextRequest) {
   if (rateLimited) return rateLimited;
 
   try {
-    const { email } = await request.json();
-
-    if (!email) {
+    const body = await request.json();
+    const parsed = forgotPasswordSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: "INVALID_INPUT",
-            message: "이메일을 입력해주세요.",
-          },
-        },
+        { success: false, error: { code: "VALIDATION_ERROR", message: parsed.error.issues[0]?.message || "입력값이 올바르지 않습니다", details: parsed.error.flatten().fieldErrors } },
         { status: 400 }
       );
     }
 
+    const { email } = parsed.data;
     const token = await passwordResetService.requestReset(email);
 
     // If the user exists, send the email. But always return success

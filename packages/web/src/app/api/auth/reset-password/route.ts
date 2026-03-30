@@ -1,40 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { passwordResetService } from "@kimchupa/api";
 import { checkRateLimit } from "@/lib/withRateLimit";
+import { z } from "zod";
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1),
+  password: z.string().min(8),
+});
 
 export async function POST(request: NextRequest) {
   const rateLimited = checkRateLimit(request, { interval: 60_000, limit: 5 });
   if (rateLimited) return rateLimited;
 
   try {
-    const { token, password } = await request.json();
-
-    if (!token || !password) {
+    const body = await request.json();
+    const parsed = resetPasswordSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: "INVALID_INPUT",
-            message: "토큰과 새 비밀번호를 입력해주세요.",
-          },
-        },
+        { success: false, error: { code: "VALIDATION_ERROR", message: parsed.error.issues[0]?.message || "입력값이 올바르지 않습니다", details: parsed.error.flatten().fieldErrors } },
         { status: 400 }
       );
     }
 
-    if (password.length < 8) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: "WEAK_PASSWORD",
-            message: "비밀번호는 8자 이상이어야 합니다.",
-          },
-        },
-        { status: 400 }
-      );
-    }
-
+    const { token, password } = parsed.data;
     const result = await passwordResetService.resetPassword(token, password);
 
     if (!result.success) {

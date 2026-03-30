@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { reportService } from "@kimchupa/api";
 import { checkRateLimit } from "@/lib/withRateLimit";
+import { z } from "zod";
+
+const createReportSchema = z.object({
+  targetType: z.enum(["post", "comment", "user"]),
+  targetId: z.string(),
+  reason: z.enum(["spam", "harassment", "inappropriate", "copyright", "other"]),
+  description: z.string().optional(),
+});
 
 export async function POST(request: NextRequest) {
   const rateLimited = checkRateLimit(request, { interval: 60_000, limit: 5 });
@@ -16,31 +24,15 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { targetType, targetId, reason, description } = body;
-
-  if (!targetType || !targetId || !reason) {
+  const parsed = createReportSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { success: false, error: { code: "BAD_REQUEST", message: "필수 항목이 누락되었습니다" } },
+      { success: false, error: { code: "VALIDATION_ERROR", message: parsed.error.issues[0]?.message || "입력값이 올바르지 않습니다", details: parsed.error.flatten().fieldErrors } },
       { status: 400 }
     );
   }
 
-  const validTypes = ["post", "comment", "user"];
-  if (!validTypes.includes(targetType)) {
-    return NextResponse.json(
-      { success: false, error: { code: "BAD_REQUEST", message: "잘못된 신고 대상 유형입니다" } },
-      { status: 400 }
-    );
-  }
-
-  const validReasons = ["spam", "harassment", "inappropriate", "copyright", "other"];
-  if (!validReasons.includes(reason)) {
-    return NextResponse.json(
-      { success: false, error: { code: "BAD_REQUEST", message: "잘못된 신고 사유입니다" } },
-      { status: 400 }
-    );
-  }
-
+  const { targetType, targetId, reason, description } = parsed.data;
   const report = await reportService.createReport(
     session.user.id,
     targetType,
