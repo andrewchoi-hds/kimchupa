@@ -19,7 +19,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-foreground text-muted-foreground">
+    <footer className="bg-foreground text-muted-foreground pb-20 md:pb-0">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-1">

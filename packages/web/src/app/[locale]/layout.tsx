@@ -7,6 +7,7 @@ import { locales, type Locale } from "@/i18n/config";
 import SessionProvider from "@/components/providers/SessionProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import GlobalProvider from "@/components/providers/GlobalProvider";
+import BottomNav from "@/components/layout/BottomNav";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -76,6 +77,7 @@ export default async function LocaleLayout({ children, params }: Props) {
               <GlobalProvider>
                 {children}
               </GlobalProvider>
+              <BottomNav />
             </NextIntlClientProvider>
           </QueryProvider>
         </SessionProvider>
