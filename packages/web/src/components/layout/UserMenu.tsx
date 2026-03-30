@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { signOut } from "next-auth/react";
-import { User, Award, Bookmark, BookOpen, LogOut, ChevronDown } from "lucide-react";
+import { User, Award, Bookmark, BookOpen, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
 import Avatar from "@/components/ui/Avatar";
 import ProgressBar from "@/components/ui/ProgressBar";
 
@@ -26,6 +26,7 @@ export default function UserMenu({ user }: { user: UserInfo }) {
   const ref = useRef<HTMLDivElement>(null);
   const t = useTranslations("nav");
   const profileT = useTranslations("profile");
+  const locale = useLocale();
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -78,6 +79,7 @@ export default function UserMenu({ user }: { user: UserInfo }) {
 
           <div className="py-1">
             {[
+              { href: "/dashboard", icon: LayoutDashboard, label: locale === "ko" ? "대시보드" : "Dashboard" },
               { href: "/profile", icon: User, label: t("profile") },
               { href: "/profile/badges", icon: Award, label: profileT("badges.title") },
               { href: "/profile/bookmarks", icon: Bookmark, label: profileT("activity.bookmarks") },

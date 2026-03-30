@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
 export function useChallenges(page: number = 1, limit: number = 10) {
   return useQuery({

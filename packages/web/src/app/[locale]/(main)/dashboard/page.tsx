@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import {
   Zap,
   Flame,

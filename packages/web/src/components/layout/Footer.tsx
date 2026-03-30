@@ -21,7 +21,7 @@ export default function Footer() {
   return (
     <footer className="bg-foreground text-muted-foreground">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <span className="text-2xl">🥬</span>
@@ -38,6 +38,25 @@ export default function Footer() {
                 { href: "/wiki", label: nav("wiki") },
                 { href: "/community", label: nav("community") },
                 { href: "/shop", label: nav("shop") },
+                { href: "/kimjang", label: locale === "ko" ? "김장 가이드" : "Kimjang Guide" },
+                { href: "/faq", label: "FAQ" },
+                { href: "/tools/calorie", label: locale === "ko" ? "칼로리 계산기" : "Calorie Calculator" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-background transition-colors">{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-background font-semibold mb-4">{locale === "ko" ? "도구" : "Tools"}</h4>
+            <ul className="space-y-2 text-sm">
+              {[
+                { href: "/recommendation", label: locale === "ko" ? "김치 추천" : "Kimchi Recommendation" },
+                { href: "/tools/ingredients", label: locale === "ko" ? "냉장고 파먹기" : "Fridge Ingredients" },
+                { href: "/tools/calorie", label: locale === "ko" ? "칼로리 계산기" : "Calorie Calculator" },
+                { href: "/ranking", label: locale === "ko" ? "랭킹" : "Ranking" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:text-background transition-colors">{link.label}</Link>

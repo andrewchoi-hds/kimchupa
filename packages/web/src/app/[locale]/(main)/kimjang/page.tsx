@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
+import Link from "next/link";
 import {
   Calendar,
   CheckCircle2,
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Card, { CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import Card, { CardTitle, CardDescription } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import ProgressBar from "@/components/ui/ProgressBar";
 
@@ -361,7 +361,6 @@ const SECTIONS = [
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
 export default function KimjangGuidePage() {
-  const locale = useLocale();
   const [expandedTimeline, setExpandedTimeline] = useState<number | null>(null);
 
   return (
@@ -638,16 +637,12 @@ export default function KimjangGuidePage() {
               김추페에서 다양한 김치 레시피와 정보를 확인하고, 커뮤니티에서 김장 팁을 나눠보세요!
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
-              <a href="/wiki">
-                <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                  김치 백과사전
-                </Button>
-              </a>
-              <a href="/community">
-                <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                  커뮤니티
-                </Button>
-              </a>
+              <Link href="/wiki" className="inline-flex items-center justify-center h-12 px-6 bg-white/10 border border-white/30 text-white font-medium rounded-[var(--radius)] hover:bg-white/20 transition-colors">
+                김치 백과사전
+              </Link>
+              <Link href="/community" className="inline-flex items-center justify-center h-12 px-6 bg-white/10 border border-white/30 text-white font-medium rounded-[var(--radius)] hover:bg-white/20 transition-colors">
+                커뮤니티
+              </Link>
             </div>
           </div>
         </section>

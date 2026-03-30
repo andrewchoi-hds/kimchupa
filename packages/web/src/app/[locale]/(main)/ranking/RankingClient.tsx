@@ -11,7 +11,6 @@ import LevelBadge from "@/components/ui/LevelBadge";
 import FilterBar from "@/components/ui/FilterBar";
 import PageHero from "@/components/ui/PageHero";
 import Skeleton from "@/components/ui/Skeleton";
-import { LEVEL_EMOJIS } from "@/constants/levels";
 import { getLevelByXp } from "@/constants/levels";
 
 interface RankUser {

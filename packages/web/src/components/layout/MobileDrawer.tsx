@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { signOut } from "next-auth/react";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, LayoutDashboard } from "lucide-react";
 import Avatar from "@/components/ui/Avatar";
 import ProgressBar from "@/components/ui/ProgressBar";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
@@ -57,6 +57,7 @@ export default function MobileDrawer({
   onClose: () => void;
 }) {
   const t = useTranslations("nav");
+  const locale = useLocale();
   const xpProgress = user ? user.xp % 100 : 0;
 
   return (
@@ -93,6 +94,14 @@ export default function MobileDrawer({
 
         {user ? (
           <div className="flex flex-col gap-1">
+            <Link
+              href="/dashboard"
+              onClick={onClose}
+              className="flex items-center gap-3 px-4 py-3 text-foreground hover:bg-muted rounded-[var(--radius)]"
+            >
+              <LayoutDashboard className="w-5 h-5" />
+              {locale === "ko" ? "대시보드" : "Dashboard"}
+            </Link>
             <Link
               href="/profile"
               onClick={onClose}

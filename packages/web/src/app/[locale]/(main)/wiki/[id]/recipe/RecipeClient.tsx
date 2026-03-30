@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Card from "@/components/ui/Card";
@@ -286,7 +285,7 @@ function TimerModal({
 // ---------------------------------------------------------------------------
 
 export default function RecipeClient({ data }: { data: RecipeData }) {
-  const t = useTranslations("wiki");
+  // const t = useTranslations("wiki"); // unused for now
 
   const steps = data.makingProcess ? parseSteps(data.makingProcess) : [];
   const hasSteps = steps.length > 0;
