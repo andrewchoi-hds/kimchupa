@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { userService } from "@kimchupa/api";
 import { updateProfileSchema } from "@kimchupa/shared";
 import { apiServerError } from "@/lib/apiError";
+import { sanitizeText } from "@/lib/sanitize";
 
 export async function GET() {
   try {
@@ -37,7 +38,12 @@ export async function PATCH(request: NextRequest) {
         { status: 400 }
       );
     }
-    const user = await userService.updateProfile(session.user.id, parsed.data);
+    const sanitizedData = {
+      ...parsed.data,
+      ...(parsed.data.nickname && { nickname: sanitizeText(parsed.data.nickname) }),
+      ...(parsed.data.bio && { bio: sanitizeText(parsed.data.bio) }),
+    };
+    const user = await userService.updateProfile(session.user.id, sanitizedData);
 
     return NextResponse.json({ success: true, data: user });
   } catch (error) {

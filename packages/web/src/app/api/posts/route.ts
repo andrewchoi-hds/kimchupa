@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { postService } from "@kimchupa/api";
-import { checkRateLimit } from "@/lib/withRateLimit";
+import { checkRateLimit, checkBodySize } from "@/lib/withRateLimit";
 import { apiServerError } from "@/lib/apiError";
 import { createPostSchema } from "@kimchupa/shared";
+import { sanitizeText } from "@/lib/sanitize";
 import type { PostType } from "@kimchupa/db";
 
 export async function GET(request: NextRequest) {
@@ -46,6 +47,9 @@ export async function POST(request: NextRequest) {
     const rateLimited = checkRateLimit(request, { interval: 60_000, limit: 10 });
     if (rateLimited) return rateLimited;
 
+    const tooLarge = checkBodySize(request, 50_000);
+    if (tooLarge) return tooLarge;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: { code: "UNAUTHORIZED", message: "로그인이 필요합니다" } }, { status: 401 });
@@ -62,6 +66,7 @@ export async function POST(request: NextRequest) {
 
     const post = await postService.create({
       ...parsed.data,
+      title: sanitizeText(parsed.data.title),
       authorId: session.user.id,
     });
 

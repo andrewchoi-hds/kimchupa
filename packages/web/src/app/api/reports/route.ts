@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { reportService } from "@kimchupa/api";
-import { checkRateLimit } from "@/lib/withRateLimit";
+import { checkRateLimit, checkBodySize } from "@/lib/withRateLimit";
+import { sanitizeText } from "@/lib/sanitize";
 import { z } from "zod";
 
 const createReportSchema = z.object({
   targetType: z.enum(["post", "comment", "user"]),
   targetId: z.string(),
   reason: z.enum(["spam", "harassment", "inappropriate", "copyright", "other"]),
-  description: z.string().optional(),
+  description: z.string().max(1000).optional(),
 });
 
 export async function POST(request: NextRequest) {
   const rateLimited = checkRateLimit(request, { interval: 60_000, limit: 5 });
   if (rateLimited) return rateLimited;
+
+  const tooLarge = checkBodySize(request, 10_000);
+  if (tooLarge) return tooLarge;
 
   const session = await auth();
   if (!session?.user?.id) {
@@ -38,7 +42,7 @@ export async function POST(request: NextRequest) {
     targetType,
     targetId,
     reason,
-    description || undefined
+    description ? sanitizeText(description) : undefined
   );
 
   return NextResponse.json({ success: true, data: report }, { status: 201 });

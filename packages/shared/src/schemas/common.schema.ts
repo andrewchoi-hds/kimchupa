@@ -23,6 +23,6 @@ export function apiResponseSchema<T extends z.ZodTypeAny>(dataSchema: T) {
 }
 
 export const paginationQuerySchema = z.object({
-  page: z.number().int().positive().default(1),
-  limit: z.number().int().positive().max(100).default(20),
+  page: z.number().int().min(1).max(1000).default(1),
+  limit: z.number().int().min(1).max(100).default(20),
 });

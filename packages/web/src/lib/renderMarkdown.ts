@@ -1,17 +1,14 @@
+import DOMPurify from "isomorphic-dompurify";
+
 /**
  * Lightweight markdown-to-HTML renderer.
  * Supports: headings, bold, italic, inline code, code blocks, lists, links, paragraphs.
- * Includes basic XSS sanitization (strips script tags and event handlers).
+ * Uses DOMPurify for robust XSS sanitization.
  */
 export function renderMarkdown(text: string): string {
   if (!text) return "";
 
   let html = text;
-
-  // --- XSS sanitization ---
-  html = html.replace(/<script[\s\S]*?<\/script>/gi, "");
-  html = html.replace(/on\w+\s*=\s*"[^"]*"/gi, "");
-  html = html.replace(/on\w+\s*=\s*'[^']*'/gi, "");
 
   // --- Code blocks (fenced) — process first to protect inner content ---
   html = html.replace(
@@ -70,5 +67,9 @@ export function renderMarkdown(text: string): string {
     html = `<p class="mb-4">${html}</p>`;
   }
 
-  return html;
+  // Sanitize the final HTML with DOMPurify
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ["h1", "h2", "h3", "p", "strong", "em", "code", "pre", "a", "ul", "li", "br"],
+    ALLOWED_ATTR: ["href", "target", "rel", "class"],
+  });
 }

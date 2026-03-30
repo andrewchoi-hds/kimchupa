@@ -4,8 +4,8 @@ import { checkRateLimit } from "@/lib/withRateLimit";
 import { z } from "zod";
 
 const resetPasswordSchema = z.object({
-  token: z.string().min(1),
-  password: z.string().min(8),
+  token: z.string().min(1).max(200),
+  password: z.string().min(8).max(100),
 });
 
 export async function POST(request: NextRequest) {

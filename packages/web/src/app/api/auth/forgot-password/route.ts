@@ -4,7 +4,7 @@ import { checkRateLimit } from "@/lib/withRateLimit";
 import { z } from "zod";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().max(100),
 });
 
 async function sendResetEmail(email: string, token: string) {

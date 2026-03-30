@@ -5,7 +5,7 @@ import { checkRateLimit } from "@/lib/withRateLimit";
 import { z } from "zod";
 
 const completeChallengeSchema = z.object({
-  postId: z.string().optional(),
+  postId: z.string().max(100).optional(),
 });
 
 export async function POST(

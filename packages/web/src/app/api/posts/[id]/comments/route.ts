@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { commentService } from "@kimchupa/api";
 import { checkRateLimit } from "@/lib/withRateLimit";
 import { createCommentSchema } from "@kimchupa/shared";
+import { sanitizeText } from "@/lib/sanitize";
 
 export async function POST(
   request: NextRequest,
@@ -30,6 +31,7 @@ export async function POST(
     postId,
     authorId: session.user.id,
     ...parsed.data,
+    content: sanitizeText(parsed.data.content),
   });
 
   return NextResponse.json({ success: true, data: comment }, { status: 201 });

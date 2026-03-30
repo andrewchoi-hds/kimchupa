@@ -4,7 +4,7 @@ import { kimchiDexService } from "@kimchupa/api";
 import { z } from "zod";
 
 const kimchiDexEntrySchema = z.object({
-  kimchiId: z.string(),
+  kimchiId: z.string().min(1).max(100),
   status: z.enum(["want_to_try", "tried", "favorite"]),
   rating: z.number().min(1).max(5).optional(),
   memo: z.string().max(500).optional(),

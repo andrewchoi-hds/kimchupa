@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getRateLimitHeaders, type RateLimitConfig } from "./rateLimit";
 
+export function checkBodySize(request: NextRequest, maxBytes = 50_000) {
+  const contentLength = request.headers.get("content-length");
+  if (contentLength && parseInt(contentLength) > maxBytes) {
+    return NextResponse.json(
+      { success: false, error: { code: "PAYLOAD_TOO_LARGE", message: "요청이 너무 큽니다" } },
+      { status: 413 }
+    );
+  }
+  return null;
+}
+
 export function checkRateLimit(
   request: NextRequest,
   config?: RateLimitConfig
