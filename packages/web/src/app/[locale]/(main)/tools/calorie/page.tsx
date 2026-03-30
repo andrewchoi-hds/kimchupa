@@ -61,11 +61,11 @@ const NUTRIENT_COLORS: Record<string, string> = {
 };
 
 const NUTRIENT_BG_COLORS: Record<string, string> = {
-  carbs: "bg-blue-100 dark:bg-blue-950",
-  protein: "bg-red-100 dark:bg-red-950",
-  fat: "bg-yellow-100 dark:bg-yellow-950",
-  fiber: "bg-green-100 dark:bg-green-950",
-  vitaminC: "bg-orange-100 dark:bg-orange-950",
+  carbs: "bg-blue-100",
+  protein: "bg-red-100",
+  fat: "bg-yellow-100",
+  fiber: "bg-green-100",
+  vitaminC: "bg-orange-100",
 };
 
 function AnimatedNumber({ value, suffix = "" }: { value: number; suffix?: string }) {

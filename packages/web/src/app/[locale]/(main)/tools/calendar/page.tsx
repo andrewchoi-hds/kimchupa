@@ -19,18 +19,18 @@ interface MonthData {
 }
 
 const MONTHLY_KIMCHI: MonthData[] = [
-  { month: 1, name: "1월", emoji: "❄️", kimchi: ["동치미", "깍두기"], tip: "겨울철 시원한 동치미가 제격", seasonal: ["무", "배추"], color: "bg-blue-50 dark:bg-blue-950/30" },
-  { month: 2, name: "2월", emoji: "🌨️", kimchi: ["백김치", "나박김치"], tip: "입춘을 앞두고 산뜻한 김치 준비", seasonal: ["무", "쪽파"], color: "bg-blue-50 dark:bg-blue-950/30" },
-  { month: 3, name: "3월", emoji: "🌸", kimchi: ["달래김치", "냉이김치"], tip: "봄나물로 향긋한 김치 담그기", seasonal: ["달래", "냉이", "부추"], color: "bg-pink-50 dark:bg-pink-950/30" },
-  { month: 4, name: "4월", emoji: "🌷", kimchi: ["부추김치", "파김치"], tip: "봄 파와 부추가 가장 연한 시기", seasonal: ["부추", "파", "쪽파"], color: "bg-pink-50 dark:bg-pink-950/30" },
-  { month: 5, name: "5월", emoji: "🌿", kimchi: ["열무김치", "풋배추김치"], tip: "열무가 나오기 시작하는 계절", seasonal: ["열무", "풋배추", "상추"], color: "bg-green-50 dark:bg-green-950/30" },
-  { month: 6, name: "6월", emoji: "☀️", kimchi: ["오이소박이", "열무김치"], tip: "여름 오이소박이 시즌 시작!", seasonal: ["오이", "열무", "깻잎"], color: "bg-green-50 dark:bg-green-950/30" },
-  { month: 7, name: "7월", emoji: "🌊", kimchi: ["오이소박이", "양배추김치"], tip: "시원한 물김치와 오이소박이", seasonal: ["오이", "양배추"], color: "bg-cyan-50 dark:bg-cyan-950/30" },
-  { month: 8, name: "8월", emoji: "🔥", kimchi: ["가지김치", "깻잎김치"], tip: "가지와 깻잎이 풍성한 시기", seasonal: ["가지", "깻잎", "고추"], color: "bg-orange-50 dark:bg-orange-950/30" },
-  { month: 9, name: "9월", emoji: "🍂", kimchi: ["갓김치", "고들빼기김치"], tip: "가을 갓으로 담근 갓김치의 계절", seasonal: ["갓", "고들빼기"], color: "bg-amber-50 dark:bg-amber-950/30" },
-  { month: 10, name: "10월", emoji: "🍁", kimchi: ["총각김치", "석박지"], tip: "김장 준비! 총각무가 나오는 시기", seasonal: ["총각무", "배추"], color: "bg-amber-50 dark:bg-amber-950/30" },
-  { month: 11, name: "11월", emoji: "🥬", kimchi: ["배추김치", "보쌈김치"], tip: "김장 시즌! 배추김치를 담그는 달", seasonal: ["배추", "무", "갓"], color: "bg-red-50 dark:bg-red-950/30" },
-  { month: 12, name: "12월", emoji: "⛄", kimchi: ["배추김치", "동치미"], tip: "김장 마무리와 겨울 동치미", seasonal: ["배추", "무"], color: "bg-red-50 dark:bg-red-950/30" },
+  { month: 1, name: "1월", emoji: "❄️", kimchi: ["동치미", "깍두기"], tip: "겨울철 시원한 동치미가 제격", seasonal: ["무", "배추"], color: "bg-blue-50" },
+  { month: 2, name: "2월", emoji: "🌨️", kimchi: ["백김치", "나박김치"], tip: "입춘을 앞두고 산뜻한 김치 준비", seasonal: ["무", "쪽파"], color: "bg-blue-50" },
+  { month: 3, name: "3월", emoji: "🌸", kimchi: ["달래김치", "냉이김치"], tip: "봄나물로 향긋한 김치 담그기", seasonal: ["달래", "냉이", "부추"], color: "bg-pink-50" },
+  { month: 4, name: "4월", emoji: "🌷", kimchi: ["부추김치", "파김치"], tip: "봄 파와 부추가 가장 연한 시기", seasonal: ["부추", "파", "쪽파"], color: "bg-pink-50" },
+  { month: 5, name: "5월", emoji: "🌿", kimchi: ["열무김치", "풋배추김치"], tip: "열무가 나오기 시작하는 계절", seasonal: ["열무", "풋배추", "상추"], color: "bg-green-50" },
+  { month: 6, name: "6월", emoji: "☀️", kimchi: ["오이소박이", "열무김치"], tip: "여름 오이소박이 시즌 시작!", seasonal: ["오이", "열무", "깻잎"], color: "bg-green-50" },
+  { month: 7, name: "7월", emoji: "🌊", kimchi: ["오이소박이", "양배추김치"], tip: "시원한 물김치와 오이소박이", seasonal: ["오이", "양배추"], color: "bg-cyan-50" },
+  { month: 8, name: "8월", emoji: "🔥", kimchi: ["가지김치", "깻잎김치"], tip: "가지와 깻잎이 풍성한 시기", seasonal: ["가지", "깻잎", "고추"], color: "bg-orange-50" },
+  { month: 9, name: "9월", emoji: "🍂", kimchi: ["갓김치", "고들빼기김치"], tip: "가을 갓으로 담근 갓김치의 계절", seasonal: ["갓", "고들빼기"], color: "bg-amber-50" },
+  { month: 10, name: "10월", emoji: "🍁", kimchi: ["총각김치", "석박지"], tip: "김장 준비! 총각무가 나오는 시기", seasonal: ["총각무", "배추"], color: "bg-amber-50" },
+  { month: 11, name: "11월", emoji: "🥬", kimchi: ["배추김치", "보쌈김치"], tip: "김장 시즌! 배추김치를 담그는 달", seasonal: ["배추", "무", "갓"], color: "bg-red-50" },
+  { month: 12, name: "12월", emoji: "⛄", kimchi: ["배추김치", "동치미"], tip: "김장 마무리와 겨울 동치미", seasonal: ["배추", "무"], color: "bg-red-50" },
 ];
 
 const SEASON_LABELS: Record<string, { ko: string; en: string; emoji: string }> = {
@@ -219,7 +219,7 @@ export default function CalendarPage() {
                                   {data.seasonal.map((item) => (
                                     <span
                                       key={item}
-                                      className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-[var(--radius)] bg-secondary-50 text-secondary-dark dark:bg-secondary-50/10"
+                                      className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-[var(--radius)] bg-secondary-50 text-secondary-dark"
                                     >
                                       <span>🥬</span>
                                       {item}
