@@ -123,7 +123,9 @@ export default function DashboardPage() {
 
   const profile = profileData?.data;
   const attendance = attendanceData?.data;
-  const notifications = notificationsData?.data ?? [];
+  const notifications = Array.isArray(notificationsData?.data)
+    ? notificationsData.data
+    : notificationsData?.data?.notifications ?? [];
   const userBadges = userBadgesData?.data ?? [];
   const xpHistory = xpHistoryData?.data ?? [];
   const activeChallenge = activeChallengeData?.data?.[0] ?? activeChallengeData?.data ?? null;
