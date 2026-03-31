@@ -13,9 +13,12 @@ export default function MainError({ error, reset }: { error: Error; reset: () =>
       <div className="text-center max-w-md">
         <span className="text-6xl block mb-4">😵</span>
         <h2 className="text-2xl font-bold text-foreground mb-2">오류가 발생했습니다</h2>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-muted-foreground mb-4">
           페이지를 불러오는 중 문제가 생겼습니다. 다시 시도해주세요.
         </p>
+        <pre className="text-xs text-left bg-muted p-3 rounded-lg mb-6 overflow-auto max-h-40 text-error">
+          {error?.message || "Unknown error"}{"\n"}{error?.stack?.slice(0, 500)}
+        </pre>
         <div className="flex items-center justify-center gap-3">
           <Button onClick={reset}>다시 시도</Button>
           <Button variant="outline" onClick={() => window.location.href = "/"}>홈으로</Button>
